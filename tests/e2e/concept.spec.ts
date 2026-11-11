@@ -52,3 +52,33 @@ test('unknown slug is a 404', async ({ page }) => {
   const res = await page.goto('/vi/concepts/nope')
   expect(res?.status()).toBe(404)
 })
+
+test('concept page wears the concept theme', async ({ page }) => {
+  await page.goto('/vi/concepts/winter-cherie')
+  await expect(page.locator('main.concept')).toHaveCSS('background-color', 'rgb(106, 14, 18)')
+  await expect(page.locator('main.concept [data-collage]')).toHaveAttribute('loading', 'eager')
+  await expect.poll(() => page.evaluate(() => document.documentElement.style.getPropertyValue('--bg').toLowerCase())).toBe('#6a0e12')
+})
+
+test('concept collage is never upscaled', async ({ page }) => {
+  await page.goto('/vi/concepts/summer-crush')
+  const { ch, h } = await page.locator('main.concept [data-collage]').evaluate((i: HTMLImageElement) => ({ ch: i.clientHeight, h: Number(i.dataset.h) }))
+  expect(h).toBeGreaterThan(0)
+  expect(ch * 2).toBeLessThanOrEqual(h + 2)
+})
+
+test('gallery and lightbox never upscale tiles', async ({ page }) => {
+  await page.goto('/vi/concepts/summer-crush')
+  const tiles = page.locator('[data-gallery-item] img')
+  for (const img of await tiles.all()) {
+    await img.scrollIntoViewIfNeeded()
+    await expect(img).toHaveJSProperty('complete', true)
+    const { cw, nw } = await img.evaluate((i: HTMLImageElement) => ({ cw: i.clientWidth, nw: i.naturalWidth }))
+    expect(cw).toBeLessThanOrEqual(nw + 1)
+  }
+  await page.locator('[data-gallery-item]').first().click()
+  const big = page.locator('dialog.lightbox img')
+  await expect(big).toHaveJSProperty('complete', true)
+  const { cw, nw } = await big.evaluate((i: HTMLImageElement) => ({ cw: i.clientWidth, nw: i.naturalWidth }))
+  expect(cw).toBeLessThanOrEqual(nw + 1)
+})

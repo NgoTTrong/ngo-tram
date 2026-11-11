@@ -30,7 +30,6 @@ describe('concepts', () => {
     expect(c.photos).not.toContain(4)
     for (const hidden of HIDDEN[c.slug] ?? []) expect(c.photos).not.toContain(hidden)
     expect(c.photos).toContain(c.cover)
-    for (const t of c.triptych) expect(c.photos).toContain(t)
     for (const i of c.photos) expect(existsSync(path.join('public', 'concepts', c.slug, `${i}.webp`))).toBe(true)
   })
 

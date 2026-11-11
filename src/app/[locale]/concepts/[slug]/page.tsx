@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
+import type { CSSProperties } from 'react'
 import { notFound } from 'next/navigation'
 import { BookButton } from '@/components/BookButton'
 import { Credit } from '@/components/Credit'
@@ -7,6 +7,8 @@ import { Gallery } from '@/components/Gallery'
 import { concepts, getConcept, neighbors } from '@/content/concepts'
 import { isLocale, locales } from '@/i18n/config'
 import { getDict } from '@/i18n/dict'
+import { themeFor, themeStyle } from '@/content/themes'
+import { collageSrc, getCollage } from '@/lib/collage'
 import { photoSrc } from '@/lib/photo'
 
 /** Only the generated locales/slugs exist; anything else is a 404. */
@@ -36,44 +38,47 @@ export default async function ConceptPage({ params }: PageProps<'/[locale]/conce
   if (!c || !isLocale(locale)) notFound()
   const t = getDict(locale)
   const { prev, next } = neighbors(slug)
-  const sides = c.triptych.filter((i) => i !== c.cover).slice(0, 2)
+  const theme = themeFor(slug)
+  const size = getCollage(slug)
+  const ar = size.width / size.height
+  const desktopWidth = Math.round(Math.min(800, size.height / 2) * ar)
+  // Tiles are never shown wider than their source (low-res sets have ~340px tiles).
+  const tileMax = c.lowRes ? 340 : 670
+  const style = { ...themeStyle(theme), '--ar': ar.toFixed(4), '--max-h': `${size.height / 2}px`, '--tile-max': `${tileMax}px` } as CSSProperties
 
   return (
-    <main className="concept">
+    <main className="concept" data-scene-theme data-fx={theme.fx} style={style}>
       <section className="concept__hero">
-        <div className="chapter__media">
-          <div className="chapter__frame chapter__frame--side">
-            <Image src={photoSrc(slug, sides[0])} alt="" fill sizes="30vw" className="chapter__img" />
-          </div>
-          <div className="chapter__frame chapter__frame--main">
-            <Image
-              src={photoSrc(slug, c.cover)}
+        <figure className="scene__frame">
+          <div className="scene__clip">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              data-collage
+              data-h={size.height}
+              src={collageSrc(slug, 'md')}
+              srcSet={`${collageSrc(slug, 'md')} ${size.mdWidth}w, ${collageSrc(slug, 'lg')} ${size.width}w`}
+              sizes={`(min-width: 900px) ${desktopWidth}px, 88vw`}
+              width={size.width}
+              height={size.height}
               alt={`${c.name} — Makeup Ngô Trâm`}
-              fill
-              sizes="(min-width: 768px) 40vw, 100vw"
               loading="eager"
               fetchPriority="high"
-              className="chapter__img"
             />
           </div>
-          <div className="chapter__frame chapter__frame--side">
-            <Image src={photoSrc(slug, sides[1])} alt="" fill sizes="30vw" className="chapter__img" />
-          </div>
-        </div>
-        <div className="chapter__shade" aria-hidden />
+        </figure>
         <div className="concept__hero-text">
           <a href={`/${locale}#${slug}`} className="concept__back">
             ← {t.back}
           </a>
-          <p className="chapter__num">
+          <p className="scene__num">
             {t.chapter} {pad(c.order)} / {concepts.length}
           </p>
           <h1 className="concept__title font-script">{c.name}</h1>
-          <p className="chapter__tagline">{c.tagline[locale]}</p>
+          <p className="scene__tagline prose-ko">{c.tagline[locale]}</p>
         </div>
       </section>
 
-      <section className="concept__body" data-surface="cream">
+      <section className="concept__body">
         <div className="concept__story prose-ko">
           {c.description[locale].map((p) => (
             <p key={p}>{p}</p>

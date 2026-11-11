@@ -1,6 +1,5 @@
 'use client'
 
-import Image from 'next/image'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { photoSrc } from '@/lib/photo'
 
@@ -41,9 +40,11 @@ export function Gallery({ slug, name, photos, closeLabel, prevLabel, nextLabel }
     <>
       <ul className="gallery">
         {photos.map((p, i) => (
-          <li key={p} className={`gallery__item gallery__item--${i % 5}`}>
+          <li key={p} className="gallery__item">
             <button type="button" data-gallery-item onClick={() => open(i)} aria-label={`${name} — ${i + 1} / ${n}`}>
-              <Image src={photoSrc(slug, p)} alt="" fill sizes="(min-width: 1024px) 33vw, 50vw" className="gallery__img" />
+              {/* plain <img>: the original tile, never upscaled (CSS caps it at --tile-max) */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={photoSrc(slug, p)} alt="" loading="lazy" decoding="async" className="gallery__img" />
             </button>
           </li>
         ))}

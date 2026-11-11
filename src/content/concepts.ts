@@ -12,10 +12,8 @@ export type Concept = {
   description: Record<Locale, string[]>
   /** Tile indices shown in the gallery, in display order. Never 4 (the studio's centre card). */
   photos: number[]
-  /** Full-bleed background of the chapter on phones. */
+  /** Representative tile: share image and the About strip. */
   cover: number
-  /** Three side-by-side photos of the chapter on wide screens. */
-  triptych: [number, number, number]
   /** Source collage is small (~390px tiles): never upscale beyond the source. */
   lowRes: boolean
 }
@@ -43,7 +41,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 3,
-    triptych: [2, 3, 5],
     lowRes: false,
   },
   {
@@ -65,7 +62,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 0,
-    triptych: [0, 3, 6],
     lowRes: false,
   },
   {
@@ -87,7 +83,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 0,
-    triptych: [1, 0, 8],
     lowRes: false,
   },
   {
@@ -109,7 +104,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 6,
-    triptych: [0, 6, 7],
     lowRes: true,
   },
   {
@@ -131,7 +125,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 7,
-    triptych: [0, 6, 3],
     lowRes: false,
   },
   {
@@ -153,7 +146,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 2,
-    triptych: [5, 2, 6],
     lowRes: false,
   },
   {
@@ -173,7 +165,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 6,
-    triptych: [3, 6, 5],
     lowRes: true,
   },
   {
@@ -195,7 +186,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 7,
-    triptych: [0, 3, 7],
     lowRes: false,
   },
   {
@@ -217,7 +207,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 5,
-    triptych: [0, 5, 7],
     lowRes: false,
   },
   {
@@ -239,7 +228,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 5,
-    triptych: [0, 5, 6],
     lowRes: false,
   },
   {
@@ -261,7 +249,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 1,
-    triptych: [0, 1, 6],
     lowRes: true,
   },
   {
@@ -283,7 +270,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 2,
-    triptych: [0, 2, 5],
     lowRes: false,
   },
   {
@@ -305,7 +291,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 5,
-    triptych: [0, 5, 7],
     lowRes: false,
   },
   {
@@ -327,7 +312,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 3,
-    triptych: [0, 3, 6],
     lowRes: false,
   },
   {
@@ -347,7 +331,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: [0, 2, 3, 5, 6, 7, 8],
     cover: 0,
-    triptych: [2, 5, 6],
     lowRes: false,
   },
   {
@@ -367,7 +350,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 0,
-    triptych: [2, 0, 5],
     lowRes: true,
   },
   {
@@ -389,7 +371,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 2,
-    triptych: [1, 2, 5],
     lowRes: false,
   },
   {
@@ -409,7 +390,6 @@ const data: Omit<Concept, 'order'>[] = [
     },
     photos: ALL,
     cover: 8,
-    triptych: [3, 6, 8],
     lowRes: false,
   },
 ]
