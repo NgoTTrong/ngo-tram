@@ -100,3 +100,13 @@ test('no horizontal scroll', async ({ page }) => {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
   expect(overflow).toBeLessThanOrEqual(0)
 })
+
+test('particles stay behind collages and text', async ({ page }) => {
+  await page.goto('/vi')
+  const z = (sel: string) => page.locator(sel).first().evaluate((e) => Number(getComputedStyle(e).zIndex) || 0)
+  const fx = await z('#fx')
+  expect(await z('#velvet-silence .scene__frame')).toBeGreaterThan(fx)
+  expect(await z('#velvet-silence .scene__text')).toBeGreaterThan(fx)
+  // the scene itself must not form a stacking context, or the canvas could not slide between its background and photo
+  expect(await page.locator('#velvet-silence').evaluate((e) => getComputedStyle(e).zIndex)).toBe('auto')
+})

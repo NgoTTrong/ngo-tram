@@ -12,7 +12,6 @@ const VARS = ['--bg', '--bg2', '--ink', '--accent'] as const
 export function SceneObserver() {
   useEffect(() => {
     const root = document.documentElement
-    root.classList.add('js-scenes')
     const index = document.querySelector<HTMLElement>('[data-chapter-index]')
     const activate = (el: HTMLElement) => {
       for (const v of VARS) root.style.setProperty(v, el.style.getPropertyValue(v))
@@ -32,7 +31,6 @@ export function SceneObserver() {
     document.querySelectorAll<HTMLElement>('[data-scene-theme]').forEach((el) => io.observe(el))
     return () => {
       io.disconnect()
-      root.classList.remove('js-scenes')
       for (const v of VARS) root.style.removeProperty(v)
       delete root.dataset.fx
     }

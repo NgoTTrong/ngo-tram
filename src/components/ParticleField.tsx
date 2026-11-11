@@ -176,11 +176,17 @@ export function ParticleField() {
     const onVis = () => (document.hidden ? stop() : start())
     const mo = new MutationObserver(setMode)
     mo.observe(root, { attributes: true, attributeFilter: ['data-fx'] })
-    setMode()
-    start()
+    // Start only once the page is idle so particles never compete with the first paint.
+    const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 300))
+    const cancelIdle = window.cancelIdleCallback ?? window.clearTimeout
+    const boot = idle(() => {
+      setMode()
+      start()
+    }, { timeout: 2500 })
     addEventListener('resize', resize)
     document.addEventListener('visibilitychange', onVis)
     return () => {
+      cancelIdle(boot)
       stop()
       mo.disconnect()
       removeEventListener('resize', resize)

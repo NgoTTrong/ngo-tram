@@ -12,15 +12,31 @@ const pad = (n: number) => String(n).padStart(2, '0')
 /**
  * One concept on the home page: the studio's whole collage, sharp (never shown taller than half its
  * source height), on the colours of its own photos. The section is a theme source for SceneObserver
- * and paints its own colours, so it is complete without JS.
+ * and paints its own colours, so it is complete without JS. `prevBg` is the background of the section
+ * above, so the colour flows from one scene into the next.
  */
-export function Scene({ concept: c, locale, t, first, total }: { concept: Concept; locale: Locale; t: Dict; first: boolean; total: number }) {
+export function Scene({
+  concept: c,
+  locale,
+  t,
+  first,
+  total,
+  prevBg,
+}: {
+  concept: Concept
+  locale: Locale
+  t: Dict
+  first: boolean
+  total: number
+  prevBg: string
+}) {
   const theme = themeFor(c.slug)
   const size = getCollage(c.slug)
   const ar = size.width / size.height
   const desktopWidth = Math.round(Math.min(800, size.height / 2) * ar)
   const style = {
     ...themeStyle(theme),
+    '--prev-bg': prevBg,
     '--ar': ar.toFixed(4),
     '--max-h': `${size.height / 2}px`,
   } as CSSProperties

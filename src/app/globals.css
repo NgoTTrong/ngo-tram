@@ -250,23 +250,27 @@ html:lang(ko) .prose-ko {
 .credit { margin: 14px 0 0; font-size: 11px; letter-spacing: 0.06em; opacity: 0.7; }
 
 /* ---------- scenes ---------- */
-/* Fixed colour wash behind the page; it shows through the scenes once SceneObserver runs (html.js-scenes). */
-.atmo {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
+/* Each scene paints itself: a band that flows from the previous scene's colour (--prev-bg) into its own,
+   plus a soft glow in its accent. Works without JS and keeps contrast checkable. */
+/* Layers: section backgrounds (no stacking context) < particles (.fx, z 1) < photos and text (z 2). */
+.fx { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none; }
+.scene__frame,
+.scene__text,
+.concept__hero-text,
+.concept__body > *,
+.intro__strip,
+.intro__text,
+.about > * { position: relative; z-index: 2; }
+.intro__scroll { z-index: 2; }
+.footer { position: relative; z-index: 3; }
+.scene,
+.about {
   background:
-    radial-gradient(60vmax 60vmax at 75% 30%, color-mix(in oklab, var(--accent) 38%, transparent), transparent 70%),
-    radial-gradient(50vmax 50vmax at 15% 85%, color-mix(in oklab, var(--bg2) 70%, transparent), transparent 70%),
-    var(--bg);
+    radial-gradient(60vmax 60vmax at 80% 35%, color-mix(in oklab, var(--accent) 30%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--prev-bg, var(--bg)) 0, var(--bg) min(45svh, 380px));
+  background-color: var(--bg);
 }
-.fx { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
-body:has(.scenes) { background: transparent; }
-main { position: relative; z-index: 1; }
-html.js-scenes .scene,
-html.js-scenes .intro,
-html.js-scenes .about { background: transparent; }
+main > * { position: relative; }
 
 .scene {
   position: relative;
@@ -277,7 +281,6 @@ html.js-scenes .about { background: transparent; }
   justify-items: center;
   gap: 22px;
   padding: 76px 20px 64px;
-  background: var(--bg);
   color: var(--ink);
   overflow: clip;
 }
@@ -296,8 +299,6 @@ html.js-scenes .about { background: transparent; }
 }
 /* frame: size + 3D tilt (pointer) · clip: reveal/parallax (GSAP) · img: focus-in (GSAP) */
 .scene__frame {
-  position: relative;
-  z-index: 1;
   margin: 0;
   aspect-ratio: var(--ar);
   /* never taller than half the source height (sharp at DPR 2), and fits the first screen on phones */
@@ -328,7 +329,7 @@ html.js-scenes .about { background: transparent; }
   transition: opacity 0.4s ease;
 }
 .scene__frame[data-hover] .scene__clip::after { opacity: 1; }
-.scene__text { position: relative; z-index: 1; max-width: 440px; text-align: center; }
+.scene__text { max-width: 440px; text-align: center; }
 .scene__num { margin: 0; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.75; }
 .scene__name { margin: 4px 0 6px; font-size: clamp(52px, 7vw, 104px); line-height: 1.05; overflow-wrap: anywhere; }
 .scene__tagline { margin: 0 0 22px; font-size: 17px; line-height: 1.5; }
@@ -434,7 +435,7 @@ html.js-scenes .about { background: transparent; }
 
 
 /* ---------- about ---------- */
-.about { background: var(--cream); padding: 88px 20px 96px; display: grid; gap: 40px; align-items: center; }
+.about { color: var(--ink); padding: 88px 20px 96px; display: grid; gap: 40px; align-items: center; }
 @media (min-width: 900px) { .about { grid-template-columns: 1fr 1fr; padding: 120px 6vw; gap: 6vw; } }
 .about__photos { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .about__photos img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center 25%; border-radius: 3px; }

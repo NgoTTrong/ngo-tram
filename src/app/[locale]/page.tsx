@@ -5,6 +5,7 @@ import { About } from '@/components/About'
 import { Intro } from '@/components/Intro'
 import { ScrollStage } from '@/components/ScrollStage'
 import { concepts, getConcept } from '@/content/concepts'
+import { BRAND, themeFor } from '@/content/themes'
 import { isLocale } from '@/i18n/config'
 import { getDict } from '@/i18n/dict'
 
@@ -21,10 +22,10 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
         <ChapterIndex concepts={concepts} label={t.gallery} />
         <div className="scenes">
           {concepts.map((c, i) => (
-            <Scene key={c.slug} concept={c} locale={locale} total={concepts.length} t={t} first={i === 0} />
+            <Scene key={c.slug} concept={c} locale={locale} total={concepts.length} t={t} first={i === 0} prevBg={i === 0 ? BRAND.bg : themeFor(concepts[i - 1].slug).bg} />
           ))}
         </div>
-        <About locale={locale} t={t} closeUps={CLOSE_UPS} />
+        <About locale={locale} t={t} closeUps={CLOSE_UPS} prevBg={themeFor(concepts[concepts.length - 1].slug).bg} />
       </main>
     </ScrollStage>
   )

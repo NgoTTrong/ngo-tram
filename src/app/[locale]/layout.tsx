@@ -40,7 +40,6 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   return (
     <html lang={locale} className={fontVars}>
       <body>
-        <div className="atmo" aria-hidden />
         <ParticleField />
         <header className="site-header">
           <a href={`/${locale}`} aria-label="Makeup Ngô Trâm">
