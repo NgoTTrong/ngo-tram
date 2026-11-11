@@ -5,7 +5,11 @@ import { getDict } from '@/i18n/dict'
 import { fontVars } from '../fonts'
 import { BookButton } from '@/components/BookButton'
 import { LangSwitch } from '@/components/LangSwitch'
+import { HeaderTone } from '@/components/HeaderTone'
 import '../globals.css'
+
+/** Only the generated locales/slugs exist; anything else is a 404. */
+export const dynamicParams = false
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -43,6 +47,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
           <LangSwitch locale={locale} label={t.switchTo} />
         </header>
         {children}
+        <HeaderTone />
         <BookButton variant="float" label={t.book} title={t.bookTitle} hint={t.bookHint} closeLabel={t.close} />
       </body>
     </html>

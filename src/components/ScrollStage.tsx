@@ -7,15 +7,14 @@ import Lenis from 'lenis'
 
 /**
  * Scroll choreography for the home page. Markup is fully visible without it; this only enhances:
- * smooth scrolling (Lenis), photo parallax and title reveals (GSAP), chapter index + progress,
- * and the header tone (dark over cream surfaces, light over photos).
+ * smooth scrolling (Lenis), photo parallax and title reveals (GSAP), chapter index + progress
+ * (header tone lives in HeaderTone).
  * prefers-reduced-motion: no smooth scroll, no parallax, no reveals — only index/tone tracking.
  */
 export function ScrollStage({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger)
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const header = document.querySelector<HTMLElement>('.site-header')
     const index = document.querySelector<HTMLElement>('[data-chapter-index]')
     const chapters = gsap.utils.toArray<HTMLElement>('[data-chapter]')
     const chaptersWrap = document.querySelector<HTMLElement>('.chapters')
@@ -27,16 +26,6 @@ export function ScrollStage({ children }: { children: React.ReactNode }) {
       lenis.on('scroll', ScrollTrigger.update)
       gsap.ticker.add(raf)
       gsap.ticker.lagSmoothing(0)
-    }
-
-    const setTone = () => {
-      if (!header) return
-      const y = 40
-      const onCream = Array.from(document.querySelectorAll<HTMLElement>('[data-surface="cream"]')).some((el) => {
-        const r = el.getBoundingClientRect()
-        return r.top <= y && r.bottom > y
-      })
-      header.dataset.tone = onCream ? 'dark' : 'light'
     }
 
     const ctx = gsap.context(() => {
@@ -89,13 +78,9 @@ export function ScrollStage({ children }: { children: React.ReactNode }) {
       }
     })
 
-    const onScroll = () => setTone()
-    setTone()
-    window.addEventListener('scroll', onScroll, { passive: true })
     if (index) index.dataset.ready = 'true'
 
     return () => {
-      window.removeEventListener('scroll', onScroll)
       ctx.revert()
       gsap.ticker.remove(raf)
       lenis?.destroy()
