@@ -8,6 +8,7 @@ import { LangSwitch } from '@/components/LangSwitch'
 import { HeaderTone } from '@/components/HeaderTone'
 import { Footer } from '@/components/Footer'
 import '../globals.css'
+import { siteUrl } from '@/lib/site-url'
 
 /** Only the generated locales/slugs exist; anything else is a 404. */
 export const dynamicParams = false
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
   if (!isLocale(locale)) return {}
   const t = getDict(locale)
   return {
-    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'),
+    metadataBase: new URL(siteUrl()),
     title: { default: t.siteTitle, template: `%s — Makeup Ngô Trâm` },
     description: t.siteDescription,
     alternates: { languages: { vi: '/vi', ko: '/ko' } },

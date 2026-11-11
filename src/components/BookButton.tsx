@@ -36,6 +36,7 @@ export function BookButton({ variant, label, title, hint, closeLabel }: Props) {
       <dialog
         ref={dialog}
         className="book-sheet"
+        data-lenis-prevent
         aria-labelledby={`book-title-${variant}`}
         onClick={(e) => {
           if (e.target === dialog.current) dialog.current?.close() // tap on backdrop

@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/concepts
     title: c.name,
     description: c.tagline[locale],
     alternates: { languages: { vi: `/vi/concepts/${slug}`, ko: `/ko/concepts/${slug}` } },
-    openGraph: { title: `${c.name} — Makeup Ngô Trâm`, description: c.tagline[locale], images: [photoSrc(slug, c.cover)] },
+    openGraph: { title: `${c.name} — Makeup Ngô Trâm`, description: c.tagline[locale], images: [photoSrc(slug, c.cover)], locale: locale === 'ko' ? 'ko_KR' : 'vi_VN', type: 'article' },
   }
 }
 

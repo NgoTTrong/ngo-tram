@@ -27,6 +27,9 @@ async function seams(src) {
   return { W, H, xs, ys }
 }
 
+// Tiles showing another studio's watermark are never published (spec: drop, don't retouch).
+const WATERMARKED = { pirate: [1] }
+
 for (const [file, slug] of Object.entries(FILE_TO_SLUG)) {
   const src = path.join(root, 'assets', `${file}.jpg`)
   const outDir = path.join(root, 'public', 'concepts', slug)
@@ -34,7 +37,7 @@ for (const [file, slug] of Object.entries(FILE_TO_SLUG)) {
   await mkdir(outDir, { recursive: true })
   const { W, H, xs, ys } = await seams(src)
   for (const rect of gridRects(W, H, xs, ys, 5)) {
-    if (rect.index === 4) continue
+    if (rect.index === 4 || WATERMARKED[file]?.includes(rect.index)) continue
     const { index, ...region } = rect
     const tile = sharp(src).extract(region)
     await tile.clone().webp({ quality: 82 }).toFile(path.join(outDir, `${index}.webp`))

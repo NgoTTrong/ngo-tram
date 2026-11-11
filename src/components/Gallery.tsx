@@ -16,8 +16,14 @@ export function Gallery({ slug, name, photos, closeLabel, prevLabel, nextLabel }
   const step = useCallback((delta: number) => setCurrent((i) => (i + delta + n) % n), [n])
 
   const open = (i: number) => {
+    const el = dialog.current
+    // Old in-app browsers without <dialog>: open the photo itself instead of failing silently.
+    if (!el || typeof el.showModal !== 'function') {
+      window.open(photoSrc(slug, photos[i]), '_blank', 'noopener')
+      return
+    }
     setCurrent(i)
-    dialog.current?.showModal()
+    el.showModal()
   }
 
   useEffect(() => {
@@ -46,6 +52,7 @@ export function Gallery({ slug, name, photos, closeLabel, prevLabel, nextLabel }
       <dialog
         ref={dialog}
         className="lightbox"
+        data-lenis-prevent
         aria-label={name}
         onClick={(e) => {
           if (e.target === dialog.current) dialog.current?.close()
