@@ -1,0 +1,21 @@
+// Source collage file (assets/<file>.jpg) → concept slug. Pure data; imported by scripts and tests.
+export const FILE_TO_SLUG = {
+  anchor: 'a-love-anchored',
+  blowing: 'blooming-grace',
+  ethereal: 'ethereal-shore',
+  fairy: 'lotus-fairy',
+  fancy: 'fancy-nancy',
+  inyoureyes: 'in-your-eyes',
+  lavie: 'la-vie-en-rose',
+  lotus: 'the-white-lotus',
+  ocean: 'ocean-kissed',
+  petal: 'petals-and-grace',
+  pink: 'pink-dream-21',
+  pirate: 'a-private-escape',
+  summer: 'summer-crush',
+  sweet: 'sweethearts-day',
+  velvet: 'velvet-silence',
+  vietnam: 'vietnamese-grace',
+  winter: 'winter-cherie',
+  wishful: 'wishful-moment',
+}
