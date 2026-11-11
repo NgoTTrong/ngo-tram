@@ -9,7 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "e2e": "playwright test",
-    "assets": "node --experimental-strip-types scripts/crop-collages.mjs && node scripts/make-logo.mjs && node scripts/make-og.mjs",
+    "assets": "node --experimental-strip-types scripts/crop-collages.mjs && node --experimental-strip-types scripts/export-collages.mjs && node scripts/make-logo.mjs && node scripts/make-og.mjs",
     "check": "npm test && playwright test"
   },
   "dependencies": {
