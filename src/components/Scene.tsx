@@ -48,6 +48,7 @@ export function Scene({
       data-scene-theme
       data-order={c.order}
       data-fx={theme.fx}
+      data-concept-name={c.name}
       data-side={c.order % 2 === 0 ? 'right' : 'left'}
       style={style}
       aria-labelledby={`${c.slug}-title`}

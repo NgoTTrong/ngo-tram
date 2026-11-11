@@ -47,7 +47,7 @@ export default async function ConceptPage({ params }: PageProps<'/[locale]/conce
   const style = { ...themeStyle(theme), '--ar': ar.toFixed(4), '--max-h': `${size.height / 2}px`, '--tile-max': `${tileMax}px` } as CSSProperties
 
   return (
-    <main className="concept" data-scene-theme data-fx={theme.fx} style={style}>
+    <main className="concept" data-scene-theme data-fx={theme.fx} data-concept-name={c.name} style={style}>
       {/* header/float button read the root colours; set them for this page before any JS runs */}
       <style>{`:root{--bg:${theme.bg};--bg2:${theme.bg2};--ink:${theme.ink};--accent:${theme.accent}}`}</style>
       <section className="concept__hero">

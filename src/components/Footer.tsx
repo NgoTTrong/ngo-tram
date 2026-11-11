@@ -1,7 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import { BOOKING, SOCIALS } from '@/content/site'
+import { concepts } from '@/content/concepts'
+import { SOCIALS } from '@/content/site'
 import type { Dict } from '@/i18n/dict'
+import { collageSrc, getCollage } from '@/lib/collage'
 import { Credit } from './Credit'
+import { FinaleActions } from './FinaleActions'
 
 const ICONS: Record<keyof typeof SOCIALS, { label: string; path: string }> = {
   instagram: {
@@ -22,35 +25,63 @@ const ICONS: Record<keyof typeof SOCIALS, { label: string; path: string }> = {
   },
 }
 
+/**
+ * The finale: every collage as a slowly drifting wall under a moss veil, a handwritten invitation,
+ * three steps to book, a ready-to-send message and the two booking channels.
+ */
 export function Footer({ t }: { t: Dict }) {
   return (
-    <footer id="contact" className="footer" aria-labelledby="contact-title">
-      <img src="/brand/logo-white.webp" alt="Makeup Ngô Trâm" className="footer__logo" width={692} height={563} loading="lazy" />
-      <h2 id="contact-title" className="footer__title font-script">
-        {t.contact}
-      </h2>
-      <p className="footer__hint">{t.bookHint}</p>
-      <div className="footer__book">
-        <a href={BOOKING.zalo} target="_blank" rel="noopener" className="channel channel--zalo">
-          Zalo
-        </a>
-        <a href={BOOKING.facebook} target="_blank" rel="noopener" className="channel channel--facebook">
-          Facebook
-        </a>
+    <footer id="contact" className="footer finale" aria-labelledby="contact-title">
+      <div className="finale__wall" data-wall aria-hidden>
+        <div className="finale__wall-track">
+          {[...concepts, ...concepts, ...concepts].map((c, i) => {
+            const size = getCollage(c.slug)
+            return (
+              <img
+                key={`${c.slug}-${i}`}
+                src={collageSrc(c.slug, 'sm')}
+                width={Math.round((360 * size.width) / size.height)}
+                height={360}
+                alt=""
+                loading="lazy"
+                decoding="async"
+              />
+            )
+          })}
+        </div>
       </div>
-      <ul className="footer__socials">
-        {(Object.keys(SOCIALS) as (keyof typeof SOCIALS)[]).map((key) => (
-          <li key={key}>
-            <a href={SOCIALS[key]} target="_blank" rel="noopener" aria-label={ICONS[key].label}>
-              <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden fill="currentColor">
-                <path d={ICONS[key].path} />
-              </svg>
-            </a>
-          </li>
-        ))}
-      </ul>
-      <Credit className="footer__credit" />
-      <p className="footer__copy">© {new Date().getFullYear()} Makeup Ngô Trâm</p>
+      <div className="finale__body">
+        <img src="/brand/logo-white.webp" alt="Makeup Ngô Trâm" className="footer__logo" width={692} height={563} loading="lazy" />
+        <p className="finale__kicker">{t.contact}</p>
+        <h2 id="contact-title" className="footer__title finale__title font-script">
+          {t.finaleTitle}
+        </h2>
+        <p className="footer__hint">{t.bookHint}</p>
+        <ol className="finale__steps">
+          {[t.step1, t.step2, t.step3].map((step, i) => (
+            <li key={i} data-step>
+              <span className="finale__step-num font-script" aria-hidden>
+                {i + 1}
+              </span>
+              {step}
+            </li>
+          ))}
+        </ol>
+        <FinaleActions template={t.messageTemplate} label={t.messageLabel} copy={t.copyMessage} copied={t.copied} />
+        <ul className="footer__socials">
+          {(Object.keys(SOCIALS) as (keyof typeof SOCIALS)[]).map((key) => (
+            <li key={key}>
+              <a href={SOCIALS[key]} target="_blank" rel="noopener" aria-label={ICONS[key].label}>
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden fill="currentColor">
+                  <path d={ICONS[key].path} />
+                </svg>
+              </a>
+            </li>
+          ))}
+        </ul>
+        <Credit className="footer__credit" />
+        <p className="footer__copy">© {new Date().getFullYear()} Makeup Ngô Trâm</p>
+      </div>
     </footer>
   )
 }

@@ -16,6 +16,8 @@ export function SceneObserver() {
     const activate = (el: HTMLElement) => {
       for (const v of VARS) root.style.setProperty(v, el.style.getPropertyValue(v))
       root.dataset.fx = el.dataset.fx ?? 'none'
+      // the footer's booking message names the concept last on screen (kept when leaving it)
+      if (el.dataset.conceptName) root.dataset.concept = el.dataset.conceptName
       const isScene = el.hasAttribute('data-scene')
       if (index) index.dataset.visible = String(isScene)
       document.querySelectorAll<HTMLElement>('[data-index-link]').forEach((a) => {
@@ -33,6 +35,7 @@ export function SceneObserver() {
       io.disconnect()
       for (const v of VARS) root.style.removeProperty(v)
       delete root.dataset.fx
+      delete root.dataset.concept
     }
   }, [])
   return null

@@ -460,6 +460,121 @@ main > * { position: relative; }
 .footer__credit { opacity: 0.6; }
 .footer__copy { margin: 6px 0 0; font-size: 12px; opacity: 0.75; }
 
+/* ---------- footer finale ---------- */
+html[data-finale='true'] .book-btn--float { opacity: 0; visibility: hidden; pointer-events: none; }
+.finale { overflow: hidden; isolation: isolate; padding-top: 110px; }
+.finale__wall { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+.finale__wall::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 45%, rgb(47 59 44 / 0.93), rgb(47 59 44 / 0.78) 70%),
+    linear-gradient(rgb(47 59 44 / 0.2), var(--moss) 96%);
+}
+.finale__wall-track {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 150%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  transform: translate(-50%, -50%) rotate(-9deg);
+  animation: wall-drift 46s ease-in-out infinite alternate;
+}
+.finale__wall-track img { height: 200px; width: auto; border-radius: 10px; filter: saturate(0.85); }
+@keyframes wall-drift {
+  from { transform: translate(-54%, -50%) rotate(-9deg); }
+  to { transform: translate(-46%, -53%) rotate(-9deg); }
+}
+.finale__body { position: relative; max-width: 620px; margin: 0 auto; }
+.finale__kicker { margin: 0; font-size: 12px; letter-spacing: 0.32em; text-transform: uppercase; color: #c9c2a8; }
+.finale__title { font-size: clamp(56px, 11vw, 104px); text-shadow: 0 2px 30px rgb(0 0 0 / 0.25); }
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .finale__title {
+      animation: write-in linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 40%;
+    }
+  }
+}
+@keyframes write-in {
+  from { clip-path: inset(-20% 100% -20% 0); }
+  to { clip-path: inset(-20% 0 -20% 0); }
+}
+.finale__steps { list-style: none; margin: 8px auto 30px; padding: 0; display: grid; gap: 12px; text-align: left; max-width: 460px; }
+.finale__steps li { display: grid; grid-template-columns: 44px 1fr; align-items: center; gap: 12px; font-size: 15px; line-height: 1.5; }
+.finale__step-num {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgb(237 231 217 / 0.4);
+  font-size: 26px;
+  line-height: 1;
+}
+.finale__actions { display: grid; gap: 14px; margin: 0 auto 34px; max-width: 460px; }
+.finale__message {
+  margin: 0;
+  padding: 18px 18px 14px;
+  border-radius: 18px;
+  background: rgb(245 241 232 / 0.08);
+  border: 1px dashed rgb(237 231 217 / 0.4);
+  backdrop-filter: blur(6px);
+  text-align: left;
+}
+.finale__message figcaption { font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: #c9c2a8; }
+.finale__message blockquote { margin: 8px 0 12px; font-size: 16px; line-height: 1.55; }
+.finale__copy {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid rgb(237 231 217 / 0.6);
+  background: transparent;
+  color: var(--cream);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.finale__copy:hover { background: rgb(237 231 217 / 0.14); }
+.finale__channels { display: grid; gap: 12px; }
+@media (min-width: 640px) { .finale__channels { grid-template-columns: 1fr 1fr; } }
+.finale__channel {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 20px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translate(var(--mx, 0), var(--my, 0));
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1.4), box-shadow 0.25s ease;
+}
+.finale__channel--zalo { background: var(--cream); color: var(--moss); }
+.finale__channel--facebook { background: transparent; color: var(--cream); border: 1.5px solid var(--cream); }
+.finale__channel:hover { box-shadow: 0 14px 40px rgb(0 0 0 / 0.3); }
+.finale__channel::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.45) 50%, transparent 65%);
+  transform: translateX(-120%);
+}
+.finale__channel:hover::after { transition: transform 0.8s ease; transform: translateX(120%); }
+@media (prefers-reduced-motion: reduce) {
+  .finale__wall-track { animation: none; }
+  .finale__channel, .finale__channel::after { transition: none; transform: none; }
+}
+
 html:lang(ko) .about__title,
 html:lang(ko) .footer__title,
 html:lang(ko) .concept__gallery-title,
