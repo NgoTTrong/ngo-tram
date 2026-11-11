@@ -2,9 +2,13 @@ import { expect, test } from '@playwright/test'
 
 test.describe('without JavaScript', () => {
   test.use({ javaScriptEnabled: false })
-  test('all chapter titles are visible', async ({ page }) => {
+  test('without JavaScript every scene keeps its colours and collage', async ({ page }) => {
     await page.goto('/vi')
-    const titles = page.locator('[data-chapter] h2')
+    await expect(page.locator('#winter-cherie')).toHaveCSS('background-color', 'rgb(106, 14, 18)')
+    const srcs = await page.locator('[data-collage]').evaluateAll((imgs) => imgs.map((i) => i.getAttribute('src') ?? ''))
+    expect(srcs).toHaveLength(18)
+    expect(srcs.every((s) => s.startsWith('/collages/'))).toBe(true)
+    const titles = page.locator('[data-scene] h2')
     await expect(titles).toHaveCount(18)
     for (const title of await titles.all()) {
       await title.scrollIntoViewIfNeeded()
@@ -28,16 +32,11 @@ test.describe('reduced motion', () => {
   })
 })
 
-test('chapter index tracks the active chapter', async ({ page }) => {
+test('chapter index and page colours track the active scene', async ({ page }) => {
   await page.goto('/vi')
-  await page.evaluate(() => document.getElementById('pink-dream-21')!.scrollIntoView())
-  await expect(page.locator('[data-index-link="pink-dream-21"]')).toHaveAttribute('data-active', 'true')
+  await page.evaluate(() => document.getElementById('velvet-silence')!.scrollIntoView())
+  await expect(page.locator('[data-index-link="velvet-silence"]')).toHaveAttribute('data-active', 'true')
   await expect(page.locator('[data-index-link="the-white-lotus"]')).toHaveAttribute('data-active', 'false')
-})
-
-test('header switches to light over photos and dark over the cream intro', async ({ page }) => {
-  await page.goto('/vi')
-  await expect(page.locator('.site-header')).toHaveAttribute('data-tone', 'dark')
-  await page.evaluate(() => document.getElementById('ocean-kissed')!.scrollIntoView())
-  await expect(page.locator('.site-header')).toHaveAttribute('data-tone', 'light')
+  await expect.poll(() => page.evaluate(() => document.documentElement.style.getPropertyValue('--bg').toLowerCase())).toBe('#241912')
+  await expect(page.locator('html')).toHaveAttribute('data-fx', 'dust')
 })

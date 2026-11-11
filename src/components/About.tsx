@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import type { Concept } from '@/content/concepts'
 import { AREA } from '@/content/site'
+import { BRAND, themeStyle } from '@/content/themes'
 import type { Locale } from '@/i18n/config'
 import type { Dict } from '@/i18n/dict'
 import { photoSrc } from '@/lib/photo'
@@ -12,7 +13,7 @@ import { photoSrc } from '@/lib/photo'
 export function About({ locale, t, closeUps }: { locale: Locale; t: Dict; closeUps: Concept[] }) {
   const services = t.serviceList.split(' · ')
   return (
-    <section id="about" className="about" data-surface="cream" aria-labelledby="about-title">
+    <section id="about" className="about" data-surface="cream" data-scene-theme data-fx="none" style={themeStyle(BRAND)} aria-labelledby="about-title">
       <div className="about__photos" aria-hidden>
         {closeUps.map((c) => (
           <img key={c.slug} src={photoSrc(c.slug, c.cover, true)} alt="" loading="lazy" width={480} height={600} />

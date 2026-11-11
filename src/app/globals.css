@@ -8,6 +8,12 @@
   --ink-on-photo: #ffffff;
 }
 
+/* Scene colours: registered so <html> can transition between scenes (SceneObserver sets them). */
+@property --bg { syntax: '<color>'; inherits: true; initial-value: #ede7d9; }
+@property --bg2 { syntax: '<color>'; inherits: true; initial-value: #f5f1e8; }
+@property --ink { syntax: '<color>'; inherits: true; initial-value: #2f3b2c; }
+@property --accent { syntax: '<color>'; inherits: true; initial-value: #c9c2a8; }
+
 @theme inline {
   --color-cream: var(--cream);
   --color-paper: var(--paper);
@@ -22,6 +28,10 @@ html {
   overflow-x: clip;
   background: var(--moss);
   -webkit-text-size-adjust: 100%;
+  transition: --bg 1.4s ease, --bg2 1.4s ease, --ink 1.4s ease, --accent 1.4s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { transition: none; }
 }
 
 body {
@@ -179,35 +189,16 @@ html:lang(ko) .prose-ko {
   display: grid;
   place-items: center;
   padding: 88px 20px 96px;
-  background: var(--cream);
+  background: var(--bg);
+  color: var(--ink);
   overflow: hidden;
 }
 .intro__text { position: relative; z-index: 2; text-align: center; }
 .intro__logo { width: min(58vw, 260px); height: auto; margin: 0 auto; display: block; }
 .intro__tagline { margin: 18px 0 6px; font-size: clamp(40px, 9vw, 76px); line-height: 1.05; }
 .intro__line { margin: 0; font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--moss-2); }
-.intro__fan { position: absolute; inset: 0; pointer-events: none; overflow: hidden; contain: paint; }
-.intro__card {
-  position: absolute;
-  margin: 0;
-  width: clamp(110px, 22vw, 230px);
-  padding: 7px 7px 26px;
-  background: #fff;
-  box-shadow: 0 14px 40px rgb(47 59 44 / 0.22);
-}
-.intro__card img { display: block; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; }
-.intro__card figcaption { position: absolute; left: 0; right: 0; bottom: 2px; text-align: center; font-size: 18px; }
-.intro__card--0 { left: 4%; top: 9%; rotate: -8deg; }
-.intro__card--1 { right: 5%; top: 14%; rotate: 6deg; }
-.intro__card--2 { left: 50%; bottom: 3%; translate: -50% 0; rotate: -2deg; width: clamp(96px, 16vw, 180px); }
 @media (max-width: 767px) {
-  .intro__card--0 { top: 7%; left: -4%; }
-  .intro__card--1 { top: 9%; right: -5%; }
-  .intro__card--2 { display: none; }
-  .intro__text { margin-top: 18vh; }
-}
-@media (min-width: 768px) {
-  .intro__card--2 { left: 74%; bottom: 8%; }
+  .intro__text { margin-top: 4vh; }
 }
 .intro__scroll {
   position: absolute;
@@ -287,11 +278,96 @@ html:lang(ko) .prose-ko {
 .chapter__link:hover { background: rgb(255 255 255 / 0.2); }
 .credit { margin: 14px 0 0; font-size: 11px; letter-spacing: 0.06em; opacity: 0.7; }
 
+/* ---------- scenes ---------- */
+/* Fixed colour wash behind the page; it shows through the scenes once SceneObserver runs (html.js-scenes). */
+.atmo {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60vmax 60vmax at 75% 30%, color-mix(in oklab, var(--accent) 38%, transparent), transparent 70%),
+    radial-gradient(50vmax 50vmax at 15% 85%, color-mix(in oklab, var(--bg2) 70%, transparent), transparent 70%),
+    var(--bg);
+}
+.fx { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+body:has(.scenes) { background: transparent; }
+main { position: relative; z-index: 1; }
+html.js-scenes .scene,
+html.js-scenes .intro,
+html.js-scenes .about { background: transparent; }
+
+.scene {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-content: center;
+  justify-items: center;
+  gap: 22px;
+  padding: 76px 20px 64px;
+  background: var(--bg);
+  color: var(--ink);
+  overflow: clip;
+}
+.scene__ghost {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: clamp(120px, 22vw, 360px);
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--ink);
+  opacity: 0.06;
+  pointer-events: none;
+  z-index: 0;
+}
+.scene__frame {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  aspect-ratio: var(--ar);
+  /* never taller than half the source height (sharp at DPR 2), and fits the first screen on phones */
+  height: min(62svh, var(--max-h), calc(88vw / var(--ar)));
+  border-radius: 6px;
+  overflow: hidden;
+  background: color-mix(in oklab, var(--ink) 12%, transparent);
+  box-shadow: 0 40px 80px -30px rgb(0 0 0 / 0.45), 0 0 0 1px rgb(255 255 255 / 0.25) inset;
+}
+.scene__frame img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.scene__text { position: relative; z-index: 1; max-width: 440px; text-align: center; }
+.scene__num { margin: 0; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.75; }
+.scene__name { margin: 4px 0 6px; font-size: clamp(52px, 7vw, 104px); line-height: 1.05; overflow-wrap: anywhere; }
+.scene__tagline { margin: 0 0 22px; font-size: 17px; line-height: 1.5; }
+.scene__link {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  padding: 11px 22px;
+  border: 1.5px solid currentColor;
+  border-radius: 999px;
+  color: inherit;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.scene__link:hover { background: var(--ink); color: var(--bg); }
+.scene .credit { margin-top: 16px; }
+@media (min-width: 900px) {
+  .scene { grid-template-columns: 1.15fr 1fr; gap: 6vw; padding: 96px 8vw; min-height: 100svh; }
+  .scene__frame { height: min(82svh, 800px, var(--max-h), calc(46vw / var(--ar))); }
+  .scene__text { text-align: left; justify-self: start; }
+  .scene[data-side='right'] .scene__frame { order: 2; }
+  .scene[data-side='right'] .scene__text { justify-self: end; }
+}
+
 /* ---------- chapter index ---------- */
 .chapter-index { position: fixed; z-index: 30; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; }
 .chapter-index[data-visible='true'] { opacity: 1; }
-.chapter-index__bar { position: fixed; left: 0; right: 0; top: 0; height: 2px; background: rgb(255 255 255 / 0.15); }
-.chapter-index__fill { display: block; height: 100%; width: 100%; background: var(--cream); transform-origin: left; transform: scaleX(var(--progress, 0)); }
+.chapter-index__bar { position: fixed; left: 0; right: 0; top: 0; height: 2px; background: color-mix(in oklab, var(--ink) 15%, transparent); }
+.chapter-index__fill { display: block; height: 100%; width: 100%; background: var(--ink); transform-origin: left; transform: scaleX(var(--progress, 0)); }
 .chapter-index__list { display: none; list-style: none; margin: 0; padding: 0; }
 @media (min-width: 1024px) {
   .chapter-index__list {
@@ -303,12 +379,12 @@ html:lang(ko) .prose-ko {
     translate: 0 -50%;
     pointer-events: auto;
   }
-  .chapter-index__list a { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-height: 24px; color: #fff; text-decoration: none; }
-  .chapter-index__dot { width: 6px; height: 6px; border-radius: 50%; background: rgb(255 255 255 / 0.45); transition: transform 0.25s ease, background-color 0.25s ease; }
-  .chapter-index__name { font-size: 12px; opacity: 0; translate: 6px 0; transition: opacity 0.2s ease, translate 0.2s ease; white-space: nowrap; text-shadow: 0 1px 8px rgb(0 0 0 / 0.5); }
+  .chapter-index__list a { display: flex; align-items: center; justify-content: flex-end; gap: 10px; min-height: 24px; color: var(--ink); text-decoration: none; }
+  .chapter-index__dot { width: 6px; height: 6px; border-radius: 50%; background: color-mix(in oklab, var(--ink) 40%, transparent); transition: transform 0.25s ease, background-color 0.25s ease; }
+  .chapter-index__name { font-size: 12px; opacity: 0; translate: 6px 0; transition: opacity 0.2s ease, translate 0.2s ease; white-space: nowrap; }
   .chapter-index__list a:hover .chapter-index__name,
   .chapter-index__list a[data-active='true'] .chapter-index__name { opacity: 1; translate: 0 0; }
-  .chapter-index__list a[data-active='true'] .chapter-index__dot { background: #fff; transform: scale(1.6); }
+  .chapter-index__list a[data-active='true'] .chapter-index__dot { background: var(--ink); transform: scale(1.6); }
 }
 
 /* ---------- concept page ---------- */

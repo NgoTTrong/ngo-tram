@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { Chapter } from '@/components/Chapter'
+import { Scene } from '@/components/Scene'
 import { ChapterIndex } from '@/components/ChapterIndex'
 import { About } from '@/components/About'
 import { Intro } from '@/components/Intro'
@@ -9,7 +9,6 @@ import { isLocale } from '@/i18n/config'
 import { getDict } from '@/i18n/dict'
 
 const CLOSE_UPS = ['petals-and-grace', 'lotus-fairy', 'wishful-moment'].map((s) => getConcept(s)!)
-const FAN = ['la-vie-en-rose', 'the-white-lotus', 'pink-dream-21'].map((s) => getConcept(s)!)
 
 export default async function Home({ params }: PageProps<'/[locale]'>) {
   const { locale } = await params
@@ -18,11 +17,11 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
   return (
     <ScrollStage>
       <main>
-        <Intro t={t} fan={FAN} />
+        <Intro t={t} />
         <ChapterIndex concepts={concepts} label={t.gallery} />
-        <div className="chapters">
-          {concepts.map((c) => (
-            <Chapter key={c.slug} concept={c} locale={locale} total={concepts.length} t={t} />
+        <div className="scenes">
+          {concepts.map((c, i) => (
+            <Scene key={c.slug} concept={c} locale={locale} total={concepts.length} t={t} first={i === 0} />
           ))}
         </div>
         <About locale={locale} t={t} closeUps={CLOSE_UPS} />

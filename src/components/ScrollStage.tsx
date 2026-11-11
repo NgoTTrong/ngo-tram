@@ -11,8 +11,8 @@ type Libs = {
 
 /**
  * Scroll choreography for the home page. Markup is fully visible without it; this only enhances:
- * smooth scrolling (Lenis), photo parallax and title reveals (GSAP), chapter index + progress
- * (header tone lives in HeaderTone).
+ * smooth scrolling (Lenis) and the chapter progress bar (GSAP). Scene colours, particles and the
+ * active chapter live in SceneObserver / ParticleField.
  * prefers-reduced-motion: no smooth scroll, no parallax, no reveals — only index/tone tracking.
  */
 export function ScrollStage({ children }: { children: React.ReactNode }) {
@@ -42,8 +42,7 @@ function setup({ gsap, ScrollTrigger, Lenis }: Libs): () => void {
   gsap.registerPlugin(ScrollTrigger)
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const index = document.querySelector<HTMLElement>('[data-chapter-index]')
-  const chapters = gsap.utils.toArray<HTMLElement>('[data-chapter]')
-  const chaptersWrap = document.querySelector<HTMLElement>('.chapters')
+  const scenesWrap = document.querySelector<HTMLElement>('.scenes')
 
   let lenis: Lenis | undefined
   const raf = (time: number) => lenis?.raf(time * 1000)
@@ -55,51 +54,13 @@ function setup({ gsap, ScrollTrigger, Lenis }: Libs): () => void {
   }
 
   const ctx = gsap.context(() => {
-    chapters.forEach((chapter) => {
-      const slug = chapter.id
+    if (scenesWrap && index) {
       ScrollTrigger.create({
-        trigger: chapter,
-        start: 'top center',
-        end: 'bottom center',
-        onToggle: ({ isActive }) => {
-          const link = document.querySelector<HTMLElement>(`[data-index-link="${slug}"]`)
-          if (link) link.dataset.active = String(isActive)
-        },
-      })
-      if (reduced) return
-      const media = chapter.querySelector('[data-chapter-media]')
-      const content = chapter.querySelector('[data-chapter-content]')
-      if (media) {
-        gsap.fromTo(
-          media,
-          { yPercent: -6, scale: 1.12 },
-          { yPercent: 6, scale: 1.12, ease: 'none', scrollTrigger: { trigger: chapter, start: 'top bottom', end: 'bottom top', scrub: true } },
-        )
-      }
-      if (content) {
-        gsap.from(content.children, {
-          y: 36,
-          opacity: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          stagger: 0.08,
-          scrollTrigger: { trigger: chapter, start: 'top 65%', toggleActions: 'play none none reverse' },
-        })
-      }
-    })
-
-    if (chaptersWrap && index) {
-      ScrollTrigger.create({
-        trigger: chaptersWrap,
+        trigger: scenesWrap,
         start: 'top bottom',
         end: 'bottom bottom',
         onUpdate: ({ progress }) => index.style.setProperty('--progress', progress.toFixed(4)),
-        onToggle: ({ isActive }) => (index.dataset.visible = String(isActive)),
       })
-    }
-
-    if (!reduced) {
-      gsap.from('[data-intro-card]', { y: 60, rotate: 0, duration: 1.2, ease: 'power3.out', stagger: 0.12, delay: 0.1 })
     }
   })
 
