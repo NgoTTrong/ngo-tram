@@ -42,7 +42,8 @@ html:lang(ko) .prose-ko {
 }
 
 .font-script {
-  font-family: var(--font-script), cursive;
+  /* Hangul is not in Great Vibes: let it fall through to Gowun Batang instead of a system font. */
+  font-family: var(--font-script), var(--font-ko), cursive;
   font-weight: 400;
 }
 
@@ -354,3 +355,36 @@ html:lang(ko) .prose-ko {
 
 .site-header[data-tone='light'] .lang-switch { background: rgb(20 26 18 / 0.28); }
 .site-header[data-tone='dark'] .lang-switch { background: rgb(245 241 232 / 0.6); }
+
+/* ---------- about ---------- */
+.about { background: var(--cream); padding: 88px 20px 96px; display: grid; gap: 40px; align-items: center; }
+@media (min-width: 900px) { .about { grid-template-columns: 1fr 1fr; padding: 120px 6vw; gap: 6vw; } }
+.about__photos { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.about__photos img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; object-position: center 25%; border-radius: 3px; }
+.about__photos img:nth-child(2) { translate: 0 28px; }
+.about__title { margin: 0 0 12px; font-size: clamp(56px, 10vw, 96px); line-height: 1; }
+.about__lead { margin: 0 0 28px; font-size: 17px; line-height: 1.8; max-width: 52ch; }
+.about__facts { margin: 0; display: grid; gap: 18px; }
+.about__facts dt { font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--moss-2); margin-bottom: 8px; }
+.about__facts dd { margin: 0; font-size: 16px; }
+.about__chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.about__chips li { padding: 7px 14px; border: 1px solid rgb(47 59 44 / 0.3); border-radius: 999px; font-size: 14px; }
+
+/* ---------- footer ---------- */
+.footer { background: var(--moss); color: var(--cream); text-align: center; padding: 80px 20px max(120px, calc(env(safe-area-inset-bottom) + 100px)); }
+.footer__logo { width: 140px; height: auto; margin: 0 auto 28px; display: block; }
+.footer__title { margin: 12px 0 4px; font-size: clamp(52px, 9vw, 84px); line-height: 1; }
+.footer__hint { margin: 0 auto 24px; max-width: 40ch; font-size: 15px; line-height: 1.6; opacity: 0.85; }
+.footer__book { display: grid; gap: 10px; max-width: 360px; margin: 0 auto 28px; }
+@media (min-width: 640px) { .footer__book { grid-template-columns: 1fr 1fr; } }
+.footer__socials { list-style: none; margin: 0 0 28px; padding: 0; display: flex; justify-content: center; gap: 14px; }
+.footer__socials a { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgb(237 231 217 / 0.35); color: var(--cream); transition: background-color 0.2s ease; }
+.footer__socials a:hover { background: rgb(237 231 217 / 0.12); }
+.footer__credit { opacity: 0.6; }
+.footer__copy { margin: 6px 0 0; font-size: 12px; opacity: 0.5; }
+
+html:lang(ko) .about__title,
+html:lang(ko) .footer__title,
+html:lang(ko) .concept__gallery-title,
+html:lang(ko) .intro__tagline,
+html:lang(ko) .book-sheet__title { font-size: clamp(30px, 6vw, 52px); letter-spacing: -0.01em; line-height: 1.25; }

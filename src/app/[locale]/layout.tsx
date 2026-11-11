@@ -6,6 +6,7 @@ import { fontVars } from '../fonts'
 import { BookButton } from '@/components/BookButton'
 import { LangSwitch } from '@/components/LangSwitch'
 import { HeaderTone } from '@/components/HeaderTone'
+import { Footer } from '@/components/Footer'
 import '../globals.css'
 
 /** Only the generated locales/slugs exist; anything else is a 404. */
@@ -47,6 +48,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
           <LangSwitch locale={locale} label={t.switchTo} />
         </header>
         {children}
+        <Footer t={t} />
         <HeaderTone />
         <BookButton variant="float" label={t.book} title={t.bookTitle} hint={t.bookHint} closeLabel={t.close} />
       </body>
