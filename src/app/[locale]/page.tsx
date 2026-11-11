@@ -1,6 +1,12 @@
+import { notFound } from 'next/navigation'
+import { Chapter } from '@/components/Chapter'
+import { ChapterIndex } from '@/components/ChapterIndex'
+import { Intro } from '@/components/Intro'
+import { concepts, getConcept } from '@/content/concepts'
 import { isLocale } from '@/i18n/config'
 import { getDict } from '@/i18n/dict'
-import { notFound } from 'next/navigation'
+
+const FAN = ['la-vie-en-rose', 'the-white-lotus', 'pink-dream-21'].map((s) => getConcept(s)!)
 
 export default async function Home({ params }: PageProps<'/[locale]'>) {
   const { locale } = await params
@@ -8,7 +14,13 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
   const t = getDict(locale)
   return (
     <main>
-      <h1 className="font-script">{t.tagline}</h1>
+      <Intro t={t} fan={FAN} />
+      <ChapterIndex concepts={concepts} label={t.gallery} />
+      <div className="chapters">
+        {concepts.map((c, i) => (
+          <Chapter key={c.slug} concept={c} locale={locale} total={concepts.length} first={i === 0} t={t} />
+        ))}
+      </div>
     </main>
   )
 }

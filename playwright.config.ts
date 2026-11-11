@@ -7,11 +7,12 @@ export default defineConfig({
   webServer: {
     command: 'npm run build && npx next start -p 3100',
     url: 'http://localhost:3100',
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 300_000,
   },
   projects: [
-    { name: 'mobile', use: { ...devices['iPhone 13'] } },
+    // iPhone-sized viewport in Chromium: Playwright's WebKit on Windows mis-scales with OS DPI (clientWidth 326 for a 390 viewport).
+    { name: 'mobile', use: { ...devices['iPhone 13'], browserName: 'chromium' } },
     { name: 'desktop', use: { browserName: 'chromium', viewport: { width: 1440, height: 900 } } },
   ],
 })
