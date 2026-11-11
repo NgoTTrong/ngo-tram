@@ -31,10 +31,10 @@ test('chapter fills the viewport', async ({ page }) => {
   expect(Math.abs(h - vh)).toBeLessThanOrEqual(2)
 })
 
-test('only the first chapter image loads eagerly', async ({ page }) => {
+test('chapter images are lazy: the intro is the first screen', async ({ page }) => {
   await page.goto('/vi')
   const eager = await page.locator('[data-chapter] img').evaluateAll((imgs) => imgs.filter((i) => i.getAttribute('loading') !== 'lazy').length)
-  expect(eager).toBe(1)
+  expect(eager).toBe(0)
 })
 
 test('no horizontal scroll', async ({ page }) => {

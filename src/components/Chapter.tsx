@@ -5,7 +5,7 @@ import type { Dict } from '@/i18n/dict'
 import { photoSrc } from '@/lib/photo'
 import { Credit } from './Credit'
 
-type Props = { concept: Concept; locale: Locale; total: number; first: boolean; t: Dict }
+type Props = { concept: Concept; locale: Locale; total: number; t: Dict }
 
 const pad = (n: number) => String(n).padStart(2, '0')
 
@@ -13,7 +13,7 @@ const pad = (n: number) => String(n).padStart(2, '0')
  * One full-screen chapter. Phones: the cover photo full-bleed. Wide screens: cover in the middle
  * with two more photos either side (side photos are display:none on phones, so lazy ones never load there).
  */
-export function Chapter({ concept: c, locale, total, first, t }: Props) {
+export function Chapter({ concept: c, locale, total, t }: Props) {
   const sides = c.triptych.filter((i) => i !== c.cover).slice(0, 2)
   const alt = `${c.name} — Makeup Ngô Trâm`
   return (
@@ -29,7 +29,6 @@ export function Chapter({ concept: c, locale, total, first, t }: Props) {
             fill
             sizes="(min-width: 768px) 40vw, 100vw"
             className="chapter__img"
-            {...(first ? { loading: 'eager' as const, fetchPriority: 'high' as const } : {})}
           />
         </div>
         <div className="chapter__frame chapter__frame--side">

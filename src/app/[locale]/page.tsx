@@ -21,8 +21,8 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
         <Intro t={t} fan={FAN} />
         <ChapterIndex concepts={concepts} label={t.gallery} />
         <div className="chapters">
-          {concepts.map((c, i) => (
-            <Chapter key={c.slug} concept={c} locale={locale} total={concepts.length} first={i === 0} t={t} />
+          {concepts.map((c) => (
+            <Chapter key={c.slug} concept={c} locale={locale} total={concepts.length} t={t} />
           ))}
         </div>
         <About locale={locale} t={t} closeUps={CLOSE_UPS} />

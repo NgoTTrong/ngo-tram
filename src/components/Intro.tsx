@@ -10,13 +10,13 @@ export function Intro({ t, fan }: { t: Dict; fan: Concept[] }) {
       <div className="intro__fan" aria-hidden>
         {fan.map((c, i) => (
           <figure key={c.slug} className={`intro__card intro__card--${i}`} data-intro-card>
-            <img src={photoSrc(c.slug, c.cover, true)} alt="" width={480} height={600} />
+            <img src={photoSrc(c.slug, c.cover, true)} alt="" width={480} height={600} fetchPriority={i === 0 ? 'high' : undefined} />
             <figcaption className="font-script">{c.name}</figcaption>
           </figure>
         ))}
       </div>
       <div className="intro__text" data-intro-text>
-        <img src="/brand/logo-moss.png" alt="Makeup Ngô Trâm" className="intro__logo" width={692} height={563} />
+        <img src="/brand/logo-moss.webp" alt="Makeup Ngô Trâm" className="intro__logo" width={692} height={563} fetchPriority="high" />
         <h1 className="intro__tagline font-script">{t.tagline}</h1>
         <p className="intro__line">{t.intro}</p>
       </div>

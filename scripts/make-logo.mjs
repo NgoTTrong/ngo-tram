@@ -37,3 +37,8 @@ for (const name of Object.keys(variants)) {
     .png()
     .toFile(path.join(outDir, `mark-${name}.png`))
 }
+
+// WebP copies for the page (PNG kept for tools that need it).
+for (const file of ['logo-moss', 'logo-white', 'mark-moss', 'mark-white']) {
+  await sharp(path.join(outDir, `${file}.png`)).webp({ quality: 90, alphaQuality: 90 }).toFile(path.join(outDir, `${file}.webp`))
+}

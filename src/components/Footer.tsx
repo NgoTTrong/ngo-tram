@@ -25,7 +25,7 @@ const ICONS: Record<keyof typeof SOCIALS, { label: string; path: string }> = {
 export function Footer({ t }: { t: Dict }) {
   return (
     <footer id="contact" className="footer" aria-labelledby="contact-title">
-      <img src="/brand/logo-white.png" alt="Makeup Ngô Trâm" className="footer__logo" width={692} height={563} loading="lazy" />
+      <img src="/brand/logo-white.webp" alt="Makeup Ngô Trâm" className="footer__logo" width={692} height={563} loading="lazy" />
       <h2 id="contact-title" className="footer__title font-script">
         {t.contact}
       </h2>
