@@ -25,8 +25,10 @@ export function BookButton({ variant, label, title, hint, closeLabel }: Props) {
         className={`book-btn book-btn--${variant}`}
         data-testid={`book-${variant}`}
         onClick={(e) => {
+          // Old in-app browsers without <dialog> keep the plain #contact link.
+          if (typeof dialog.current?.showModal !== 'function') return
           e.preventDefault()
-          dialog.current?.showModal()
+          dialog.current.showModal()
         }}
       >
         {label}
