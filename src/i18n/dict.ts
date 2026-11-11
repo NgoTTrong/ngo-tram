@@ -1,0 +1,64 @@
+import type { Locale } from './config'
+
+const vi = {
+  siteTitle: 'Makeup Ngô Trâm — Makeup & chụp snap tại Nha Trang',
+  siteDescription: '18 bộ concept makeup thực tế: áo dài, sinh nhật, couple, biển Nha Trang. Đặt lịch qua Zalo hoặc Facebook.',
+  tagline: 'Đẹp theo cách của riêng bạn',
+  intro: 'Makeup & chụp snap · Nội thành Nha Trang',
+  book: 'Đặt lịch',
+  bookTitle: 'Nhắn Trâm để đặt lịch',
+  bookHint: 'Nhắn qua Zalo hoặc Facebook, Trâm sẽ trả lời sớm nhất có thể.',
+  close: 'Đóng',
+  chapter: 'Chương',
+  scroll: 'Cuộn để xem',
+  viewConcept: 'Xem bộ ảnh',
+  likeThisConcept: 'Thích concept này? Nhắn Trâm',
+  about: 'Về Trâm',
+  aboutText: 'Trâm nhận makeup cho tiệc, kỷ yếu, sự kiện và các concept beauty, kèm gói chụp snap cùng studio đối tác. Mỗi gương mặt là một câu chuyện riêng — Trâm lắng nghe và trang điểm để bạn thấy mình đẹp nhất theo cách tự nhiên.',
+  services: 'Dịch vụ',
+  serviceList: 'Makeup + chụp snap cùng studio đối tác · Tiệc · Kỷ yếu · Sự kiện · Concept beauty',
+  area: 'Khu vực',
+  contact: 'Liên hệ',
+  back: 'Về trang chủ',
+  prev: 'Concept trước',
+  next: 'Concept tiếp',
+  gallery: 'Bộ ảnh',
+  notFound: 'Không tìm thấy trang này.',
+  switchTo: '한국어',
+}
+
+export type Dict = typeof vi
+
+const ko: Dict = {
+  // KO-DRAFT — needs native review
+  siteTitle: '응오짬 메이크업 — 나트랑 메이크업 & 스냅 촬영',
+  siteDescription: '아오자이, 생일, 커플, 나트랑 바다 등 18가지 실제 메이크업 콘셉트. Zalo 또는 Facebook으로 예약하세요.',
+  tagline: '당신만의 아름다움을 담아요',
+  intro: '메이크업 & 스냅 촬영 · 나트랑 시내',
+  book: '예약하기',
+  bookTitle: '짬에게 메시지로 예약하기',
+  bookHint: 'Zalo 또는 Facebook 메시지로 문의해 주세요. 한국어 메시지도 괜찮아요.',
+  close: '닫기',
+  chapter: '챕터',
+  scroll: '스크롤해서 보기',
+  viewConcept: '화보 보기',
+  likeThisConcept: '이 콘셉트가 마음에 드세요? 메시지 보내기',
+  about: '짬 소개',
+  aboutText: '파티, 졸업 사진, 행사, 뷰티 콘셉트 메이크업을 하며, 파트너 스튜디오와 함께하는 스냅 촬영 패키지도 준비되어 있어요. 한 사람 한 사람의 이야기를 듣고, 가장 자연스럽게 아름다운 모습을 찾아 드립니다.',
+  services: '서비스',
+  serviceList: '메이크업 + 파트너 스튜디오 스냅 촬영 · 파티 · 졸업 사진 · 행사 · 뷰티 콘셉트',
+  area: '지역',
+  contact: '문의',
+  back: '홈으로',
+  prev: '이전 콘셉트',
+  next: '다음 콘셉트',
+  gallery: '화보',
+  notFound: '페이지를 찾을 수 없습니다.',
+  switchTo: 'Tiếng Việt',
+}
+
+const dicts: Record<Locale, Dict> = { vi, ko }
+
+export function getDict(locale: Locale): Dict {
+  return dicts[locale]
+}

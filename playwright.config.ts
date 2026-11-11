@@ -6,7 +6,7 @@ export default defineConfig({
   use: { baseURL: 'http://localhost:3100' },
   webServer: {
     command: 'npm run build && npx next start -p 3100',
-    url: 'http://localhost:3100/vi',
+    url: 'http://localhost:3100',
     reuseExistingServer: !process.env.CI,
     timeout: 300_000,
   },

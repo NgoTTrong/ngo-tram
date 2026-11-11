@@ -1,26 +1,164 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cream: #ede7d9;
+  --paper: #f5f1e8;
+  --moss: #2f3b2c;
+  --moss-2: #5b6650;
+  --ink-on-photo: #ffffff;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-cream: var(--cream);
+  --color-paper: var(--paper);
+  --color-moss: var(--moss);
+  --color-moss-2: var(--moss-2);
+  --font-script: var(--font-script);
+  --font-body: var(--font-body);
+  --font-ko: var(--font-ko);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--moss);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--paper);
+  color: var(--moss);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
+
+html:lang(ko) body {
+  font-family: var(--font-body), var(--font-ko), 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+}
+:lang(ko) .ko-serif,
+html:lang(ko) .prose-ko {
+  font-family: var(--font-ko), serif;
+}
+
+.font-script {
+  font-family: var(--font-script), cursive;
+  font-weight: 400;
+}
+
+:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+/* ---------- header ---------- */
+.site-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(14px, env(safe-area-inset-top)) 18px 14px;
+  pointer-events: none;
+  mix-blend-mode: difference;
+  color: #fff;
+}
+.site-header > * { pointer-events: auto; }
+.site-header__mark img { display: block; height: 30px; width: auto; }
+.lang-switch {
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  padding: 8px 12px;
+  border: 1px solid rgb(255 255 255 / 0.6);
+  border-radius: 999px;
+}
+
+/* ---------- booking ---------- */
+.book-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border-radius: 999px;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+.book-btn:active { transform: scale(0.97); }
+.book-btn--float {
+  position: fixed;
+  z-index: 45;
+  right: 16px;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  padding: 14px 22px;
+  background: var(--cream);
+  color: var(--moss);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.25);
+}
+.book-btn--inline {
+  padding: 14px 26px;
+  background: var(--moss);
+  color: var(--cream);
+}
+
+.book-sheet {
+  margin: auto auto 0;
+  width: min(100%, 440px);
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 22px 22px 0 0;
+  background: var(--paper);
+  color: var(--moss);
+}
+@media (min-width: 640px) {
+  .book-sheet { margin: auto; border-radius: 22px; }
+}
+.book-sheet::backdrop { background: rgb(20 26 18 / 0.55); backdrop-filter: blur(4px); }
+.book-sheet[open] { animation: sheet-in 0.28s ease-out; }
+@keyframes sheet-in { from { transform: translateY(24px); opacity: 0; } }
+.book-sheet__inner { padding: 26px 22px max(22px, env(safe-area-inset-bottom)); }
+.book-sheet__title { margin: 0; font-family: var(--font-script), cursive; font-size: 34px; line-height: 1.1; }
+.book-sheet__hint { margin: 8px 0 18px; font-size: 14px; line-height: 1.6; color: var(--moss-2); }
+.book-sheet__links { display: grid; gap: 10px; }
+.channel {
+  display: block;
+  padding: 15px 18px;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: 600;
+  text-decoration: none;
+  color: #fff;
+}
+.channel--zalo { background: #0068ff; }
+.channel--facebook { background: #1877f2; }
+.book-sheet__close {
+  margin-top: 12px;
+  width: 100%;
+  padding: 12px;
+  border: 0;
+  background: transparent;
+  color: var(--moss-2);
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---------- 404 ---------- */
+.not-found {
+  min-height: 100svh;
+  display: grid;
+  place-content: center;
+  gap: 10px;
+  text-align: center;
+  padding: 24px;
+  background: var(--cream);
+}
+.not-found__title { font-size: 96px; margin: 0; line-height: 1; }
+.not-found a { color: var(--moss); }
