@@ -17,7 +17,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
   return (
     <ScrollStage>
       <main>
-        <Intro t={t} />
+        <Intro t={t} concepts={concepts} />
         <ChapterIndex concepts={concepts} label={t.gallery} />
         <div className="scenes">
           {concepts.map((c, i) => (

@@ -76,6 +76,25 @@ test('particle count is capped on phones', async ({ browser }) => {
   await page.close()
 })
 
+test('intro shows two moving strips with every collage', async ({ page }) => {
+  await page.goto('/vi')
+  const strips = page.locator('.intro [data-strip]')
+  await expect(strips).toHaveCount(2)
+  const slugs = await page.locator('.intro [data-strip] a').evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute('href')))])
+  expect(slugs.sort()).toEqual(concepts.map((c) => `#${c.slug}`).sort())
+  const srcs = await page.locator('.intro [data-strip] img').evaluateAll((imgs) => imgs.map((i) => i.getAttribute('src')))
+  expect(srcs.every((s) => /^\/collages\/.+-360\.webp$/.test(s ?? ''))).toBe(true)
+  expect(await strips.first().locator('[data-strip-track]').evaluate((e) => getComputedStyle(e).animationName)).not.toBe('none')
+})
+
+test.describe('reduced motion intro', () => {
+  test.use({ reducedMotion: 'reduce' })
+  test('intro strips stand still', async ({ page }) => {
+    await page.goto('/vi')
+    expect(await page.locator('.intro [data-strip-track]').first().evaluate((e) => getComputedStyle(e).animationPlayState)).toBe('paused')
+  })
+})
+
 test('no horizontal scroll', async ({ page }) => {
   await page.goto('/vi')
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)

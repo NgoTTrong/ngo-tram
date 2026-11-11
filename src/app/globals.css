@@ -197,8 +197,37 @@ html:lang(ko) .prose-ko {
 .intro__logo { width: min(58vw, 260px); height: auto; margin: 0 auto; display: block; }
 .intro__tagline { margin: 18px 0 6px; font-size: clamp(40px, 9vw, 76px); line-height: 1.05; }
 .intro__line { margin: 0; font-size: 13px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--moss-2); }
+/* two drifting strips of every collage around the logo */
+.intro { grid-template-rows: auto 1fr auto; place-items: stretch; padding: 72px 0 84px; gap: 4svh; }
+.intro__text { align-self: center; padding: 0 20px; }
+.intro__strip {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.intro__strip:first-child { rotate: -2deg; }
+.intro__strip:nth-of-type(2) { rotate: 1.5deg; }
+.intro__track { display: flex; gap: 14px; width: max-content; padding: 10px 0; animation: strip 70s linear infinite; }
+.intro__strip:hover .intro__track { animation-play-state: paused; }
+.intro__card {
+  display: block;
+  flex: none;
+  height: clamp(110px, 20svh, 180px);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 14px 30px -14px rgb(47 59 44 / 0.45);
+  transition: transform 0.35s ease;
+}
+.intro__card:hover { transform: translateY(-6px) scale(1.04); }
+.intro__card img { display: block; height: 100%; width: auto; }
+@keyframes strip { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .intro__track { animation-play-state: paused; }
+}
 @media (max-width: 767px) {
-  .intro__text { margin-top: 4vh; }
+  .intro__card { height: clamp(96px, 15svh, 140px); }
+  .intro__logo { width: min(46vw, 200px); }
+  .intro__line { font-size: 11px; letter-spacing: 0.14em; }
 }
 .intro__scroll {
   position: absolute;

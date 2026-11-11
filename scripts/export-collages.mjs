@@ -1,5 +1,5 @@
 // Exports each whole collage for the home scenes: public/collages/<slug>.webp (≤1600px tall, never enlarged)
-// and <slug>-800.webp, and records their pixel sizes in src/content/collages.json.
+// <slug>-800.webp and <slug>-360.webp (intro strips), and records their pixel sizes in src/content/collages.json.
 // A Private Escape keeps only its bottom two rows: tile 1 shows another studio's watermark (crop, never retouch).
 // Run: node --experimental-strip-types scripts/export-collages.mjs
 import sharp from 'sharp'
@@ -24,6 +24,7 @@ for (const [file, slug] of Object.entries(FILE_TO_SLUG).sort((a, b) => a[1].loca
   const buf = await base.toBuffer()
   const lg = await sharp(buf).resize({ height: 1600, withoutEnlargement: true }).webp({ quality: 84 }).toFile(path.join(outDir, `${slug}.webp`))
   const md = await sharp(buf).resize({ height: 800, withoutEnlargement: true }).webp({ quality: 80 }).toFile(path.join(outDir, `${slug}-800.webp`))
+  await sharp(buf).resize({ height: 360, withoutEnlargement: true }).webp({ quality: 74 }).toFile(path.join(outDir, `${slug}-360.webp`))
   sizes[slug] = { width: lg.width, height: lg.height, mdWidth: md.width, mdHeight: md.height }
   console.log(slug, sizes[slug])
 }

@@ -4,9 +4,11 @@ export type CollageSize = { width: number; height: number; mdWidth: number; mdHe
 
 const SIZES: Record<string, CollageSize> = collages
 
-/** Public URL of a whole collage: `lg` ≤1600px tall, `md` ≤800px tall. */
-export function collageSrc(slug: string, size: 'lg' | 'md'): string {
-  return `/collages/${slug}${size === 'md' ? '-800' : ''}.webp`
+const SUFFIX = { lg: '', md: '-800', sm: '-360' } as const
+
+/** Public URL of a whole collage: `lg` ≤1600px tall, `md` ≤800px, `sm` ≤360px (intro strips). */
+export function collageSrc(slug: string, size: keyof typeof SUFFIX): string {
+  return `/collages/${slug}${SUFFIX[size]}.webp`
 }
 
 /** Pixel size of the collage files (`width`/`height` are the `lg` file). Throws on an unknown slug. */

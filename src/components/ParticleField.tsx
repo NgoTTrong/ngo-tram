@@ -101,7 +101,7 @@ function paint(ctx: CanvasRenderingContext2D, p: P, accent: string, d: number) {
     }
     case 'sparkle':
       ctx.globalAlpha = p.a * (0.35 + 0.65 * Math.abs(Math.sin(p.t * 3)))
-      ctx.fillStyle = '#fff'
+      ctx.fillStyle = accent
       ctx.moveTo(0, -r * 2)
       ctx.quadraticCurveTo(0, 0, r * 2, 0)
       ctx.quadraticCurveTo(0, 0, 0, r * 2)

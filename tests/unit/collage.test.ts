@@ -5,7 +5,7 @@ import { collageSrc, getCollage } from '@/lib/collage'
 
 test('every concept has both collage files and recorded sizes', () => {
   for (const c of concepts) {
-    for (const size of ['lg', 'md'] as const) expect(existsSync(`public${collageSrc(c.slug, size)}`)).toBe(true)
+    for (const size of ['lg', 'md', 'sm'] as const) expect(existsSync(`public${collageSrc(c.slug, size)}`)).toBe(true)
     const { width, height } = getCollage(c.slug)
     expect(height).toBeLessThanOrEqual(1600)
     expect(width).toBeGreaterThan(0)
@@ -25,6 +25,7 @@ test('a private escape shows only the bottom two rows (3 cols × 2 rows of 4:5 t
 test('md files are the -800 variant', () => {
   expect(collageSrc('ocean-kissed', 'md')).toBe('/collages/ocean-kissed-800.webp')
   expect(collageSrc('ocean-kissed', 'lg')).toBe('/collages/ocean-kissed.webp')
+  expect(collageSrc('ocean-kissed', 'sm')).toBe('/collages/ocean-kissed-360.webp')
 })
 
 test('unknown slug throws', () => expect(() => getCollage('nope')).toThrow())
