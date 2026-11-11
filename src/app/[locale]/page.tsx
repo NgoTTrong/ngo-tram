@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { Chapter } from '@/components/Chapter'
 import { ChapterIndex } from '@/components/ChapterIndex'
 import { Intro } from '@/components/Intro'
+import { ScrollStage } from '@/components/ScrollStage'
 import { concepts, getConcept } from '@/content/concepts'
 import { isLocale } from '@/i18n/config'
 import { getDict } from '@/i18n/dict'
@@ -13,14 +14,16 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
   if (!isLocale(locale)) notFound()
   const t = getDict(locale)
   return (
-    <main>
-      <Intro t={t} fan={FAN} />
-      <ChapterIndex concepts={concepts} label={t.gallery} />
-      <div className="chapters">
-        {concepts.map((c, i) => (
-          <Chapter key={c.slug} concept={c} locale={locale} total={concepts.length} first={i === 0} t={t} />
-        ))}
-      </div>
-    </main>
+    <ScrollStage>
+      <main>
+        <Intro t={t} fan={FAN} />
+        <ChapterIndex concepts={concepts} label={t.gallery} />
+        <div className="chapters">
+          {concepts.map((c, i) => (
+            <Chapter key={c.slug} concept={c} locale={locale} total={concepts.length} first={i === 0} t={t} />
+          ))}
+        </div>
+      </main>
+    </ScrollStage>
   )
 }

@@ -33,10 +33,12 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   return (
     <html lang={locale} className={fontVars}>
       <body>
-        <header className="site-header">
+        <header className="site-header" data-tone="dark">
           <a href={`/${locale}`} className="site-header__mark" aria-label="Makeup Ngô Trâm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/brand/mark-white.png" alt="" width={56} height={30} />
+            <img src="/brand/mark-moss.png" alt="" width={56} height={30} className="mark mark--dark" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/brand/mark-white.png" alt="" width={56} height={30} className="mark mark--light" />
           </a>
           <LangSwitch locale={locale} label={t.switchTo} />
         </header>

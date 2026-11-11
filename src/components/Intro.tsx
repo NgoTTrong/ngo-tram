@@ -6,7 +6,7 @@ import { photoSrc } from '@/lib/photo'
 /** Opening screen on cream: logo, tagline, a fan of three small portraits, scroll hint. */
 export function Intro({ t, fan }: { t: Dict; fan: Concept[] }) {
   return (
-    <section className="intro" aria-label="Makeup Ngô Trâm" data-intro>
+    <section className="intro" aria-label="Makeup Ngô Trâm" data-intro data-surface="cream">
       <div className="intro__fan" aria-hidden>
         {fan.map((c, i) => (
           <figure key={c.slug} className={`intro__card intro__card--${i}`} data-intro-card>
