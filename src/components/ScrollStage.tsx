@@ -23,11 +23,14 @@ export function ScrollStage({ children }: { children: React.ReactNode }) {
     let cancelled = false
     const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 200))
     const cancelIdle = window.cancelIdleCallback ?? window.clearTimeout
-    const handle = idle(async () => {
-      const [g, st, l] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger'), import('lenis')])
-      if (cancelled) return
-      cleanup = setup({ gsap: g.default, ScrollTrigger: st.ScrollTrigger, Lenis: l.default })
-    }, { timeout: 1500 })
+    const handle = idle(
+      async () => {
+        const [g, st, l] = await Promise.all([import('gsap'), import('gsap/ScrollTrigger'), import('lenis')])
+        if (cancelled) return
+        cleanup = setup({ gsap: g.default, ScrollTrigger: st.ScrollTrigger, Lenis: l.default })
+      },
+      { timeout: 1500 },
+    )
     return () => {
       cancelled = true
       cancelIdle(handle)
@@ -63,16 +66,25 @@ function setup({ gsap, ScrollTrigger, Lenis }: Libs): () => void {
     const ghost = scene.querySelector('.scene__ghost')
     const rest = [...(scene.querySelector('[data-scene-text]')?.children ?? [])].filter((c) => c !== name)
     if (!clip || !img || !name) return
-    gsap
-      .timeline({ scrollTrigger: { trigger: scene, start: 'top 70%', toggleActions: 'play none none reverse' } })
-      .from(clip, { clipPath: 'inset(18% 14% 18% 14% round 200px)', duration: 1.3, ease: 'expo.out' })
-      .from(img, { scale: 1.25, filter: 'blur(14px)', duration: 1.5, ease: 'expo.out' }, 0)
-      .fromTo(name, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'power2.inOut' }, 0.25)
-      .from(rest, { y: 26, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08 }, 0.35)
+    // Already on screen (back link to #slug, restored scroll): don't snap it back to blurred and replay.
+    const seen = scene.getBoundingClientRect().top < innerHeight * 0.7
+    if (!seen)
+      gsap
+        .timeline({ scrollTrigger: { trigger: scene, start: 'top 70%', toggleActions: 'play none none reverse' } })
+        .from(clip, { clipPath: 'inset(18% 14% 18% 14% round 200px)', duration: 1.3, ease: 'expo.out' })
+        .from(img, { scale: 1.25, filter: 'blur(14px)', duration: 1.5, ease: 'expo.out' }, 0)
+        .fromTo(name, { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 1.4, ease: 'power2.inOut' }, 0.25)
+        .from(rest, { y: 26, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08 }, 0.35)
     const pass = { trigger: scene, start: 'top bottom', end: 'bottom top', scrub: true }
     gsap.fromTo(clip, { yPercent: 4 }, { yPercent: -4, ease: 'none', scrollTrigger: pass })
     if (ghost) gsap.fromTo(ghost, { xPercent: 12 }, { xPercent: -12, ease: 'none', scrollTrigger: pass })
-    gsap.to(clip, { opacity: 0.25, scale: 0.94, filter: 'blur(6px)', ease: 'none', scrollTrigger: { trigger: scene, start: 'bottom 75%', end: 'bottom 15%', scrub: true } })
+    gsap.to(clip, {
+      opacity: 0.25,
+      scale: 0.94,
+      filter: 'blur(6px)',
+      ease: 'none',
+      scrollTrigger: { trigger: scene, start: 'bottom 75%', end: 'bottom 15%', scrub: true },
+    })
   }
 
   const ctx = gsap.context(() => {

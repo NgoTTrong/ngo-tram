@@ -247,13 +247,13 @@ html:lang(ko) .prose-ko {
 @keyframes drip { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
 /* ---------- shared ---------- */
-.credit { margin: 14px 0 0; font-size: 11px; letter-spacing: 0.06em; opacity: 0.7; }
+.credit { margin: 14px 0 0; font-size: 11px; letter-spacing: 0.06em; }
 
 /* ---------- scenes ---------- */
 /* Each scene paints itself: a band that flows from the previous scene's colour (--prev-bg) into its own,
    plus a soft glow in its accent. Works without JS and keeps contrast checkable. */
 /* Layers: section backgrounds (no stacking context) < particles (.fx, z 1) < photos and text (z 2). */
-.fx { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 1; pointer-events: none; }
+.fx { position: fixed; top: 0; left: 0; width: 100vw; z-index: 1; pointer-events: none; }
 .scene__frame,
 .scene__text,
 .concept__hero-text,
@@ -330,7 +330,7 @@ main > * { position: relative; }
 }
 .scene__frame[data-hover] .scene__clip::after { opacity: 1; }
 .scene__text { max-width: 440px; text-align: center; }
-.scene__num { margin: 0; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; opacity: 0.75; }
+.scene__num { margin: 0; font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase; }
 .scene__name { margin: 4px 0 6px; font-size: clamp(52px, 7vw, 104px); line-height: 1.05; overflow-wrap: anywhere; }
 .scene__tagline { margin: 0 0 22px; font-size: 17px; line-height: 1.5; }
 .scene__link {
@@ -357,8 +357,8 @@ main > * { position: relative; }
 }
 
 /* ---------- chapter index ---------- */
-.chapter-index { position: fixed; z-index: 30; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; }
-.chapter-index[data-visible='true'] { opacity: 1; }
+.chapter-index { position: fixed; z-index: 30; pointer-events: none; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s linear 0.3s; }
+.chapter-index[data-visible='true'] { opacity: 1; visibility: visible; transition-delay: 0s; }
 .chapter-index__bar { position: fixed; left: 0; right: 0; top: 0; height: 2px; background: color-mix(in oklab, var(--ink) 15%, transparent); }
 .chapter-index__fill { display: block; height: 100%; width: 100%; background: var(--ink); transform-origin: left; transform: scaleX(var(--progress, 0)); }
 .chapter-index__list { display: none; list-style: none; margin: 0; padding: 0; }
@@ -403,7 +403,6 @@ main > * { position: relative; }
 .concept__story p { margin: 0 0 1em; }
 .concept__cta { margin: 28px 0 8px; }
 .concept .book-btn--inline { background: var(--ink); color: var(--bg); }
-.concept__credit { opacity: 0.75; }
 .concept__gallery-title { text-align: center; font-size: clamp(44px, 8vw, 72px); margin: 0 0 22px; }
 
 /* masonry of original tiles, each at most its source width */

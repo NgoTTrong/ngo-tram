@@ -128,10 +128,18 @@ export function ParticleField() {
     let W = 0
     let H = 0
     let d = 1
+    // Backing store = width × tallest viewport seen, so a mobile toolbar showing/hiding neither
+    // stretches the particles nor reallocates the canvas on every scroll direction change.
     const resize = () => {
-      d = Math.min(devicePixelRatio || 1, 2)
-      W = cv.width = Math.round(innerWidth * d)
-      H = cv.height = Math.round(innerHeight * d)
+      const nd = Math.min(devicePixelRatio || 1, 2)
+      const nw = Math.round(innerWidth * nd)
+      const nh = Math.round(innerHeight * nd)
+      if (nd === d && nw === W && nh <= H) return
+      const tallest = nd === d && nw === W ? Math.max(H, nh) : nh
+      d = nd
+      W = cv.width = nw
+      H = cv.height = tallest
+      cv.style.height = `${H / d}px`
     }
     resize()
     let mode: Fx = 'none'

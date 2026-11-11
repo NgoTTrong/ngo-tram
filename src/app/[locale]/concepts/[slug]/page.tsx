@@ -48,6 +48,8 @@ export default async function ConceptPage({ params }: PageProps<'/[locale]/conce
 
   return (
     <main className="concept" data-scene-theme data-fx={theme.fx} style={style}>
+      {/* header/float button read the root colours; set them for this page before any JS runs */}
+      <style>{`:root{--bg:${theme.bg};--bg2:${theme.bg2};--ink:${theme.ink};--accent:${theme.accent}}`}</style>
       <section className="concept__hero">
         <figure className="scene__frame">
           <div className="scene__clip">
