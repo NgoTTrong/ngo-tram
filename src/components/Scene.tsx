@@ -19,7 +19,11 @@ export function Scene({ concept: c, locale, t, first, total }: { concept: Concep
   const size = getCollage(c.slug)
   const ar = size.width / size.height
   const desktopWidth = Math.round(Math.min(800, size.height / 2) * ar)
-  const style = { ...themeStyle(theme), '--ar': ar.toFixed(4), '--max-h': `${size.height / 2}px` } as CSSProperties
+  const style = {
+    ...themeStyle(theme),
+    '--ar': ar.toFixed(4),
+    '--max-h': `${size.height / 2}px`,
+  } as CSSProperties
   return (
     <section
       id={c.slug}
@@ -36,19 +40,21 @@ export function Scene({ concept: c, locale, t, first, total }: { concept: Concep
         {c.name}
       </div>
       <figure className="scene__frame">
-        <img
-          data-collage
-          data-h={size.height}
-          src={collageSrc(c.slug, 'md')}
-          srcSet={`${collageSrc(c.slug, 'md')} ${size.mdWidth}w, ${collageSrc(c.slug, 'lg')} ${size.width}w`}
-          sizes={`(min-width: 900px) ${desktopWidth}px, 88vw`}
-          width={size.width}
-          height={size.height}
-          alt={`${c.name} — Makeup Ngô Trâm`}
-          loading={first ? 'eager' : 'lazy'}
-          fetchPriority={first ? 'high' : undefined}
-          decoding="async"
-        />
+        <div className="scene__clip">
+          <img
+            data-collage
+            data-h={size.height}
+            src={collageSrc(c.slug, 'md')}
+            srcSet={`${collageSrc(c.slug, 'md')} ${size.mdWidth}w, ${collageSrc(c.slug, 'lg')} ${size.width}w`}
+            sizes={`(min-width: 900px) ${desktopWidth}px, 88vw`}
+            width={size.width}
+            height={size.height}
+            alt={`${c.name} — Makeup Ngô Trâm`}
+            loading={first ? 'eager' : 'lazy'}
+            fetchPriority={first ? 'high' : undefined}
+            decoding="async"
+          />
+        </div>
       </figure>
       <div className="scene__text" data-scene-text>
         <p className="scene__num">
