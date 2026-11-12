@@ -15,7 +15,7 @@ export const THEMES: Record<string, Theme> = {
   'la-vie-en-rose': { bg: '#F2D3CF', bg2: '#FBEDEA', ink: '#5A2F33', accent: '#EE7F84', fx: 'petals' },
   'ocean-kissed': { bg: '#D8CCD6', bg2: '#EEE6EC', ink: '#3A3448', accent: '#9FB7C9', fx: 'bubbles' },
   'velvet-silence': { bg: '#241912', bg2: '#4A3226', ink: '#EFE0D3', accent: '#8A6450', fx: 'dust' },
-  'pink-dream-21': { bg: '#F4C9D6', bg2: '#FBE6EE', ink: '#6B2C44', accent: '#E58FAE', fx: 'sparkle' },
+  'pink-dream-21': { bg: '#F4C9D6', bg2: '#FBE6EE', ink: '#5C2238', accent: '#E58FAE', fx: 'sparkle' },
   'a-love-anchored': { bg: '#1F2A3A', bg2: '#33435A', ink: '#F3EEE8', accent: '#C9B48A', fx: 'sparkle' },
   'ethereal-shore': { bg: '#17151A', bg2: '#3A2E2C', ink: '#F0DFC8', accent: '#C9986E', fx: 'dust' },
   'lotus-fairy': { bg: '#F1D9CB', bg2: '#FAEDE5', ink: '#5B3326', accent: '#E38FA0', fx: 'petals' },

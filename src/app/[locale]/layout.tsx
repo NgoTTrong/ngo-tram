@@ -1,3 +1,4 @@
+import { CHANNELS } from '@/content/site'
 import type { Metadata, Viewport } from 'next'
 import { notFound } from 'next/navigation'
 import { isLocale, locales, OG_LOCALES } from '@/i18n/config'
@@ -48,9 +49,9 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
           <LangSwitch locale={locale} label={t.language} />
         </header>
         {children}
-        <Footer t={t} />
+        <Footer t={t} locale={locale} />
         <SceneObserver />
-        <BookButton variant="float" label={t.book} title={t.bookTitle} hint={t.bookHint} closeLabel={t.close} />
+        <BookButton variant="float" label={t.book} title={t.bookTitle} hint={t.bookHint} closeLabel={t.close} channels={CHANNELS[locale]} />
       </body>
     </html>
   )

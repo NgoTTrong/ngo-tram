@@ -20,7 +20,7 @@ for (const path of ['/vi', '/vi/concepts/lotus-fairy']) {
 
 test('korean footer explains how to book', async ({ page }) => {
   await page.goto('/ko')
-  await expect(page.locator('#contact')).toContainText('Zalo 또는 Facebook')
+  await expect(page.locator('#contact')).toContainText('카카오톡')
 })
 
 test('home has an about section with services and area', async ({ page }) => {
@@ -93,4 +93,24 @@ test('floating book button steps aside while the finale is on screen', async ({ 
   await expect(float).toBeVisible()
   await page.locator('#contact [data-step]').first().scrollIntoViewIfNeeded()
   await expect(float).toBeHidden()
+})
+
+const KAKAO = 'https://qr.kakao.com/talk/Rhu6IUjVawpB_BRoYNdn587ESA8-'
+
+test('Korean pages offer KakaoTalk first, with the ID to search by', async ({ page }) => {
+  await page.goto('/ko')
+  const channels = page.locator('#contact .finale__channels a')
+  await expect(channels.first()).toHaveAttribute('href', KAKAO)
+  await expect(channels.first()).toContainText('KakaoTalk')
+  await expect(page.locator('#contact')).toContainText('ngohuynhtram')
+  await page.getByTestId('book-float').click()
+  await expect(page.getByRole('dialog').getByRole('link').first()).toHaveAttribute('href', KAKAO)
+})
+
+test('Vietnamese and Russian pages keep Zalo and Facebook only', async ({ page }) => {
+  for (const path of ['/vi', '/ru']) {
+    await page.goto(path)
+    await expect(page.locator(`a[href="${KAKAO}"]`)).toHaveCount(0)
+    await expect(page.locator('#contact .finale__channels a')).toHaveCount(2)
+  }
 })

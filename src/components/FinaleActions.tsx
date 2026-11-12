@@ -1,11 +1,13 @@
 'use client'
 
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
-import { BOOKING } from '@/content/site'
+import { CHANNEL_LABEL, CHANNEL_URL, KAKAO, type Channel } from '@/content/site'
 
 const BLANK = '___'
-const ICON = {
-  zalo: 'M12 3C6.5 3 2 6.8 2 11.5c0 2.6 1.4 4.9 3.6 6.5L5 21l3.6-1.8c1.1.3 2.2.5 3.4.5 5.5 0 10-3.8 10-8.5S17.5 3 12 3Z',
+const BUBBLE = 'M12 3C6.5 3 2 6.8 2 11.5c0 2.6 1.4 4.9 3.6 6.5L5 21l3.6-1.8c1.1.3 2.2.5 3.4.5 5.5 0 10-3.8 10-8.5S17.5 3 12 3Z'
+const ICON: Record<Channel, string> = {
+  kakao: BUBBLE,
+  zalo: BUBBLE,
   facebook: 'M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0 0 22 12Z',
 }
 
@@ -25,9 +27,21 @@ function release(e: PointerEvent<HTMLAnchorElement>) {
 /**
  * Booking actions of the footer finale: the message preview (rendered on the server with a blank,
  * filled with the concept last on screen — SceneObserver keeps it in html[data-concept]), a copy
- * button, and the Zalo/Facebook links.
+ * button, and the booking channels of this language (the first one is the main button).
  */
-export function FinaleActions({ template, label, copy, copied }: { template: string; label: string; copy: string; copied: string }) {
+export function FinaleActions({
+  template,
+  label,
+  copy,
+  copied,
+  channels,
+}: {
+  template: string
+  label: string
+  copy: string
+  copied: string
+  channels: Channel[]
+}) {
   const [concept, setConcept] = useState(BLANK)
   const [done, setDone] = useState(false)
   const timer = useRef<number>(undefined)
@@ -74,10 +88,10 @@ export function FinaleActions({ template, label, copy, copied }: { template: str
         </button>
       </figure>
       <div className="finale__channels">
-        {(['zalo', 'facebook'] as const).map((k) => (
+        {channels.map((k) => (
           <a
             key={k}
-            href={BOOKING[k]}
+            href={CHANNEL_URL[k]}
             target="_blank"
             rel="noopener"
             className={`finale__channel finale__channel--${k}`}
@@ -87,10 +101,15 @@ export function FinaleActions({ template, label, copy, copied }: { template: str
             <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden fill="currentColor">
               <path d={ICON[k]} />
             </svg>
-            {k === 'zalo' ? 'Zalo' : 'Facebook'}
+            {CHANNEL_LABEL[k]}
           </a>
         ))}
       </div>
+      {channels.includes('kakao') && (
+        <p className="finale__kakao-id">
+          KakaoTalk ID: <strong>{KAKAO.id}</strong>
+        </p>
+      )}
     </div>
   )
 }

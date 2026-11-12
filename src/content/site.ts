@@ -13,6 +13,15 @@ export const BOOKING = {
   facebook: SOCIALS.facebook,
 } as const
 
+/** KakaoTalk friend link (from Trâm's QR code) and the ID to search for in the app. */
+export const KAKAO = { url: 'https://qr.kakao.com/talk/Rhu6IUjVawpB_BRoYNdn587ESA8-', id: 'ngohuynhtram' } as const
+
+export type Channel = 'kakao' | 'zalo' | 'facebook'
+export const CHANNEL_URL: Record<Channel, string> = { kakao: KAKAO.url, zalo: BOOKING.zalo, facebook: BOOKING.facebook }
+export const CHANNEL_LABEL: Record<Channel, string> = { kakao: 'KakaoTalk', zalo: 'Zalo', facebook: 'Facebook' }
+/** Booking channels per language, most used first: Korean visitors message on KakaoTalk, not Zalo. */
+export const CHANNELS: Record<Locale, Channel[]> = { vi: ['zalo', 'facebook'], ko: ['kakao', 'zalo', 'facebook'], ru: ['zalo', 'facebook'] }
+
 export const CREDIT = 'Makeup: Ngô Trâm · Photo: TO Studio'
 
 export const AREA: Record<Locale, string> = { vi: 'Nội thành Nha Trang', ko: '나트랑 시내', ru: 'Центр Нячанга' }

@@ -196,6 +196,7 @@ html:lang(ko) .prose-ko {
 }
 .channel--zalo { background: #0068ff; }
 .channel--facebook { background: #0b5fcc; }
+.channel--kakao { background: #fee500; color: #191919; }
 .book-sheet__close {
   margin-top: 12px;
   width: 100%;
@@ -600,8 +601,11 @@ html[data-finale='true'] .book-btn--float { opacity: 0; visibility: hidden; poin
   transform: translate(var(--mx, 0), var(--my, 0));
   transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1.4), box-shadow 0.25s ease;
 }
-.finale__channel--zalo { background: var(--cream); color: var(--moss); }
-.finale__channel--facebook { background: transparent; color: var(--cream); border: 1.5px solid var(--cream); }
+.finale__channel { background: transparent; color: var(--cream); border: 1.5px solid var(--cream); }
+.finale__channel:first-child { background: var(--cream); color: var(--moss); }
+@media (min-width: 640px) { .finale__channel:first-child:nth-last-child(3) { grid-column: 1 / -1; } }
+.finale__kakao-id { margin: -2px 0 0; font-size: 14px; color: #c9c2a8; }
+.finale__kakao-id strong { color: var(--cream); letter-spacing: 0.04em; }
 .finale__channel:hover { box-shadow: 0 14px 40px rgb(0 0 0 / 0.3); }
 .finale__channel::after {
   content: '';

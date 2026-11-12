@@ -1,3 +1,4 @@
+import { CHANNELS } from '@/content/site'
 import type { Metadata } from 'next'
 import type { CSSProperties } from 'react'
 import { notFound } from 'next/navigation'
@@ -86,7 +87,7 @@ export default async function ConceptPage({ params }: PageProps<'/[locale]/conce
             <p key={p}>{p}</p>
           ))}
           <div className="concept__cta">
-            <BookButton variant="inline" label={t.likeThisConcept} title={t.bookTitle} hint={t.bookHint} closeLabel={t.close} />
+            <BookButton variant="inline" label={t.likeThisConcept} title={t.bookTitle} hint={t.bookHint} closeLabel={t.close} channels={CHANNELS[locale]} />
           </div>
           <Credit className="concept__credit" />
         </div>

@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { concepts } from '@/content/concepts'
-import { SOCIALS } from '@/content/site'
+import { CHANNELS, SOCIALS } from '@/content/site'
+import type { Locale } from '@/i18n/config'
 import type { Dict } from '@/i18n/dict'
 import { collageSrc, getCollage } from '@/lib/collage'
 import { Credit } from './Credit'
@@ -29,7 +30,7 @@ const ICONS: Record<keyof typeof SOCIALS, { label: string; path: string }> = {
  * The finale: every collage as a slowly drifting wall under a moss veil, a handwritten invitation,
  * three steps to book, a ready-to-send message and the two booking channels.
  */
-export function Footer({ t }: { t: Dict }) {
+export function Footer({ t, locale }: { t: Dict; locale: Locale }) {
   return (
     <footer id="contact" className="footer finale" aria-labelledby="contact-title">
       <div className="finale__wall" data-wall aria-hidden>
@@ -67,7 +68,7 @@ export function Footer({ t }: { t: Dict }) {
             </li>
           ))}
         </ol>
-        <FinaleActions template={t.messageTemplate} label={t.messageLabel} copy={t.copyMessage} copied={t.copied} />
+        <FinaleActions template={t.messageTemplate} label={t.messageLabel} copy={t.copyMessage} copied={t.copied} channels={CHANNELS[locale]} />
         <ul className="footer__socials">
           {(Object.keys(SOCIALS) as (keyof typeof SOCIALS)[]).map((key) => (
             <li key={key}>
