@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { notFound } from 'next/navigation'
-import { isLocale, locales } from '@/i18n/config'
+import { isLocale, locales, OG_LOCALES } from '@/i18n/config'
 import { getDict } from '@/i18n/dict'
 import { fontVars } from '../fonts'
 import { BookButton } from '@/components/BookButton'
@@ -26,8 +26,8 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
     metadataBase: new URL(siteUrl()),
     title: { default: t.siteTitle, template: `%s — Makeup Ngô Trâm` },
     description: t.siteDescription,
-    alternates: { languages: { vi: '/vi', ko: '/ko' } },
-    openGraph: { title: t.siteTitle, description: t.siteDescription, images: ['/og.jpg'], locale: locale === 'ko' ? 'ko_KR' : 'vi_VN', type: 'website' },
+    alternates: { languages: Object.fromEntries(locales.map((l) => [l, `/${l}`])) },
+    openGraph: { title: t.siteTitle, description: t.siteDescription, images: ['/og.jpg'], locale: OG_LOCALES[locale], type: 'website' },
   }
 }
 
@@ -45,7 +45,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
           <a href={`/${locale}`} aria-label="Makeup Ngô Trâm">
             <span className="logo-mask" aria-hidden />
           </a>
-          <LangSwitch locale={locale} label={t.switchTo} />
+          <LangSwitch locale={locale} label={t.language} />
         </header>
         {children}
         <Footer t={t} />

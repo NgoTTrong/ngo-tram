@@ -32,7 +32,7 @@ const vi = {
   next: 'Concept tiếp',
   gallery: 'Bộ ảnh',
   notFound: 'Không tìm thấy trang này.',
-  switchTo: '한국어',
+  language: 'Ngôn ngữ',
 }
 
 export type Dict = typeof vi
@@ -70,10 +70,46 @@ const ko: Dict = {
   next: '다음 콘셉트',
   gallery: '화보',
   notFound: '페이지를 찾을 수 없습니다.',
-  switchTo: 'Tiếng Việt',
+  language: '언어',
 }
 
-const dicts: Record<Locale, Dict> = { vi, ko }
+const ru: Dict = {
+  // RU-DRAFT — needs native review
+  siteTitle: 'Makeup Ngô Trâm — макияж и фотосъёмка в Нячанге',
+  siteDescription: '18 реальных концептов макияжа: аозай, день рождения, пары, море Нячанга. Запись через Zalo или Facebook.',
+  tagline: 'Красота по-вашему',
+  intro: 'Макияж и фотосъёмка · центр Нячанга',
+  book: 'Записаться',
+  bookTitle: 'Напишите Чам, чтобы записаться',
+  bookHint: 'Напишите в Zalo или Facebook — Чам ответит как можно скорее. Можно писать по-английски.',
+  close: 'Закрыть',
+  chapter: 'Глава',
+  scroll: 'Листайте вниз',
+  viewConcept: 'Смотреть съёмку',
+  likeThisConcept: 'Нравится этот концепт? Напишите Чам',
+  about: 'О Чам',
+  aboutText: 'Чам делает макияж для праздников, выпускных, мероприятий и beauty-концептов, а вместе со студией-партнёром — фотосъёмку. У каждого лица своя история: Чам слушает и подбирает макияж, в котором вы красивы естественно.',
+  services: 'Услуги',
+  serviceList: 'Макияж + фотосъёмка со студией-партнёром · Праздники · Выпускные · Мероприятия · Beauty-концепты',
+  area: 'Район',
+  contact: 'Контакты',
+  finaleTitle: 'Давайте встретимся',
+  step1: 'Выберите понравившийся концепт',
+  step2: 'Напишите в Zalo или Facebook и укажите желаемую дату',
+  step3: 'Чам делает макияж, студия снимает — вам остаётся наслаждаться',
+  messageLabel: 'Пример сообщения',
+  messageTemplate: 'Здравствуйте, Чам! Хочу записаться на концепт {concept} на ___.',
+  copyMessage: 'Скопировать сообщение',
+  copied: 'Скопировано — вставьте в Zalo или Facebook',
+  back: 'На главную',
+  prev: 'Предыдущий концепт',
+  next: 'Следующий концепт',
+  gallery: 'Фотографии',
+  notFound: 'Страница не найдена.',
+  language: 'Язык',
+}
+
+const dicts: Record<Locale, Dict> = { vi, ko, ru }
 
 export function getDict(locale: Locale): Dict {
   return dicts[locale]

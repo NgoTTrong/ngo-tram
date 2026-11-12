@@ -39,10 +39,11 @@ test.describe('without JavaScript', () => {
   })
 })
 
-test('sitemap lists both home pages and all 36 concept pages', async ({ request }) => {
+test('sitemap lists the 3 home pages and all 54 concept pages', async ({ request }) => {
   const xml = await (await request.get('/sitemap.xml')).text()
-  expect(xml.match(/<loc>/g)?.length).toBe(38)
+  expect(xml.match(/<loc>/g)?.length).toBe(57)
   expect(xml).toContain('/ko/concepts/winter-cherie')
+  expect(xml).toContain('/ru/concepts/winter-cherie')
 })
 
 test('share image exists', async ({ request }) => {

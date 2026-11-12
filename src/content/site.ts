@@ -15,4 +15,4 @@ export const BOOKING = {
 
 export const CREDIT = 'Makeup: Ngô Trâm · Photo: TO Studio'
 
-export const AREA: Record<Locale, string> = { vi: 'Nội thành Nha Trang', ko: '나트랑 시내' }
+export const AREA: Record<Locale, string> = { vi: 'Nội thành Nha Trang', ko: '나트랑 시내', ru: 'Центр Нячанга' }

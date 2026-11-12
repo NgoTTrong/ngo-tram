@@ -5,7 +5,7 @@ import { BookButton } from '@/components/BookButton'
 import { Credit } from '@/components/Credit'
 import { Gallery } from '@/components/Gallery'
 import { concepts, getConcept, neighbors } from '@/content/concepts'
-import { isLocale, locales } from '@/i18n/config'
+import { isLocale, locales, OG_LOCALES } from '@/i18n/config'
 import { getDict } from '@/i18n/dict'
 import { themeFor, themeStyle } from '@/content/themes'
 import { collageSrc, getCollage } from '@/lib/collage'
@@ -25,8 +25,8 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/concepts
   return {
     title: c.name,
     description: c.tagline[locale],
-    alternates: { languages: { vi: `/vi/concepts/${slug}`, ko: `/ko/concepts/${slug}` } },
-    openGraph: { title: `${c.name} — Makeup Ngô Trâm`, description: c.tagline[locale], images: [photoSrc(slug, c.cover)], locale: locale === 'ko' ? 'ko_KR' : 'vi_VN', type: 'article' },
+    alternates: { languages: Object.fromEntries(locales.map((l) => [l, `/${l}/concepts/${slug}`])) },
+    openGraph: { title: `${c.name} — Makeup Ngô Trâm`, description: c.tagline[locale], images: [photoSrc(slug, c.cover)], locale: OG_LOCALES[locale], type: 'article' },
   }
 }
 

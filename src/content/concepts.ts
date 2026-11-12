@@ -21,12 +21,13 @@ export type Concept = {
 const ALL = [0, 1, 2, 3, 5, 6, 7, 8]
 
 // KO-DRAFT — every `ko` string below is a draft translation and needs review by a native Korean speaker before launch.
+// RU-DRAFT — every `ru` string below is a draft translation and needs review by a native Russian speaker before launch.
 const data: Omit<Concept, 'order'>[] = [
   {
     slug: 'the-white-lotus',
     file: 'lotus',
     name: 'The White Lotus',
-    tagline: { vi: 'Nét thơ của tà Việt phục trắng', ko: '하얀 베트남 전통 의상의 시' },
+    tagline: { vi: 'Nét thơ của tà Việt phục trắng', ko: '하얀 베트남 전통 의상의 시', ru: 'Поэзия белого вьетнамского наряда' },
     description: {
       vi: [
         'Lấy cảm hứng từ vẻ đẹp truyền thống Việt Nam, Bạch Liên là hình ảnh người con gái dịu dàng trong tà Việt phục trắng tinh khôi, giữa không gian cổ kính và sắc xanh thiên nhiên.',
@@ -38,6 +39,11 @@ const data: Omit<Concept, 'order'>[] = [
         '시선 하나, 서 있는 자세 하나까지 우아하고 차분하게 — 옛 이야기 속에서 걸어 나온 뮤즈처럼.',
         '화려한 색이나 장식 없이, 맑은 흰색과 고전적인 아름다움만으로 완성한 화보입니다.',
       ],
+      ru: [
+        'Концепт вдохновлён традиционной красотой Вьетнама: нежная девушка в белоснежном национальном наряде среди старинной архитектуры и зелени.',
+        'Каждый взгляд, поза и движение — изящные и сдержанные, словно муза, сошедшая со страниц старой истории.',
+        'Без ярких красок и сложных аксессуаров: чистый белый цвет и классическая красота создают особое очарование съёмки.',
+      ],
     },
     photos: ALL,
     cover: 3,
@@ -47,7 +53,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'la-vie-en-rose',
     file: 'lavie',
     name: 'La Vie En Rose',
-    tagline: { vi: 'Dịu dàng như một đoá hồng Pháp', ko: '프랑스 장미처럼 부드럽게' },
+    tagline: { vi: 'Dịu dàng như một đoá hồng Pháp', ko: '프랑스 장미처럼 부드럽게', ru: 'Нежность французской розы' },
     description: {
       vi: [
         'La Vie en Rose — cụm từ kinh điển của nước Pháp, gợi sự lãng mạn, nữ tính và đầy chất thơ.',
@@ -59,6 +65,11 @@ const data: Omit<Concept, 'order'>[] = [
         '파우더 핑크 톤과 빈티지 레이스로 부드러운 소녀의 모습을 그려낸 프렌치 빈티지 콘셉트입니다.',
         '모든 컷에 단정함과 청순함, 시간이 지나도 변치 않는 아름다움을 담았습니다.',
       ],
+      ru: [
+        'La Vie en Rose — классическое французское выражение о романтике, женственности и поэзии.',
+        'Образ нежной девушки в пудрово-розовых тонах и винтажном кружеве, в утончённом стиле French Vintage.',
+        'Каждый кадр хранит элегантность, чистоту и вневременную красоту.',
+      ],
     },
     photos: ALL,
     cover: 0,
@@ -68,7 +79,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'ocean-kissed',
     file: 'ocean',
     name: 'Ocean Kissed',
-    tagline: { vi: 'Hoàng hôn, sóng biển và sắc màu mùa hè', ko: '노을과 파도, 여름의 색' },
+    tagline: { vi: 'Hoàng hôn, sóng biển và sắc màu mùa hè', ko: '노을과 파도, 여름의 색', ru: 'Закат, волны и краски лета' },
     description: {
       vi: [
         'Giữa ánh hoàng hôn và những con sóng dịu êm, cô gái như mang theo cả sắc màu của mùa hè.',
@@ -80,6 +91,11 @@ const data: Omit<Concept, 'order'>[] = [
         '달콤하고 자유롭고 생기 넘치는 — 여성스러운 아름다움과 맑은 바다의 숨결이 어우러진 화보입니다.',
         '바다와 여름을 사랑하고, 자연스러운 순간을 남기고 싶은 분께 추천해요.',
       ],
+      ru: [
+        'Среди закатного света и мягких волн девушка словно несёт в себе все краски лета.',
+        'Нежно, свободно и живо — съёмка соединяет женственную красоту и чистое дыхание моря.',
+        'Для тех, кто любит море и лето и хочет сохранить красивые моменты естественно.',
+      ],
     },
     photos: ALL,
     cover: 0,
@@ -89,7 +105,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'velvet-silence',
     file: 'velvet',
     name: 'Velvet Silence',
-    tagline: { vi: 'Tinh tế, tối giản và đầy thần thái', ko: '섬세하고 미니멀한 분위기' },
+    tagline: { vi: 'Tinh tế, tối giản và đầy thần thái', ko: '섬세하고 미니멀한 분위기', ru: 'Утончённо, минималистично, с характером' },
     description: {
       vi: [
         'Bộ ảnh tôn vinh vẻ đẹp tinh tế và tối giản, nơi cảm xúc hiện lên qua ánh nhìn, thần thái và những chuyển động tự nhiên.',
@@ -101,6 +117,11 @@ const data: Omit<Concept, 'order'>[] = [
         '따뜻한 브라운 톤, 부드러운 퍼 소재와 우아한 블랙 드레스가 모던하면서도 여성스러운 무드를 완성합니다.',
         '모든 앵글이 각자의 자신감과 고유한 아름다움을 이야기합니다.',
       ],
+      ru: [
+        'Съёмка о тонкой минималистичной красоте, где чувства передаются взглядом, настроением и естественным движением.',
+        'Тёплые коричневые тона, мягкий мех и элегантное чёрное платье создают современный, роскошный и женственный образ.',
+        'Каждый ракурс рассказывает об уверенности и индивидуальной красоте.',
+      ],
     },
     photos: ALL,
     cover: 6,
@@ -110,7 +131,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'pink-dream-21',
     file: 'pink',
     name: 'Pink Dream 21',
-    tagline: { vi: 'Tuổi 21 ngọt ngào như kẹo bông', ko: '솜사탕처럼 달콤한 스물하나' },
+    tagline: { vi: 'Tuổi 21 ngọt ngào như kẹo bông', ko: '솜사탕처럼 달콤한 스물하나', ru: 'Сладкие 21, как сахарная вата' },
     description: {
       vi: [
         'Pink Dream 21 là giấc mơ màu hồng dành cho những cô gái bước sang tuổi 21 — ngọt ngào, trong trẻo nhưng vẫn có chút tinh nghịch rất riêng.',
@@ -122,6 +143,11 @@ const data: Omit<Concept, 'order'>[] = [
         '파스텔 핑크를 중심으로 케이크, 숫자 풍선, 꽃과 귀여운 소품으로 현대판 동화 같은 생일 파티를 연출했습니다.',
         '예쁜 드레스 한 벌, 케이크 하나, 그리고 많은 웃음으로 빛나는 스물한 살을 남겨 보세요.',
       ],
+      ru: [
+        'Pink Dream 21 — розовая мечта для девушек, которым исполняется 21: нежно, свежо и чуть озорно.',
+        'Пастельный розовый, торт, шары-цифры, цветы и милые детали — день рождения, словно из современной сказки.',
+        'Ничего сложного: красивое платье, торт и много радости, чтобы сохранить свои сияющие 21.',
+      ],
     },
     photos: ALL,
     cover: 7,
@@ -131,7 +157,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'a-love-anchored',
     file: 'anchor',
     name: 'A Love Anchored',
-    tagline: { vi: 'Bình yên giữa nắng chiều và kiến trúc cổ', ko: '오후 햇살과 고풍스러운 건축 속 평온함' },
+    tagline: { vi: 'Bình yên giữa nắng chiều và kiến trúc cổ', ko: '오후 햇살과 고풍스러운 건축 속 평온함', ru: 'Покой вечернего солнца и старой архитектуры' },
     description: {
       vi: [
         'Khoảnh khắc bình yên của hai người giữa ánh nắng chiều và kiến trúc cổ kính.',
@@ -143,6 +169,11 @@ const data: Omit<Concept, 'order'>[] = [
         '해군 제복과 화이트 드레스의 조합이 격식 있으면서도 로맨틱한 분위기를 만들고, 모든 컷에 진심과 다정함을 담았습니다.',
         '커플 촬영, 기념 사진, 프리웨딩, 미니멀한 스타일을 좋아하는 커플에게 어울려요.',
       ],
+      ru: [
+        'Спокойный момент двоих среди вечернего солнца и старинной архитектуры.',
+        'Морская форма и белое платье — торжественно и романтично; каждый кадр хранит искренность, нежность и естественные эмоции.',
+        'Подходит для пар, памятных фото, pre-wedding и любителей минимализма.',
+      ],
     },
     photos: ALL,
     cover: 2,
@@ -152,7 +183,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'ethereal-shore',
     file: 'ethereal',
     name: 'Ethereal Shore',
-    tagline: { vi: 'Bản tình ca giữa sóng nước và hoàng hôn', ko: '파도와 노을 사이의 세레나데' },
+    tagline: { vi: 'Bản tình ca giữa sóng nước và hoàng hôn', ko: '파도와 노을 사이의 세레나데', ru: 'Серенада волн и заката' },
     description: {
       vi: [
         'Dưới ánh hoàng hôn dần buông và mặt nước lấp lánh, nàng thơ hiện lên với vẻ đẹp mong manh nhưng cuốn hút.',
@@ -161,6 +192,10 @@ const data: Omit<Concept, 'order'>[] = [
       ko: [
         '저물어 가는 노을과 반짝이는 물결 아래, 연약하지만 매혹적인 뮤즈.',
         '부드러운 소재, 유려한 라인, 밤바다의 풍경이 예술적이면서도 자연의 자유로움을 담은 장면을 만들어 냅니다.',
+      ],
+      ru: [
+        'В свете угасающего заката и мерцающей воды муза предстаёт хрупкой, но притягательной.',
+        'Мягкие ткани, плавные линии и вечернее море создают кадры одновременно художественные и полные свободы природы.',
       ],
     },
     photos: ALL,
@@ -171,7 +206,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'lotus-fairy',
     file: 'fairy',
     name: 'Lotus Fairy',
-    tagline: { vi: 'Sen hồng, tà ren và nét thơ thiếu nữ', ko: '분홍 연꽃과 레이스, 소녀의 시' },
+    tagline: { vi: 'Sen hồng, tà ren và nét thơ thiếu nữ', ko: '분홍 연꽃과 레이스, 소녀의 시', ru: 'Розовый лотос, кружево и девичья поэзия' },
     description: {
       vi: [
         'Sắc hồng dịu dàng, tà ren mềm mại cùng những đoá sen hồng đang độ khoe sắc, tạo nên bộ ảnh nữ tính và đậm chất thơ.',
@@ -183,6 +218,11 @@ const data: Omit<Concept, 'order'>[] = [
         '레이스 의상과 연꽃이 맑으면서도 차분한 느낌을 주며, 베트남 여성의 단아한 아름다움을 떠올리게 합니다.',
         '연꽃을 좋아하고 청춘을 낭만적으로 남기고 싶은 분께 추천해요.',
       ],
+      ru: [
+        'Нежный розовый, мягкое кружево и цветущие розовые лотосы создают женственную и поэтичную съёмку.',
+        'Кружевной наряд и лотосы дают ощущение свежести и мягкости, напоминая о нежной красоте вьетнамской девушки.',
+        'Для тех, кто любит лотосы и хочет сохранить молодость поэтично.',
+      ],
     },
     photos: ALL,
     cover: 7,
@@ -192,7 +232,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'sweethearts-day',
     file: 'sweet',
     name: "Sweetheart's Day",
-    tagline: { vi: 'Hẹn hò ngọt ngào trong sắc đỏ và trắng', ko: '레드와 화이트의 달콤한 데이트' },
+    tagline: { vi: 'Hẹn hò ngọt ngào trong sắc đỏ và trắng', ko: '레드와 화이트의 달콤한 데이트', ru: 'Сладкое свидание в красном и белом' },
     description: {
       vi: [
         'Concept lấy cảm hứng từ một buổi hẹn hò ngọt ngào với sắc đỏ và trắng.',
@@ -204,6 +244,11 @@ const data: Omit<Concept, 'order'>[] = [
         '케이크와 곰인형, 작은 소품들이 따뜻한 분위기를 더하고, 자연스럽고 감성적인 순간을 담는 데 집중했어요.',
         '사랑스럽고 부드러운 스타일을 좋아하는 분께 어울립니다.',
       ],
+      ru: [
+        'Концепт вдохновлён сладким свиданием в красных и белых тонах.',
+        'Торт, плюшевый мишка и маленькие детали создают тёплую атмосферу; в центре — естественные, полные чувств моменты.',
+        'Для тех, кто любит милый и нежный стиль.',
+      ],
     },
     photos: ALL,
     cover: 5,
@@ -213,7 +258,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'in-your-eyes',
     file: 'inyoureyes',
     name: 'In Your Eyes',
-    tagline: { vi: 'Có những cảm xúc chỉ cần nhìn vào mắt nhau', ko: '눈빛만으로 전해지는 마음' },
+    tagline: { vi: 'Có những cảm xúc chỉ cần nhìn vào mắt nhau', ko: '눈빛만으로 전해지는 마음', ru: 'Чувства, которые видны во взгляде' },
     description: {
       vi: [
         'Có những cảm xúc chẳng cần nói thành lời, chỉ cần nhìn vào mắt nhau.',
@@ -225,6 +270,11 @@ const data: Omit<Concept, 'order'>[] = [
         '시선과 작은 몸짓으로 이어지는 교감을 담았고, 뉴트럴 톤이 감정을 더욱 돋보이게 합니다.',
         '미니멀하지만 깊이 있는 분위기를 좋아하는 커플을 위한 콘셉트예요.',
       ],
+      ru: [
+        'Есть чувства, которым не нужны слова — достаточно посмотреть друг другу в глаза.',
+        'Съёмка о связи через взгляд и лёгкие жесты; нейтральные тона подчёркивают каждую эмоцию.',
+        'Для пар, которые любят минимализм с глубиной.',
+      ],
     },
     photos: ALL,
     cover: 5,
@@ -234,7 +284,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'summer-crush',
     file: 'summer',
     name: 'Summer Crush',
-    tagline: { vi: 'Nắng, gió biển và nụ cười Nha Trang', ko: '나트랑의 햇살과 미소' },
+    tagline: { vi: 'Nắng, gió biển và nụ cười Nha Trang', ko: '나트랑의 햇살과 미소', ru: 'Солнце, морской ветер и улыбка Нячанга' },
     description: {
       vi: [
         'Lấy cảm hứng từ những ngày hè rực rỡ bên biển xanh, Summer Crush ghi lại vẻ đẹp tươi trẻ, trong veo và tràn đầy sức sống dưới ánh nắng vàng.',
@@ -246,6 +296,11 @@ const data: Omit<Concept, 'order'>[] = [
         '트로피컬 컬러, 잔잔한 파도, 노을이 달콤하면서도 자유로운 장면을 만들어요.',
         '바다와 햇살을 사랑하고 가장 빛나는 나를 남기고 싶은 분께 추천합니다.',
       ],
+      ru: [
+        'Вдохновлённая яркими летними днями у синего моря, Summer Crush ловит свежую, чистую и живую красоту под золотым солнцем.',
+        'Тропические цвета, мягкие волны и закат создают кадры одновременно нежные и свободные.',
+        'Для девушек, которые любят море и солнце и хотят сохранить свою самую сияющую версию.',
+      ],
     },
     photos: ALL,
     cover: 1,
@@ -255,7 +310,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'petals-and-grace',
     file: 'petal',
     name: 'Petals & Grace',
-    tagline: { vi: 'Mong manh như cánh hoa đầu xuân', ko: '봄 꽃잎처럼 섬세하게' },
+    tagline: { vi: 'Mong manh như cánh hoa đầu xuân', ko: '봄 꽃잎처럼 섬세하게', ru: 'Хрупкая, как весенний лепесток' },
     description: {
       vi: [
         'Concept lấy cảm hứng từ vẻ đẹp nữ tính, dịu dàng giữa những nhành hoa nhỏ, mang đến cảm giác trong trẻo và thơ mộng.',
@@ -267,6 +322,11 @@ const data: Omit<Concept, 'order'>[] = [
         '꽃과 손동작을 활용한 다양한 포즈로 변화를 주면서도 감정의 결은 하나로 이어집니다.',
         '자연스럽고 은은하며 살짝 로맨틱한 분위기를 좋아하는 분께 어울려요.',
       ],
+      ru: [
+        'Концепт о женственной, нежной красоте среди маленьких веточек цветов — светло и мечтательно.',
+        'Мягкие позы с цветами и движения рук делают съёмку разнообразной, сохраняя единое настроение.',
+        'Для любителей образа музы — женственного, элегантного, естественного и немного романтичного.',
+      ],
     },
     photos: ALL,
     cover: 2,
@@ -276,7 +336,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'fancy-nancy',
     file: 'fancy',
     name: 'Fancy Nancy',
-    tagline: { vi: 'Bữa tiệc sinh nhật bước ra từ giấc mơ', ko: '꿈에서 나온 듯한 생일 파티' },
+    tagline: { vi: 'Bữa tiệc sinh nhật bước ra từ giấc mơ', ko: '꿈에서 나온 듯한 생일 파티', ru: 'День рождения, словно из сна' },
     description: {
       vi: [
         'Một chút ngọt ngào của sắc hồng, một chút rực rỡ của những dải màu và ánh mắt lấp lánh của cô gái trong ngày đặc biệt.',
@@ -288,6 +348,11 @@ const data: Omit<Concept, 'order'>[] = [
         '케이크와 왕관, 화사한 컬러가 생기 넘치는 장면을 완성합니다.',
         '장난스럽고 사랑스럽지만 여성스러운 매력도 놓치지 않은 화보예요.',
       ],
+      ru: [
+        'Немного розовой сладости, немного ярких гирлянд и сияющий взгляд девушки в особенный день.',
+        'Торт, корона и яркие цвета создают живые кадры.',
+        'Озорная и милая съёмка, сохраняющая женственность и обаяние.',
+      ],
     },
     photos: ALL,
     cover: 5,
@@ -297,7 +362,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'vietnamese-grace',
     file: 'vietnam',
     name: 'Vietnamese Grace',
-    tagline: { vi: 'Duyên dáng trong tà Việt phục hồng pastel', ko: '파스텔 핑크 전통 의상의 우아함' },
+    tagline: { vi: 'Duyên dáng trong tà Việt phục hồng pastel', ko: '파스텔 핑크 전통 의상의 우아함', ru: 'Изящество в пастельно-розовом наряде' },
     description: {
       vi: [
         'Bộ ảnh tôn vinh vẻ đẹp dịu dàng, thanh lịch và nữ tính của người phụ nữ Việt Nam qua tà Việt phục màu hồng pastel.',
@@ -309,6 +374,11 @@ const data: Omit<Concept, 'order'>[] = [
         '앉은 자세, 눈빛, 미소 하나하나가 자연스럽고 차분하게 단아함을 드러냅니다.',
         '소박하고 섬세한, 베트남 여성 특유의 은은한 매력에 바치는 화보예요.',
       ],
+      ru: [
+        'Съёмка о нежной, элегантной и женственной красоте вьетнамской женщины в пастельно-розовом национальном наряде.',
+        'Каждая поза, взгляд и улыбка — мягкие и естественные, подчёркивающие изящество.',
+        'Дань простой, утончённой и тихой прелести вьетнамских девушек.',
+      ],
     },
     photos: ALL,
     cover: 3,
@@ -318,7 +388,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'a-private-escape',
     file: 'pirate',
     name: 'A Private Escape',
-    tagline: { vi: 'Chậm lại giữa biển, nắng và hoàng hôn', ko: '바다와 햇살, 노을 속 느린 하루' },
+    tagline: { vi: 'Chậm lại giữa biển, nắng và hoàng hôn', ko: '바다와 햇살, 노을 속 느린 하루', ru: 'Замедлиться среди моря, солнца и заката' },
     description: {
       vi: [
         'Một hành trình hình ảnh trong không gian nghỉ dưỡng yên tĩnh — từ những khoảnh khắc thanh lịch trong villa, buổi chiều bên biển đến hoàng hôn trên ghềnh đá.',
@@ -327,6 +397,10 @@ const data: Omit<Concept, 'order'>[] = [
       ko: [
         '조용한 휴양지에서의 시각적 여행 — 빌라에서의 우아한 순간, 바닷가의 오후, 바위 위의 노을까지.',
         '천천히 머물며 지금을 온전히 즐기고, 특별한 곳에서의 추억을 남기는 아름다움을 담았습니다.',
+      ],
+      ru: [
+        'Визуальное путешествие в тихом месте отдыха — от элегантных моментов на вилле и дня у моря до заката на скалах.',
+        'Каждый кадр — о красоте неспешности, жизни настоящим моментом и памяти об особенном месте.',
       ],
     },
     photos: [0, 2, 3, 5, 6, 7, 8],
@@ -337,7 +411,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'blooming-grace',
     file: 'blowing',
     name: 'Blooming Grace',
-    tagline: { vi: 'Nở rộ trong những điều giản đơn', ko: '소박함 속에 피어나다' },
+    tagline: { vi: 'Nở rộ trong những điều giản đơn', ko: '소박함 속에 피어나다', ru: 'Расцвести в простых вещах' },
     description: {
       vi: [
         'Khi vẻ đẹp nở rộ trong những điều giản đơn: một bó hoa tươi, chiếc bánh kem nhỏ và ánh nắng dịu nhẹ đã đủ tạo nên bộ ảnh ngập tràn cảm xúc.',
@@ -346,6 +420,10 @@ const data: Omit<Concept, 'order'>[] = [
       ko: [
         '싱그러운 꽃다발, 작은 케이크, 은은한 햇살 — 소박한 것들 속에서 피어나는 아름다움을 담았습니다.',
         '따뜻한 톤의 우아하고 여성스러운 스타일로, 자연스럽고 섬세한 순간을 나만의 방식으로 남겨요.',
+      ],
+      ru: [
+        'Красота расцветает в простом: свежий букет, маленький торт и мягкий солнечный свет — и съёмка полна чувств.',
+        'Элегантный женственный стиль в тёплых тонах, сохраняющий естественные и тонкие моменты по-вашему.',
       ],
     },
     photos: ALL,
@@ -356,7 +434,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'winter-cherie',
     file: 'winter',
     name: 'Winter Cherie',
-    tagline: { vi: 'Áo len đỏ và phép màu mùa lễ hội', ko: '빨간 니트와 축제의 마법' },
+    tagline: { vi: 'Áo len đỏ và phép màu mùa lễ hội', ko: '빨간 니트와 축제의 마법', ru: 'Красный свитер и волшебство праздников' },
     description: {
       vi: [
         'Trong chiếc áo len đỏ giữa không gian Noel rực rỡ, nàng thơ hiện lên đáng yêu, dịu dàng nhưng không kém phần tinh nghịch.',
@@ -368,6 +446,11 @@ const data: Omit<Concept, 'order'>[] = [
         '트리 옆의 몽환적인 눈빛부터 하얀 눈과 작은 선물과 함께한 순간까지, 겨울 동화 같은 따뜻한 장면을 담았습니다.',
         '축제 시즌의 작은 마법, 당신만을 위한 가장 예쁜 모습.',
       ],
+      ru: [
+        'В красном свитере среди яркой рождественской атмосферы муза мила, нежна и немного озорна.',
+        'От мечтательного взгляда у ёлки до игр со снегом и маленьким подарком — каждый кадр тёплый, как зимняя сказка.',
+        'Немного праздничного волшебства — самая красивая версия, только для вас.',
+      ],
     },
     photos: ALL,
     cover: 2,
@@ -377,7 +460,7 @@ const data: Omit<Concept, 'order'>[] = [
     slug: 'wishful-moment',
     file: 'wishful',
     name: 'Wishful Moment',
-    tagline: { vi: 'Ánh nến nhỏ và một điều ước bình yên', ko: '작은 촛불과 조용한 소원' },
+    tagline: { vi: 'Ánh nến nhỏ và một điều ước bình yên', ko: '작은 촛불과 조용한 소원', ru: 'Огонёк свечи и тихое желание' },
     description: {
       vi: [
         'Concept lấy cảm hứng từ những buổi sinh nhật nhỏ, ánh nến và sự bình yên.',
@@ -386,6 +469,10 @@ const data: Omit<Concept, 'order'>[] = [
       ko: [
         '작은 생일, 촛불, 그리고 평온함에서 영감을 받은 콘셉트입니다.',
         '뉴트럴 톤과 부드러운 빛이 영화 같은 분위기를 만들고, 자연스러운 아름다움과 진솔한 감정을 담았습니다.',
+      ],
+      ru: [
+        'Концепт вдохновлён небольшими днями рождения, светом свечей и покоем.',
+        'Нейтральные тона и мягкий свет создают кинематографичное, лёгкое и изысканное настроение; каждый кадр хранит естественную красоту и искренние чувства.',
       ],
     },
     photos: ALL,

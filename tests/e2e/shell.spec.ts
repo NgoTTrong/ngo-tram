@@ -16,6 +16,22 @@ test('root redirects Korean browsers to /ko', async ({ browser }) => {
   await context.close()
 })
 
+test('root redirects Russian browsers to /ru', async ({ browser }) => {
+  const context = await browser.newContext({ locale: 'ru-RU', extraHTTPHeaders: { 'accept-language': 'ru-RU,ru;q=0.9,en;q=0.8' } })
+  const page = await context.newPage()
+  await page.goto('/')
+  await expect(page).toHaveURL(/\/ru$/)
+  await context.close()
+})
+
+test('Russian pages are in Russian with a Cyrillic body font', async ({ page }) => {
+  await page.goto('/ru/concepts/summer-crush')
+  await expect(page.locator('html')).toHaveAttribute('lang', 'ru')
+  await expect(page.locator('.scene__tagline, .concept__hero-text p').filter({ hasText: /[а-яё]/i }).first()).toBeVisible()
+  expect(await page.evaluate(() => getComputedStyle(document.body).fontFamily)).toMatch(/Nunito/i)
+  await expect(page.locator('#contact h2')).toContainText(/[а-яё]/i)
+})
+
 test('html lang follows the locale', async ({ page }) => {
   await page.goto('/vi')
   await expect(page.locator('html')).toHaveAttribute('lang', 'vi')
@@ -38,11 +54,31 @@ test('book button opens a chooser with Zalo and Facebook', async ({ page }) => {
   await expect(sheet).toBeHidden()
 })
 
-test('language switch points to the same page in the other language', async ({ page }) => {
-  await page.goto('/vi')
-  await expect(page.getByTestId('lang-switch')).toHaveAttribute('href', '/ko')
-  await page.goto('/ko')
-  await expect(page.getByTestId('lang-switch')).toHaveAttribute('href', '/vi')
+test('language menu lists every language for the same page', async ({ page }) => {
+  await page.goto('/ko/concepts/lotus-fairy')
+  const menu = page.getByTestId('lang-switch')
+  await expect(menu.locator('summary')).toContainText('KO')
+  await menu.locator('summary').click()
+  const links = menu.getByRole('link')
+  await expect(links).toHaveCount(3)
+  await expect(menu.getByRole('link', { name: 'Tiếng Việt' })).toHaveAttribute('href', '/vi/concepts/lotus-fairy')
+  await expect(menu.getByRole('link', { name: 'Русский' })).toHaveAttribute('href', '/ru/concepts/lotus-fairy')
+  await expect(menu.getByRole('link', { name: '한국어' })).toHaveAttribute('aria-current', 'true')
+  await page.keyboard.press('Escape')
+  await expect(links.first()).toBeHidden()
+  await menu.locator('summary').click()
+  await page.mouse.click(10, 400)
+  await expect(links.first()).toBeHidden()
+})
+
+test.describe('language menu without JavaScript', () => {
+  test.use({ javaScriptEnabled: false })
+  test('still opens and links to Russian', async ({ page }) => {
+    await page.goto('/vi')
+    await page.getByTestId('lang-switch').locator('summary').click()
+    await page.getByRole('link', { name: 'Русский' }).click()
+    await expect(page).toHaveURL(/\/ru$/)
+  })
 })
 
 test('unknown locale is a 404', async ({ page }) => {

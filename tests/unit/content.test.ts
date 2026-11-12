@@ -1,3 +1,4 @@
+import { locales } from '@/i18n/config'
 import { existsSync } from 'node:fs'
 import path from 'node:path'
 import { describe, expect, test } from 'vitest'
@@ -33,8 +34,8 @@ describe('concepts', () => {
     for (const i of c.photos) expect(existsSync(path.join('public', 'concepts', c.slug, `${i}.webp`))).toBe(true)
   })
 
-  test.each(concepts.map((c) => [c.slug, c] as const))('%s: copy exists in both languages', (_, c) => {
-    for (const locale of ['vi', 'ko'] as const) {
+  test.each(concepts.map((c) => [c.slug, c] as const))('%s: copy exists in every language', (_, c) => {
+    for (const locale of locales) {
       expect(c.tagline[locale].trim()).not.toBe('')
       expect(c.tagline[locale].length).toBeLessThanOrEqual(60)
       expect(c.description[locale].length).toBeGreaterThanOrEqual(2)
