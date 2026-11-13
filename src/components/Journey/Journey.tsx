@@ -3,7 +3,7 @@
 import { useEffect, useRef } from 'react'
 
 /**
- * Drives the home journey: smooth scroll, scroll-linked scenes, falling petals and reveals.
+ * Drives the home journey: smooth scroll, scroll-linked scenes, twinkling sparkles and hearts, and reveals.
  * Every scene is a continuous function of scroll position, transforms and opacity only.
  * The markup works without it: chapters stack, the corridor scrolls sideways, nothing is hidden.
  */
@@ -106,7 +106,7 @@ export function Journey() {
       root.classList.toggle('scrolled', y > vh * 0.5)
     }
 
-    // petals: cream, blush and sage, drifting down and turning; a few soft glows behind them
+    // sparkles and small hearts: stars twinkle almost in place, hearts float up slowly; a few soft glows behind them
     const cv = canvas.current!
     const cx = cv.getContext('2d')!
     const dpr = Math.min(2, devicePixelRatio || 1)
@@ -115,40 +115,60 @@ export function Journey() {
     rs()
     on('resize', rs)
     const small = innerWidth < 760, R = Math.random
-    const TINTS = ['#ede7d9', '#f0d6cc', '#e6c3b8', '#c9d1b8', '#f5f1e8']
-    type Petal = { x: number; y: number; z: number; r: number; v: number; p: number; rot: number; vr: number; c: string; glow: boolean }
-    const mk = (glow: boolean): Petal => ({
-      x: R(), y: R(), z: 0.5 + R() * 0.8, r: glow ? 18 + R() * 30 : 4 + R() * 5, v: 0.00008 + R() * 0.00018,
-      p: R() * 7, rot: R() * 6, vr: (R() - 0.5) * 0.02, c: TINTS[(R() * TINTS.length) | 0], glow,
+    const STAR = ['#c98a7d', '#d9a28f', '#b4646f', '#fff4ee']
+    const HEART = ['#d7898f', '#e3a2a8', '#c96f7d']
+    type Kind = 'glow' | 'star' | 'heart'
+    type Mote = { kind: Kind; x: number; y: number; z: number; r: number; v: number; p: number; rot: number; c: string }
+    const mk = (kind: Kind): Mote => ({
+      kind, x: R(), y: R(), z: 0.6 + R() * 0.7, p: R() * 7, rot: (R() - 0.5) * 0.5,
+      r: kind === 'glow' ? 22 + R() * 34 : kind === 'star' ? 2.5 + R() * 3.5 : 3 + R() * 2.5,
+      v: kind === 'heart' ? 0.00006 + R() * 0.0001 : 0.000012 + R() * 0.00002,
+      c: kind === 'heart' ? HEART[(R() * HEART.length) | 0] : STAR[(R() * STAR.length) | 0],
     })
-    const ambient = [...Array.from({ length: small ? 4 : 7 }, () => mk(true)), ...Array.from({ length: small ? 14 : 26 }, () => mk(false))]
-    type Fx = { x: number; y: number; vx: number; vy: number; life: number; dec: number; r: number; rot: number; vr: number; c: string }
+    const ambient = [
+      ...Array.from({ length: small ? 4 : 7 }, () => mk('glow')),
+      ...Array.from({ length: small ? 14 : 26 }, () => mk('star')),
+      ...Array.from({ length: small ? 5 : 9 }, () => mk('heart')),
+    ]
+    type Fx = { x: number; y: number; vx: number; vy: number; life: number; dec: number; r: number; heart: boolean; c: string; rot: number }
     const fx: Fx[] = []
     const burst = (x: number, y: number, n: number) => {
       if (reduce) return
       for (let i = 0; i < (small ? Math.round(n * 0.55) : n); i++) {
-        const a = R() * Math.PI * 2, sp = 1 + R() * 3.2
-        fx.push({ x: x * dpr, y: y * dpr, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 0.8, life: 1, dec: 0.006 + R() * 0.008, r: 3 + R() * 4, rot: R() * 6, vr: (R() - 0.5) * 0.12, c: TINTS[(R() * TINTS.length) | 0] })
+        const a = R() * Math.PI * 2, sp = 0.8 + R() * 2.6, heart = R() < 0.35
+        fx.push({ x: x * dpr, y: y * dpr, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 0.6, life: 1, dec: 0.007 + R() * 0.008, r: heart ? 3 + R() * 2.5 : 2 + R() * 3, heart, c: heart ? HEART[(R() * HEART.length) | 0] : STAR[(R() * STAR.length) | 0], rot: (R() - 0.5) * 0.6 })
       }
     }
-    let mx = 0.5, my = 0.5, smx = 0.5, smy = 0.5, lastDrop = 0
+    let mx = 0.5, my = 0.5, smx = 0.5, smy = 0.5, lastSpark = 0
     if (matchMedia('(pointer: fine)').matches) {
       on('pointermove', (e) => {
         mx = e.clientX / innerWidth
         my = e.clientY / innerHeight
         const now = performance.now()
-        if (!reduce && now - lastDrop > 90) {
-          lastDrop = now
-          fx.push({ x: e.clientX * dpr, y: e.clientY * dpr, vx: (R() - 0.5) * 0.6, vy: 0.4 + R() * 0.5, life: 1, dec: 0.016, r: 2 + R() * 2.5, rot: R() * 6, vr: (R() - 0.5) * 0.1, c: TINTS[(R() * TINTS.length) | 0] })
+        if (!reduce && now - lastSpark > 70) {
+          lastSpark = now
+          fx.push({ x: e.clientX * dpr, y: e.clientY * dpr, vx: (R() - 0.5) * 0.5, vy: -0.2 - R() * 0.4, life: 1, dec: 0.02, r: 1.5 + R() * 2, heart: false, c: STAR[(R() * STAR.length) | 0], rot: 0 })
         }
       }, { passive: true })
     }
-    // a petal: two arcs meeting at a point, flipped by `flip` to look like it turns in the air
-    const petal = (x: number, y: number, r: number, rot: number, flip: number) => {
-      cx.save(); cx.translate(x, y); cx.rotate(rot); cx.scale(flip, 1)
-      cx.beginPath(); cx.moveTo(0, -r * 1.3)
-      cx.bezierCurveTo(r * 1.1, -r * 0.6, r * 0.9, r * 0.9, 0, r * 1.2)
-      cx.bezierCurveTo(-r * 0.9, r * 0.9, -r * 1.1, -r * 0.6, 0, -r * 1.3)
+    // a four-point sparkle with slightly pinched arms
+    const star = (x: number, y: number, r: number) => {
+      cx.beginPath(); cx.moveTo(x, y - r)
+      cx.quadraticCurveTo(x + r * 0.14, y - r * 0.14, x + r, y)
+      cx.quadraticCurveTo(x + r * 0.14, y + r * 0.14, x, y + r)
+      cx.quadraticCurveTo(x - r * 0.14, y + r * 0.14, x - r, y)
+      cx.quadraticCurveTo(x - r * 0.14, y - r * 0.14, x, y - r)
+      cx.fill()
+    }
+    // a small heart centred on (x, y), tilted by rot
+    const heart = (x: number, y: number, r: number, rot: number) => {
+      const s = r * 2
+      cx.save(); cx.translate(x, y); cx.rotate(rot); cx.translate(0, -s / 2)
+      cx.beginPath(); cx.moveTo(0, s * 0.3)
+      cx.bezierCurveTo(0, 0, -s * 0.5, 0, -s * 0.5, s * 0.3)
+      cx.bezierCurveTo(-s * 0.5, s * 0.6, 0, s * 0.8, 0, s)
+      cx.bezierCurveTo(0, s * 0.8, s * 0.5, s * 0.6, s * 0.5, s * 0.3)
+      cx.bezierCurveTo(s * 0.5, 0, 0, 0, 0, s * 0.3)
       cx.fill(); cx.restore()
     }
     let lastY = scrollY, vel = 0
@@ -159,39 +179,46 @@ export function Journey() {
       smy += (my - smy) * 0.04
       cx.clearRect(0, 0, W, H)
       for (const q of ambient) {
-        // petals fall; scrolling down lifts them a little, as if the reader moved through them
-        q.y += (q.v - vel * 0.00004) * q.z
-        q.x += Math.sin(t / 2400 + q.p) * 0.00035 * q.z
-        q.rot += q.vr
-        if (q.y > 1.05) { q.y = -0.05; q.x = R() }
+        // everything rises a little; scrolling carries it along like air
+        q.y -= (q.v + vel * 0.00003) * q.z
+        q.x += Math.sin(t / 3200 + q.p) * (q.kind === 'heart' ? 0.0003 : 0.00006) * q.z
         if (q.y < -0.05) { q.y = 1.05; q.x = R() }
+        if (q.y > 1.05) { q.y = -0.05; q.x = R() }
         const X = (q.x + (smx - 0.5) * -0.03 * q.z) * W, Y = (q.y + (smy - 0.5) * -0.03 * q.z) * H
-        if (q.glow) {
+        if (q.kind === 'glow') {
           const g = cx.createRadialGradient(X, Y, 0, X, Y, q.r * dpr)
-          g.addColorStop(0, 'rgba(240,214,204,.10)'); g.addColorStop(1, 'rgba(240,214,204,0)')
+          g.addColorStop(0, 'rgba(255,255,255,.3)'); g.addColorStop(1, 'rgba(255,255,255,0)')
           cx.globalAlpha = 0.6 + 0.4 * Math.sin(t / 2600 + q.p); cx.fillStyle = g
           cx.beginPath(); cx.arc(X, Y, q.r * dpr, 0, 7); cx.fill()
           continue
         }
-        cx.globalAlpha = 0.5 + 0.25 * q.z
         cx.fillStyle = q.c
-        petal(X, Y, q.r * dpr * q.z, q.rot, Math.cos(t / 900 + q.p))
+        if (q.kind === 'star') {
+          // twinkle: mostly faint, now and then bright
+          const tw = Math.max(0, Math.sin(t / 900 + q.p))
+          cx.globalAlpha = 0.15 + tw * tw * 0.8
+          star(X, Y, q.r * dpr * (0.6 + tw * 0.5))
+        } else {
+          cx.globalAlpha = 0.35 + 0.2 * Math.sin(t / 1800 + q.p)
+          heart(X, Y, q.r * dpr * q.z, q.rot + Math.sin(t / 2000 + q.p) * 0.15)
+        }
       }
       for (let i = fx.length - 1; i >= 0; i--) {
         const f = fx[i]
-        f.x += f.vx * dpr; f.y += f.vy * dpr; f.vx *= 0.97; f.vy = f.vy * 0.97 + 0.02; f.life -= f.dec; f.rot += f.vr
+        f.x += f.vx * dpr; f.y += f.vy * dpr; f.vx *= 0.96; f.vy = f.vy * 0.96 - 0.01; f.life -= f.dec
         if (f.life <= 0) { fx.splice(i, 1); continue }
-        cx.globalAlpha = f.life * 0.85; cx.fillStyle = f.c
-        petal(f.x, f.y, f.r * dpr, f.rot, Math.cos(f.rot * 2))
+        cx.globalAlpha = f.life * 0.9; cx.fillStyle = f.c
+        if (f.heart) heart(f.x, f.y, f.r * dpr, f.rot)
+        else star(f.x, f.y, f.r * dpr * (0.6 + f.life * 0.6))
       }
       cx.globalAlpha = 1
     }
 
-    // a handful of petals from the logo on arrival, a few when a mirror is hovered
+    // sparkles and hearts from the logo on arrival, a few when a mirror is hovered
     const logo = $('[data-burst]')
     const t0 = setTimeout(() => {
       const b = logo?.getBoundingClientRect()
-      if (b) burst(b.left + b.width / 2, b.top + b.height / 2, 46)
+      if (b) burst(b.left + b.width / 2, b.top + b.height / 2, 40)
     }, 600)
     cleanups.push(() => clearTimeout(t0))
     plates.forEach((pl) => {
@@ -253,5 +280,5 @@ export function Journey() {
     }
   }, [])
 
-  return <canvas ref={canvas} className="petals" aria-hidden />
+  return <canvas ref={canvas} className="sparkles" aria-hidden />
 }

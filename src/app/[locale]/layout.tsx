@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
   }
 }
 
-export const viewport: Viewport = { themeColor: '#2F3B2C', width: 'device-width', initialScale: 1, viewportFit: 'cover' }
+export const viewport: Viewport = { themeColor: '#F1D9CB', width: 'device-width', initialScale: 1, viewportFit: 'cover' }
 
 export default async function LocaleLayout({ children, params }: LayoutProps<'/[locale]'>) {
   const { locale } = await params

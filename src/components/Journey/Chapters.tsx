@@ -134,7 +134,7 @@ export function Collection({ locale, t }: { locale: Locale; t: Dict }) {
   )
 }
 
-/** 03 · one face per occasion, staggered along a vine that grows as you scroll. */
+/** 03 · one face per occasion, staggered along a thread that grows as you scroll; a star marks each. */
 export function Moments({ t }: { t: Dict }) {
   return (
     <div id="moments" className="chapter">

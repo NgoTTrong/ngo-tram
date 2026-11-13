@@ -64,7 +64,7 @@ test('chapter titles and moments reveal as they come into view', async ({ page }
   await expect.poll(() => stop.locator('.stop__face').evaluate((e) => Number(getComputedStyle(e).opacity))).toBeGreaterThan(0.9)
 })
 
-test('the vine grows with the reader', async ({ page }) => {
+test('the thread grows with the reader', async ({ page }) => {
   await ready(page)
   const off = () => page.locator('[data-vine]').evaluate((e) => Number((e as SVGPathElement).style.strokeDashoffset || 1))
   await page.locator('.path').evaluate((e) => window.scrollTo({ top: e.getBoundingClientRect().top + scrollY - innerHeight, behavior: 'instant' }))
@@ -97,9 +97,9 @@ test('the rail follows the chapters (desktop)', async ({ page }, info) => {
   await expect(page.locator('.map a.on')).toHaveAttribute('href', '#backstage')
 })
 
-test('petals fall on a canvas behind the content', async ({ page }) => {
+test('sparkles and hearts drift on a canvas behind the content', async ({ page }) => {
   await ready(page)
-  const canvas = page.locator('canvas.petals')
+  const canvas = page.locator('canvas.sparkles')
   await expect(canvas).toHaveCount(1)
   await expect(canvas).toHaveCSS('pointer-events', 'none')
 })
