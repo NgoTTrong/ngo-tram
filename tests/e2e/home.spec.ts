@@ -1,112 +1,68 @@
 import { expect, test } from '@playwright/test'
-import { concepts } from '../../src/content/concepts'
+import { AREA } from '../../src/content/site'
 
-/** Registered `<color>` custom properties compute to rgb(); accept either spelling. */
-const rgb = (hex: string) => `rgb(${[1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ')})`
-
-test('renders 18 scenes in order', async ({ page }) => {
+test('home shows the face wall with the logo', async ({ page }) => {
   await page.goto('/vi')
-  const scenes = page.locator('[data-scene]')
-  await expect(scenes).toHaveCount(18)
-  expect(await scenes.evaluateAll((els) => els.map((e) => e.id))).toEqual(concepts.map((c) => c.slug))
-  const orders = await scenes.evaluateAll((els) => els.map((e) => Number((e as HTMLElement).dataset.order)))
-  expect(orders).toEqual(Array.from({ length: 18 }, (_, i) => i + 1))
-  await expect(scenes.first().getByRole('heading', { level: 2 })).toHaveText('The White Lotus')
+  await expect(page.locator('#wall img[data-face]')).toHaveCount(25)
+  await expect(page.locator('#wall .wall__tile--hero img')).toHaveAttribute('data-face', '43')
+  await expect(page.locator('#wall img[alt="Makeup Ngô Trâm"]')).toBeVisible()
 })
 
-test('each scene links to its concept page and credits the studio', async ({ page }) => {
+test('six looks with captions and a counter', async ({ page }) => {
   await page.goto('/vi')
-  for (const c of concepts) {
-    const section = page.locator(`#${c.slug}`)
-    await expect(section.locator(`a[href="/vi/concepts/${c.slug}"]`)).toHaveCount(1)
-    await expect(section).toContainText('Makeup: Ngô Trâm · Photo: TO Studio')
-  }
+  const looks = page.locator('#looks figure.look')
+  await expect(looks).toHaveCount(6)
+  await expect(looks.first().locator('.look__name')).toHaveText('Tóc cài hoa')
+  await expect(looks.first().locator('.look__kind')).toContainText('Chụp ảnh')
+  await expect(page.locator('.looks__count')).toHaveText('01 / 06')
 })
 
-test('korean home shows korean taglines and links', async ({ page }) => {
+test('korean looks are captioned in korean', async ({ page }) => {
   await page.goto('/ko')
-  const first = page.locator('#the-white-lotus')
-  await expect(first).toContainText(concepts[0].tagline.ko)
-  await expect(first.locator('a[href="/ko/concepts/the-white-lotus"]')).toHaveCount(1)
+  await expect(page.locator('#looks figure.look').nth(1).locator('.look__name')).toHaveText('베일과 진주')
 })
 
-test('each scene paints its own theme colour', async ({ page }) => {
-  await page.goto('/vi')
-  const bg = await page.locator('#velvet-silence').evaluate((e) => getComputedStyle(e).getPropertyValue('--bg').trim().toLowerCase())
-  expect([rgb('#241912'), '#241912']).toContain(bg)
+test('face tiles have size before images load', async ({ page }) => {
+  await page.route('**/faces/**', () => {})
+  await page.goto('/vi', { waitUntil: 'domcontentloaded' })
+  const boxes = await page.locator('#wall .wall__tile').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).map((r) => r.width * r.height))
+  expect(boxes).toHaveLength(25)
+  for (const area of boxes) expect(area).toBeGreaterThan(0)
 })
 
-test('collages are never upscaled', async ({ page }) => {
+test('more faces run in two strips of clickable tiles', async ({ page }) => {
   await page.goto('/vi')
-  for (const id of ['the-white-lotus', 'summer-crush', 'a-private-escape']) {
-    // compare with the source (lg) height, not the srcset variant the browser picked
-    const img = page.locator(`#${id} [data-collage]`)
-    await img.scrollIntoViewIfNeeded()
-    const { ch, h } = await img.evaluate((i: HTMLImageElement) => ({ ch: i.clientHeight, h: Number(i.dataset.h) }))
-    expect(h).toBeGreaterThan(0)
-    expect(ch * 2).toBeLessThanOrEqual(h + 2)
+  await expect(page.locator('#more .strip')).toHaveCount(2)
+  const first = page.locator('#more .strip').first().locator('a.face').first()
+  await expect(first).toHaveAttribute('href', /\/faces\/\d{2}-lg\.webp$/)
+})
+
+test('backstage carries the about text, services and area', async ({ page }) => {
+  await page.goto('/vi')
+  const bts = page.locator('#backstage')
+  await expect(bts.getByRole('heading', { level: 2 })).toHaveText('Sau tấm gương')
+  await expect(bts).toContainText(AREA.vi)
+  expect(await bts.locator('.bts__services li').count()).toBeGreaterThanOrEqual(3)
+  await expect(bts.locator('a.face')).toHaveCount(6)
+})
+
+test('old concept links land on the home page', async ({ page }) => {
+  const res = await page.goto('/vi/concepts/la-vie-en-rose')
+  expect(res?.request().redirectedFrom()).not.toBeNull()
+  expect(new URL(page.url()).pathname).toBe('/vi')
+  await page.goto('/ko/concepts/winter-cherie')
+  expect(new URL(page.url()).pathname).toBe('/ko')
+})
+
+test('no page mentions concepts or TO Studio', async ({ page }) => {
+  for (const path of ['/vi', '/ko', '/ru']) {
+    await page.goto(path)
+    const text = await page.locator('body').innerText()
+    expect(text, path).not.toMatch(/concept|TO Studio|콘셉트|концепт/i)
   }
-})
-
-test('only the first collage is eager', async ({ page }) => {
-  await page.goto('/vi')
-  await expect(page.locator('[data-collage][loading="eager"]')).toHaveCount(1)
-  await expect(page.locator('#the-white-lotus [data-collage]')).toHaveAttribute('loading', 'eager')
-})
-
-for (const height of [664, 844]) {
-  test(`scene title fits the first screen on short phones (${height})`, async ({ browser }) => {
-    const page = await browser.newPage({ viewport: { width: 390, height } })
-    await page.goto('/vi')
-    const { top, bottom } = await page.locator('#ocean-kissed').evaluate((s) => ({
-      top: s.getBoundingClientRect().top,
-      bottom: s.querySelector('.scene__name')!.getBoundingClientRect().bottom,
-    }))
-    expect(bottom - top).toBeLessThanOrEqual(height)
-    await page.close()
-  })
-}
-
-test('particle count is capped on phones', async ({ browser }) => {
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } })
-  await page.goto('/vi')
-  await page.evaluate(() => document.getElementById('winter-cherie')!.scrollIntoView())
-  await expect(page.locator('#fx')).toHaveAttribute('data-mode', 'snow')
-  expect(Number(await page.locator('#fx').getAttribute('data-count'))).toBeLessThanOrEqual(30)
-  await page.close()
-})
-
-test('intro shows two moving strips with every collage', async ({ page }) => {
-  await page.goto('/vi')
-  const strips = page.locator('.intro [data-strip]')
-  await expect(strips).toHaveCount(2)
-  const slugs = await page.locator('.intro [data-strip] a').evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute('href')))])
-  expect(slugs.sort()).toEqual(concepts.map((c) => `#${c.slug}`).sort())
-  const srcs = await page.locator('.intro [data-strip] img').evaluateAll((imgs) => imgs.map((i) => i.getAttribute('src')))
-  expect(srcs.every((s) => /^\/collages\/.+-360\.webp$/.test(s ?? ''))).toBe(true)
-  expect(await strips.first().locator('[data-strip-track]').evaluate((e) => getComputedStyle(e).animationName)).not.toBe('none')
-})
-
-test.describe('reduced motion intro', () => {
-  test.use({ reducedMotion: 'reduce' })
-  test('intro strips stand still', async ({ page }) => {
-    await page.goto('/vi')
-    expect(await page.locator('.intro [data-strip-track]').first().evaluate((e) => getComputedStyle(e).animationPlayState)).toBe('paused')
-  })
 })
 
 test('no horizontal scroll', async ({ page }) => {
   await page.goto('/vi')
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)
-  expect(overflow).toBeLessThanOrEqual(0)
-})
-
-test('particles stay behind collages and text', async ({ page }) => {
-  await page.goto('/vi')
-  const z = (sel: string) => page.locator(sel).first().evaluate((e) => Number(getComputedStyle(e).zIndex) || 0)
-  const fx = await z('#fx')
-  expect(await z('#velvet-silence .scene__frame')).toBeGreaterThan(fx)
-  expect(await z('#velvet-silence .scene__text')).toBeGreaterThan(fx)
-  // the scene itself must not form a stacking context, or the canvas could not slide between its background and photo
-  expect(await page.locator('#velvet-silence').evaluate((e) => getComputedStyle(e).zIndex)).toBe('auto')
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
 })

@@ -6,8 +6,6 @@ import { getDict } from '@/i18n/dict'
 import { fontVars } from '../fonts'
 import { BookButton } from '@/components/BookButton'
 import { LangSwitch } from '@/components/LangSwitch'
-import { ParticleField } from '@/components/ParticleField'
-import { SceneObserver } from '@/components/SceneObserver'
 import { Footer } from '@/components/Footer'
 import '../globals.css'
 import { siteUrl } from '@/lib/site-url'
@@ -41,7 +39,6 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   return (
     <html lang={locale} className={fontVars}>
       <body>
-        <ParticleField />
         <header className="site-header">
           <a href={`/${locale}`} aria-label="Makeup Ngô Trâm">
             <span className="logo-mask" aria-hidden />
@@ -50,7 +47,6 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
         </header>
         {children}
         <Footer t={t} locale={locale} />
-        <SceneObserver />
         <BookButton variant="float" label={t.book} title={t.bookTitle} hint={t.bookHint} closeLabel={t.close} channels={CHANNELS[locale]} />
       </body>
     </html>

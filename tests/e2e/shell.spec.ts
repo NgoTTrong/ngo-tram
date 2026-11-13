@@ -25,9 +25,9 @@ test('root redirects Russian browsers to /ru', async ({ browser }) => {
 })
 
 test('Russian pages are in Russian with a Cyrillic body font', async ({ page }) => {
-  await page.goto('/ru/concepts/summer-crush')
+  await page.goto('/ru')
   await expect(page.locator('html')).toHaveAttribute('lang', 'ru')
-  await expect(page.locator('.scene__tagline, .concept__hero-text p').filter({ hasText: /[а-яё]/i }).first()).toBeVisible()
+  await expect(page.locator('#looks .look__name').first()).toHaveText(/[а-яё]/i)
   expect(await page.evaluate(() => getComputedStyle(document.body).fontFamily)).toMatch(/Nunito/i)
   await expect(page.locator('#contact h2')).toContainText(/[а-яё]/i)
 })
@@ -55,14 +55,14 @@ test('book button opens a chooser with Zalo and Facebook', async ({ page }) => {
 })
 
 test('language menu lists every language for the same page', async ({ page }) => {
-  await page.goto('/ko/concepts/lotus-fairy')
+  await page.goto('/ko')
   const menu = page.getByTestId('lang-switch')
   await expect(menu.locator('summary')).toContainText('KO')
   await menu.locator('summary').click()
   const links = menu.getByRole('link')
   await expect(links).toHaveCount(3)
-  await expect(menu.getByRole('link', { name: 'Tiếng Việt' })).toHaveAttribute('href', '/vi/concepts/lotus-fairy')
-  await expect(menu.getByRole('link', { name: 'Русский' })).toHaveAttribute('href', '/ru/concepts/lotus-fairy')
+  await expect(menu.getByRole('link', { name: 'Tiếng Việt' })).toHaveAttribute('href', '/vi')
+  await expect(menu.getByRole('link', { name: 'Русский' })).toHaveAttribute('href', '/ru')
   await expect(menu.getByRole('link', { name: '한국어' })).toHaveAttribute('aria-current', 'true')
   await page.keyboard.press('Escape')
   await expect(links.first()).toBeHidden()

@@ -1,13 +1,13 @@
-// public/og.jpg (1200×630): three chapter covers on cream + logo. Shown when the site link is shared on Zalo/Facebook/Kakao.
+// public/og.jpg (1200×630): three faces Trâm made up, on cream + logo. Shown when the site link is shared on Zalo/Facebook/Kakao.
 import sharp from 'sharp'
 import path from 'node:path'
 
 const root = path.resolve(import.meta.dirname, '..')
 const W = 1200, H = 630, PHOTO_W = 300, PHOTO_H = 375
-const covers = [['la-vie-en-rose', 0], ['the-white-lotus', 3], ['pink-dream-21', 7]]
+const covers = ['43', '17', '70']
 
 const photos = await Promise.all(
-  covers.map(([slug, i]) => sharp(path.join(root, 'public/concepts', slug, `${i}.webp`)).resize(PHOTO_W, PHOTO_H, { fit: 'cover', position: 'top' }).toBuffer()),
+  covers.map((id) => sharp(path.join(root, 'public/faces', `${id}-md.webp`)).resize(PHOTO_W, PHOTO_H, { fit: 'cover', position: 'top' }).toBuffer()),
 )
 const logo = await sharp(path.join(root, 'public/brand/logo-moss.png')).resize({ height: 300 }).toBuffer()
 const logoMeta = await sharp(logo).metadata()

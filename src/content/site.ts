@@ -22,6 +22,4 @@ export const CHANNEL_LABEL: Record<Channel, string> = { kakao: 'KakaoTalk', zalo
 /** Booking channels per language, most used first: Korean visitors message on KakaoTalk, not Zalo. */
 export const CHANNELS: Record<Locale, Channel[]> = { vi: ['zalo', 'facebook'], ko: ['kakao', 'zalo', 'facebook'], ru: ['zalo', 'facebook'] }
 
-export const CREDIT = 'Makeup: Ngô Trâm · Photo: TO Studio'
-
 export const AREA: Record<Locale, string> = { vi: 'Nội thành Nha Trang', ko: '나트랑 시내', ru: 'Центр Нячанга' }

@@ -25,10 +25,8 @@ describe('siteUrl', () => {
   })
 })
 
-describe('watermarked tiles', () => {
-  it('are not published', () => {
-    const dir = path.join(process.cwd(), 'public', 'concepts', 'a-private-escape')
-    expect(existsSync(path.join(dir, '1.webp'))).toBe(false)
-    expect(existsSync(path.join(dir, '1-sm.webp'))).toBe(false)
+describe('studio photos', () => {
+  it('are no longer published', () => {
+    expect(existsSync(path.join(process.cwd(), 'public', 'concepts'))).toBe(false)
   })
 })

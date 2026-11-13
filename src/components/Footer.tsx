@@ -1,10 +1,9 @@
 /* eslint-disable @next/next/no-img-element */
-import { concepts } from '@/content/concepts'
+import { FOOTER_WALL } from '@/content/faces'
 import { CHANNELS, SOCIALS } from '@/content/site'
 import type { Locale } from '@/i18n/config'
 import type { Dict } from '@/i18n/dict'
-import { collageSrc, getCollage } from '@/lib/collage'
-import { Credit } from './Credit'
+import { faceOut, faceSrc } from '@/lib/face'
 import { FinaleActions } from './FinaleActions'
 
 const ICONS: Record<keyof typeof SOCIALS, { label: string; path: string }> = {
@@ -27,7 +26,7 @@ const ICONS: Record<keyof typeof SOCIALS, { label: string; path: string }> = {
 }
 
 /**
- * The finale: every collage as a slowly drifting wall under a moss veil, a handwritten invitation,
+ * The finale: a slowly drifting wall of faces under a moss veil, a handwritten invitation,
  * three steps to book, a ready-to-send message and the two booking channels.
  */
 export function Footer({ t, locale }: { t: Dict; locale: Locale }) {
@@ -35,14 +34,14 @@ export function Footer({ t, locale }: { t: Dict; locale: Locale }) {
     <footer id="contact" className="footer finale" aria-labelledby="contact-title">
       <div className="finale__wall" data-wall aria-hidden>
         <div className="finale__wall-track">
-          {[...concepts, ...concepts, ...concepts].map((c, i) => {
-            const size = getCollage(c.slug)
+          {[...FOOTER_WALL, ...FOOTER_WALL].map((id, i) => {
+            const size = faceOut(id, 'sm')
             return (
               <img
-                key={`${c.slug}-${i}`}
-                src={collageSrc(c.slug, 'sm')}
-                width={Math.round((360 * size.width) / size.height)}
-                height={360}
+                key={`${id}-${i}`}
+                src={faceSrc(id, 'sm')}
+                width={size.width}
+                height={size.height}
                 alt=""
                 loading="lazy"
                 decoding="async"
@@ -80,7 +79,6 @@ export function Footer({ t, locale }: { t: Dict; locale: Locale }) {
             </li>
           ))}
         </ul>
-        <Credit className="footer__credit" />
         <p className="footer__copy">© {new Date().getFullYear()} Makeup Ngô Trâm</p>
       </div>
     </footer>

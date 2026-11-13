@@ -1,32 +1,21 @@
 import { notFound } from 'next/navigation'
-import { Scene } from '@/components/Scene'
-import { ChapterIndex } from '@/components/ChapterIndex'
-import { About } from '@/components/About'
-import { Intro } from '@/components/Intro'
-import { ScrollStage } from '@/components/ScrollStage'
-import { concepts, getConcept } from '@/content/concepts'
-import { BRAND, themeFor } from '@/content/themes'
+import { Backstage } from '@/components/Backstage'
+import { FaceStrips } from '@/components/FaceStrips'
+import { FaceWall } from '@/components/FaceWall'
+import { Looks } from '@/components/Looks'
 import { isLocale } from '@/i18n/config'
 import { getDict } from '@/i18n/dict'
-
-const CLOSE_UPS = ['petals-and-grace', 'lotus-fairy', 'wishful-moment'].map((s) => getConcept(s)!)
 
 export default async function Home({ params }: PageProps<'/[locale]'>) {
   const { locale } = await params
   if (!isLocale(locale)) notFound()
   const t = getDict(locale)
   return (
-    <ScrollStage>
-      <main>
-        <Intro t={t} concepts={concepts} />
-        <ChapterIndex concepts={concepts} label={t.gallery} />
-        <div className="scenes">
-          {concepts.map((c, i) => (
-            <Scene key={c.slug} concept={c} locale={locale} total={concepts.length} t={t} first={i === 0} prevBg={i === 0 ? BRAND.bg : themeFor(concepts[i - 1].slug).bg} />
-          ))}
-        </div>
-        <About locale={locale} t={t} closeUps={CLOSE_UPS} prevBg={themeFor(concepts[concepts.length - 1].slug).bg} />
-      </main>
-    </ScrollStage>
+    <main>
+      <FaceWall t={t} />
+      <Looks locale={locale} t={t} />
+      <FaceStrips t={t} />
+      <Backstage locale={locale} t={t} />
+    </main>
   )
 }

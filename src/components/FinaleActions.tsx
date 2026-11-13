@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { CHANNEL_LABEL, CHANNEL_URL, KAKAO, type Channel } from '@/content/site'
 
-const BLANK = '___'
 const BUBBLE = 'M12 3C6.5 3 2 6.8 2 11.5c0 2.6 1.4 4.9 3.6 6.5L5 21l3.6-1.8c1.1.3 2.2.5 3.4.5 5.5 0 10-3.8 10-8.5S17.5 3 12 3Z'
 const ICON: Record<Channel, string> = {
   kakao: BUBBLE,
@@ -25,8 +24,7 @@ function release(e: PointerEvent<HTMLAnchorElement>) {
 }
 
 /**
- * Booking actions of the footer finale: the message preview (rendered on the server with a blank,
- * filled with the concept last on screen — SceneObserver keeps it in html[data-concept]), a copy
+ * Booking actions of the footer finale: a ready-to-send message with a blank for the date, a copy
  * button, and the booking channels of this language (the first one is the main button).
  */
 export function FinaleActions({
@@ -42,25 +40,17 @@ export function FinaleActions({
   copied: string
   channels: Channel[]
 }) {
-  const [concept, setConcept] = useState(BLANK)
   const [done, setDone] = useState(false)
   const timer = useRef<number>(undefined)
-  const message = template.replace('{concept}', concept)
+  const message = template
 
   useEffect(() => {
     const root = document.documentElement
-    // a concept page names itself even if its <main> never reached the middle of the screen
-    const page = document.querySelector<HTMLElement>('main[data-concept-name]')?.dataset.conceptName
-    const read = () => setConcept(root.dataset.concept || page || BLANK)
-    read()
-    const mo = new MutationObserver(read)
-    mo.observe(root, { attributes: true, attributeFilter: ['data-concept'] })
     // the floating book button steps aside while the finale (which has the same links) is on screen
     const footer = document.getElementById('contact')
     const io = new IntersectionObserver(([e]) => (root.dataset.finale = String(e.isIntersecting)), { rootMargin: '0px 0px -30% 0px' })
     if (footer) io.observe(footer)
     return () => {
-      mo.disconnect()
       io.disconnect()
       delete root.dataset.finale
       clearTimeout(timer.current)

@@ -14,6 +14,12 @@ describe('dictionaries', () => {
     }
   })
 
+  test('no copy talks about concepts any more', () => {
+    for (const locale of locales) {
+      for (const [key, value] of Object.entries(getDict(locale))) expect(value, `${locale}.${key}`).not.toMatch(/concept|콘셉트|концепт|\{concept\}/i)
+    }
+  })
+
   test('isLocale accepts only vi, ko and ru', () => {
     expect(isLocale('vi')).toBe(true)
     expect(isLocale('ko')).toBe(true)

@@ -1,12 +1,15 @@
 import { defineConfig, devices } from '@playwright/test'
 
+// E2E_PORT lets the suite run while another project's server holds 3100.
+const PORT = process.env.E2E_PORT ?? '3100'
+
 export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 30_000,
-  use: { baseURL: 'http://localhost:3100' },
+  use: { baseURL: `http://localhost:${PORT}` },
   webServer: {
-    command: 'npm run build && npx next start -p 3100',
-    url: 'http://localhost:3100',
+    command: `npm run build && npx next start -p ${PORT}`,
+    url: `http://localhost:${PORT}`,
     reuseExistingServer: false,
     timeout: 300_000,
   },
