@@ -7,7 +7,7 @@ import { FaceLink } from './FaceImg'
 /** Chapter 4 on moss: Trâm at work, who she is, what she offers and where. */
 export function Backstage({ locale, t }: { locale: Locale; t: Dict }) {
   return (
-    <section id="backstage" className="bts" aria-labelledby="bts-title">
+    <section id="backstage" className="bts" data-ink="light" aria-labelledby="bts-title">
       <div className="bts__text">
         <p className="bts__kicker">{t.backstageKicker}</p>
         <h2 id="bts-title" className="bts__title font-script">

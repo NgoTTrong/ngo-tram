@@ -28,7 +28,7 @@ html {
   overflow-x: clip;
   background: var(--moss);
   -webkit-text-size-adjust: 100%;
-  transition: --bg 1.4s ease, --bg2 1.4s ease, --ink 1.4s ease, --accent 1.4s ease;
+  transition: --bg 0.4s ease, --ink 0.4s ease;
 }
 @media (prefers-reduced-motion: reduce) {
   html { transition: none; }
@@ -241,8 +241,8 @@ main > section { position: relative; }
   display: grid;
   grid-template-columns: repeat(5, 40vw);
   gap: 2vw;
-  translate: -50% -50%;
-  transform: scale(0.62) rotate(-6deg);
+  /* centring lives in transform: the standalone `translate` property is dropped by the CSS minifier */
+  transform: translate(-50%, -50%) scale(0.62) rotate(-6deg);
   transform-origin: center;
 }
 @media (min-width: 768px) { .wall__grid { grid-template-columns: repeat(5, 22vw); gap: 1.2vw; } }
@@ -306,6 +306,24 @@ main > section { position: relative; }
 .bts__photos { display: grid; gap: 5svh; }
 .bts__tile { aspect-ratio: 3 / 4; overflow: hidden; border-radius: 6px; width: min(100%, 460px); }
 .bts__tile:nth-child(even) { justify-self: end; }
+
+/* ---------- motion (html[data-motion='on'], set before paint; FacesStage writes the transforms) ---------- */
+html[data-ink='light'] { --ink: var(--cream); --bg: var(--moss); }
+html[data-motion='on'] .wall { height: 340svh; }
+html[data-motion='on'] .wall .stage { position: sticky; top: 0; }
+html[data-motion='on'] .wall__grid,
+html[data-motion='on'] .wall__tile,
+html[data-motion='on'] .wall__title { will-change: transform, opacity; }
+/* the looks overlap the wall's last screen: the first look wipes up over the zoomed centre face */
+html[data-motion='on'] .looks { height: calc(100svh * 6.2); margin-top: -100svh; z-index: 1; }
+html[data-motion='on'] .looks .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+html[data-motion='on'] .look { position: absolute; inset: 0; height: auto; min-height: 0; clip-path: circle(0px at 50% 72%); }
+html[data-motion='on'] .look:first-child { clip-path: none; }
+html[data-motion='on'] .look img { will-change: transform; }
+html[data-motion='on'] .looks__count { display: block; position: absolute; z-index: 3; right: max(20px, 5vw); bottom: max(28px, 8svh); margin: 0; color: var(--cream); font-size: 14px; letter-spacing: 0.2em; }
+html[data-motion='on'] .strip { overflow: hidden; }
+html[data-motion='on'] .strip__track { will-change: transform; }
+html[data-motion='on'] .bts__tile { will-change: transform; }
 
 /* ---------- footer ---------- */
 .footer { position: relative; z-index: 3; background: var(--moss); color: var(--cream); text-align: center; padding: 80px 20px max(120px, calc(env(safe-area-inset-bottom) + 100px)); }

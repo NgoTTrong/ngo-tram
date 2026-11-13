@@ -3,10 +3,14 @@ import { WALL } from '@/content/faces'
 import type { Dict } from '@/i18n/dict'
 import { FaceImg } from './FaceImg'
 
+/** Before first paint: pinned chapters only when motion is allowed (FacesStage drives them). */
+const MOTION_FLAG = "if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.dataset.motion='on'"
+
 /** Chapter 1: a tilted 5×5 wall of faces around the logo. FacesStage dives the camera into the centre face. */
 export function FaceWall({ t }: { t: Dict }) {
   return (
-    <section id="wall" className="wall" data-chapter="wall" aria-labelledby="wall-title">
+    <section id="wall" className="wall" data-chapter="wall" data-ink="light" aria-labelledby="wall-title">
+      <script dangerouslySetInnerHTML={{ __html: MOTION_FLAG }} />
       <div className="stage">
         <div className="wall__grid" aria-hidden>
           {WALL.map((id, i) => (

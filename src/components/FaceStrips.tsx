@@ -5,7 +5,7 @@ import { FaceLink } from './FaceImg'
 /** Chapter 3: two strips of faces running in opposite directions as you scroll (swipeable without JS). */
 export function FaceStrips({ t }: { t: Dict }) {
   return (
-    <section id="more" className="more" aria-labelledby="more-title">
+    <section id="more" className="more" data-ink="dark" aria-labelledby="more-title">
       <h2 id="more-title" className="more__title font-script">
         {t.moreTitle}
       </h2>

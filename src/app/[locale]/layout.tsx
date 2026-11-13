@@ -37,7 +37,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   if (!isLocale(locale)) notFound()
   const t = getDict(locale)
   return (
-    <html lang={locale} className={fontVars}>
+    <html lang={locale} className={fontVars} suppressHydrationWarning>
       <body>
         <header className="site-header">
           <a href={`/${locale}`} aria-label="Makeup Ngô Trâm">

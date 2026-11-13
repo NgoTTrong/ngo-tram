@@ -31,7 +31,7 @@ const ICONS: Record<keyof typeof SOCIALS, { label: string; path: string }> = {
  */
 export function Footer({ t, locale }: { t: Dict; locale: Locale }) {
   return (
-    <footer id="contact" className="footer finale" aria-labelledby="contact-title">
+    <footer id="contact" className="footer finale" data-ink="light" aria-labelledby="contact-title">
       <div className="finale__wall" data-wall aria-hidden>
         <div className="finale__wall-track">
           {[...FOOTER_WALL, ...FOOTER_WALL].map((id, i) => {

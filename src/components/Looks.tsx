@@ -9,7 +9,7 @@ const pad = (n: number) => String(n).padStart(2, '0')
 /** Chapter 2: full-screen looks; with motion each one opens out of a circle over the previous. */
 export function Looks({ locale, t }: { locale: Locale; t: Dict }) {
   return (
-    <section id="looks" className="looks" data-chapter="looks" aria-label={LOOKS.map((l) => l.caption[locale].name).join(' · ')}>
+    <section id="looks" className="looks" data-chapter="looks" data-ink="light" aria-label={LOOKS.map((l) => l.caption[locale].name).join(' · ')}>
       <div className="stage">
         {LOOKS.map((l, i) => (
           <figure key={l.id} className="look" data-index={i}>
