@@ -232,7 +232,7 @@ main > section { position: relative; }
 .face img, .wall__tile img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 /* 1 · wall */
-.wall { background: var(--paper); }
+.wall { background: var(--paper); z-index: 0; } /* own stacking context: the zoomed hero must stay under the looks */
 .wall .stage { height: 100svh; min-height: 560px; overflow: hidden; }
 .wall__grid {
   position: absolute;
@@ -324,6 +324,21 @@ html[data-motion='on'] .looks__count { display: block; position: absolute; z-ind
 html[data-motion='on'] .strip { overflow: hidden; }
 html[data-motion='on'] .strip__track { will-change: transform; }
 html[data-motion='on'] .bts__tile { will-change: transform; }
+
+/* ---------- lightbox ---------- */
+.lightbox { width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: rgb(20 26 18 / 0.96); color: var(--cream); }
+.lightbox[open] { display: grid; place-items: center; }
+.lightbox::backdrop { background: rgb(20 26 18 / 0.9); }
+.lightbox__img { display: block; width: auto; height: auto; max-width: min(92vw, 100%); max-height: calc(100dvh - 120px); border-radius: 4px; user-select: none; -webkit-user-drag: none; animation: lb-in 0.3s ease-out; }
+@keyframes lb-in { from { opacity: 0; transform: scale(0.97); } }
+.lightbox__count { position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); left: 0; right: 0; margin: 0; text-align: center; font-size: 13px; letter-spacing: 0.2em; }
+.lightbox__nav,
+.lightbox__close { position: absolute; display: grid; place-items: center; border: 0; background: rgb(237 231 217 / 0.12); color: var(--cream); width: 48px; height: 48px; border-radius: 50%; font-size: 28px; line-height: 1; cursor: pointer; backdrop-filter: blur(6px); }
+.lightbox__nav { top: 50%; transform: translateY(-50%); }
+.lightbox__nav--prev { left: 12px; }
+.lightbox__nav--next { right: 12px; }
+.lightbox__close { top: max(12px, env(safe-area-inset-top)); right: 12px; font-size: 18px; }
+.face { cursor: zoom-in; }
 
 /* ---------- footer ---------- */
 .footer { position: relative; z-index: 3; background: var(--moss); color: var(--cream); text-align: center; padding: 80px 20px max(120px, calc(env(safe-area-inset-bottom) + 100px)); }

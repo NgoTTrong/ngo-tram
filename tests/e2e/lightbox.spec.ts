@@ -1,0 +1,70 @@
+import { expect, test } from '@playwright/test'
+
+test('clicking a face opens it large, arrows step, Escape closes', async ({ page }) => {
+  await page.goto('/vi')
+  const tile = page.locator('#backstage a.face').first()
+  await tile.scrollIntoViewIfNeeded()
+  await tile.click()
+  const box = page.getByTestId('lightbox')
+  await expect(box).toBeVisible()
+  const img = box.locator('img')
+  await expect(img).toHaveAttribute('src', /\/faces\/13-lg\.webp$/)
+  await page.keyboard.press('ArrowRight')
+  await expect(img).toHaveAttribute('src', /\/faces\/11-lg\.webp$/)
+  await page.keyboard.press('ArrowLeft')
+  await expect(img).toHaveAttribute('src', /\/faces\/13-lg\.webp$/)
+  await page.keyboard.press('Escape')
+  await expect(box).toBeHidden()
+})
+
+test('next and previous buttons step through the faces, wrapping around', async ({ page }) => {
+  await page.goto('/vi')
+  // the looks are pinned: go to where the first one fills the screen
+  await page.evaluate(() => {
+    const el = document.querySelector<HTMLElement>('#looks')!
+    window.scrollTo({ top: el.getBoundingClientRect().top + scrollY + 2, behavior: 'instant' })
+  })
+  await page.waitForTimeout(900)
+  await page.locator('#looks a.face').first().click()
+  const box = page.getByTestId('lightbox')
+  await box.getByRole('button', { name: 'Ảnh trước' }).click()
+  await expect(box.locator('img')).toHaveAttribute('src', /\/faces\/25-lg\.webp$/)
+  await box.getByRole('button', { name: 'Ảnh sau' }).click()
+  await expect(box.locator('img')).toHaveAttribute('src', /\/faces\/43-lg\.webp$/)
+  await box.getByRole('button', { name: 'Đóng' }).click()
+  await expect(box).toBeHidden()
+})
+
+test('keyboard: Enter opens a focused face and focus returns on close', async ({ page }) => {
+  await page.goto('/vi')
+  const tile = page.locator('#more a.face').nth(2)
+  await tile.focus()
+  await page.keyboard.press('Enter')
+  await expect(page.getByTestId('lightbox')).toBeVisible()
+  await page.keyboard.press('Escape')
+  await expect(tile).toBeFocused()
+})
+
+test('the large photo is never shown above its real size', async ({ page }) => {
+  await page.goto('/vi')
+  // the strips move with the scroll, so a pointer click is racy here; size is what this test is about
+  await page.locator('#more a.face').first().dispatchEvent('click')
+  const img = page.getByTestId('lightbox').locator('img')
+  await expect(img).toBeVisible()
+  await expect.poll(() => img.evaluate((i: HTMLImageElement) => i.complete && i.naturalWidth > 0)).toBe(true)
+  const { shown, natural } = await img.evaluate((i: HTMLImageElement) => ({ shown: i.getBoundingClientRect().width, natural: i.naturalWidth }))
+  expect(shown).toBeLessThanOrEqual(natural + 1)
+})
+
+test('wall is decorative', async ({ page }) => {
+  await page.goto('/vi')
+  await expect(page.locator('#wall a')).toHaveCount(0)
+})
+
+test.describe('without JavaScript', () => {
+  test.use({ javaScriptEnabled: false })
+  test('a face links to its large file', async ({ page }) => {
+    await page.goto('/vi')
+    await expect(page.locator('#more a.face').first()).toHaveAttribute('href', /-lg\.webp$/)
+  })
+})
