@@ -24,7 +24,7 @@ describe('face catalogue', () => {
 
   it('looks are 6 full-screen-capable faces', () => {
     expect(LOOKS).toHaveLength(6)
-    expect(LOOKS[0].id).toBe('43')
+    expect(LOOKS[0].id).toBe('49')
     for (const l of LOOKS) {
       expect(faceSize(l.id).width).toBeGreaterThanOrEqual(1700)
       for (const loc of locales) expect(l.caption[loc].kind.length && l.caption[loc].name.length).toBeTruthy()
@@ -40,7 +40,8 @@ describe('face catalogue', () => {
   })
 
   it('excluded photos are never used', () => {
-    const excluded = ['19', '20', '21', '22', '24', '50', '14', '15', '27', '33', '59', '76', '77', '79', '23', '38', '39', '40', '41', '55', '45', '47', '48', '66', '67', '69', '06', '07', '71']
+    // fast-food set (brand logos), collages and landscape duplicates, and backstage shots of unknown artists
+    const excluded = ['35', '36', '37', '01', '44', '45', '09', '11', '13', '14']
     for (const id of excluded) expect(used, id).not.toContain(id)
   })
 
@@ -49,19 +50,20 @@ describe('face catalogue', () => {
   })
 
   it('srcset lists the three exports with their real widths', () => {
-    const set = faceSrcSet('43')
-    expect(set).toMatch(/\/faces\/43-sm\.webp \d+w/)
-    expect(set).toMatch(/\/faces\/43-lg\.webp \d+w/)
+    const set = faceSrcSet('49')
+    expect(set).toMatch(/\/faces\/49-sm\.webp \d+w/)
+    expect(set).toMatch(/\/faces\/49-lg\.webp \d+w/)
   })
 
   it('full-screen looks also ship an xl export at their full source width', () => {
     for (const { id } of LOOKS) {
       expect(existsSync(`public${faceSrc(id, 'xl')}`), id).toBe(true)
       const w = Number(faceSrcSet(id).match(new RegExp(`/faces/${id}-xl\\.webp (\\d+)w`))?.[1])
-      // every source pixel, give or take rounding when the long edge is capped
-      expect(w, id).toBeGreaterThanOrEqual(faceSize(id).width - 2)
+      // every source pixel up to the 2560 px long-edge cap, give or take rounding
+      const { width, height } = faceSize(id)
+      expect(w, id).toBeGreaterThanOrEqual(Math.min(width, Math.round((width * 2560) / Math.max(width, height))) - 2)
     }
     // the other faces never need one
-    expect(faceSrcSet('02')).not.toContain('-xl.webp')
+    expect(faceSrcSet('05')).not.toContain('-xl.webp')
   })
 })

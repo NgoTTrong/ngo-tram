@@ -22,21 +22,21 @@ test('the corridor holds numbered mirror frames that open large', async ({ page 
   const plates = page.locator('.walk a.plate')
   await expect(plates).toHaveCount(14)
   await expect(plates.first().locator('.plate__no')).toHaveText('N° 01')
-  await expect(plates.first().locator('.plate__name')).toHaveText('Tóc cài hoa')
-  await expect(plates.first()).toHaveAttribute('href', /\/faces\/43-lg\.webp$/)
+  await expect(plates.first().locator('.plate__name')).toHaveText('Mẫu đơn hồng')
+  await expect(plates.first()).toHaveAttribute('href', /\/faces\/49-lg\.webp$/)
   await expect(page.locator('.walk__count')).toHaveText('01 / 14')
 })
 
 test('korean plates are captioned in korean', async ({ page }) => {
   await page.goto('/ko')
-  await expect(page.locator('.walk a.plate').nth(1).locator('.plate__name')).toHaveText('베일과 진주')
+  await expect(page.locator('.walk a.plate').nth(1).locator('.plate__name')).toHaveText('땋은 머리와 아오자이')
 })
 
 test('moments sit along a vine, each with its occasion and a note', async ({ page }) => {
   await page.goto('/vi')
   const stops = page.locator('.path .stop')
-  await expect(stops).toHaveCount(5)
-  await expect(stops.first().locator('h3')).toHaveText('Cô dâu')
+  await expect(stops).toHaveCount(4)
+  await expect(stops.first().locator('h3')).toHaveText('Áo dài')
   await expect(stops.first().locator('p')).not.toBeEmpty()
   await expect(page.locator('.path__vine')).toHaveCount(1)
 })

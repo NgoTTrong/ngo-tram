@@ -31,7 +31,8 @@ test.describe('static layout', () => {
     for (let i = 1; i <= plates; i++) {
       expect(await gap(page, `.walk li:nth-child(${i}) .plate__no`, `.walk li:nth-child(${i}) .plate__name`), `plate ${i}`).toBeGreaterThanOrEqual(2)
     }
-    for (let i = 1; i <= 5; i++) {
+    const stops = await page.locator('.path .stop').count()
+    for (let i = 1; i <= stops; i++) {
       expect(await gap(page, `.path .stop:nth-of-type(${i}) .kick`, `.path .stop:nth-of-type(${i}) h3`), `moment ${i}`).toBeGreaterThanOrEqual(2)
     }
   })

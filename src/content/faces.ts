@@ -1,7 +1,7 @@
 import type { Locale } from '@/i18n/config'
 
 /**
- * Faces Trâm made up, from the owner's Drive folder (raw files in assets/drive/, gitignored; web
+ * Faces Trâm made up, from Trâm's Drive folder (https://drive.google.com/drive/folders/1jRpAnU3v618qEEPoRbBxfLYEsEWf7kuF) (raw files in assets/drive/, gitignored; web
  * sizes exported to public/faces/ by scripts/export-faces.mjs). Ids are the file numbers.
  * No client names anywhere: captions only name the kind of look.
  */
@@ -10,57 +10,49 @@ export type FaceKind = 'bride' | 'aodai' | 'photo' | 'outdoor' | 'party' | 'dail
 export type Face = { id: string; kind: FaceKind; focus?: [number, number] }
 
 const kinds: Record<FaceKind, string[]> = {
-  bride: ['16', '17'],
-  aodai: ['70', '73'],
-  photo: ['01', '09', '12', '31', '32', '34', '35', '43', '44'],
-  outdoor: ['30', '49', '56', '57', '63', '64'],
-  party: ['10', '26', '42', '65', '74', '89'],
-  daily: ['02', '03', '04', '05', '36', '37', '52', '58', '60', '61', '62', '75', '78', '80', '82', '83', '84', '85', '86', '87', '88'],
-  backstage: ['08', '11', '13', '18', '25', '29'],
+  bride: [],
+  aodai: ['46', '47', '48'],
+  photo: ['39', '40', '41', '49', '50'],
+  outdoor: ['02', '03', '04'],
+  party: ['25', '26', '27', '28', '29', '30', '31', '42', '43'],
+  daily: ['05', '06', '07', '08', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '32', '33', '34', '38'],
+  backstage: ['10', '12'],
 }
 
-const FOCUS: Record<string, [number, number]> = {
-  '43': [45, 30],
-  '17': [50, 28],
-  '70': [60, 25],
-  '30': [45, 35],
-  '12': [50, 20],
-  '57': [55, 25],
-}
+const FOCUS: Record<string, [number, number]> = {}
 
 export const FACES: Record<string, Face> = Object.fromEntries(
   (Object.entries(kinds) as [FaceKind, string[]][]).flatMap(([kind, ids]) => ids.map((id) => [id, { id, kind, focus: FOCUS[id] }])),
 )
 
 /** I · opening: three small mirrors under the logo. */
-export const OPENING = ['43', '17', '70']
+export const OPENING = ['49', '46', '02']
 
 type Caption = { kind: string; name: string }
 // KO-DRAFT / RU-DRAFT — ko and ru captions need native review.
 /** The named looks lead the corridor (sources ≥ 1700 px wide, so they also open sharp in the lightbox). */
 export const LOOKS: { id: string; caption: Record<Locale, Caption> }[] = [
-  { id: '43', caption: { vi: { kind: 'Chụp ảnh', name: 'Tóc cài hoa' }, ko: { kind: '촬영', name: '꽃 장식 헤어' }, ru: { kind: 'Фотосессия', name: 'Цветы в волосах' } } },
-  { id: '17', caption: { vi: { kind: 'Cô dâu', name: 'Voan và ngọc trai' }, ko: { kind: '신부', name: '베일과 진주' }, ru: { kind: 'Невеста', name: 'Фата и жемчуг' } } },
-  { id: '70', caption: { vi: { kind: 'Áo dài', name: 'Áo dài trắng' }, ko: { kind: '아오자이', name: '하얀 아오자이' }, ru: { kind: 'Аозай', name: 'Белый аозай' } } },
-  { id: '30', caption: { vi: { kind: 'Ngoại cảnh', name: 'Bên mặt nước' }, ko: { kind: '야외', name: '물가에서' }, ru: { kind: 'На природе', name: 'У воды' } } },
-  { id: '12', caption: { vi: { kind: 'Chụp ảnh', name: 'Hoa ly trắng' }, ko: { kind: '촬영', name: '하얀 백합' }, ru: { kind: 'Фотосессия', name: 'Белые лилии' } } },
-  { id: '57', caption: { vi: { kind: 'Ngoại cảnh', name: 'Khu vườn xanh' }, ko: { kind: '야외', name: '초록 정원' }, ru: { kind: 'На природе', name: 'Зелёный сад' } } },
+  { id: '49', caption: { vi: { kind: 'Chụp ảnh', name: 'Mẫu đơn hồng' }, ko: { kind: '촬영', name: '분홍 작약' }, ru: { kind: 'Фотосессия', name: 'Розовые пионы' } } },
+  { id: '46', caption: { vi: { kind: 'Áo dài', name: 'Áo dài tóc tết' }, ko: { kind: '아오자이', name: '땋은 머리와 아오자이' }, ru: { kind: 'Аозай', name: 'Аозай и косы' } } },
+  { id: '02', caption: { vi: { kind: 'Ngoại cảnh', name: 'Nơ đỏ trong vườn' }, ko: { kind: '야외', name: '정원의 빨간 리본' }, ru: { kind: 'На природе', name: 'Красный бант в саду' } } },
+  { id: '42', caption: { vi: { kind: 'Tiệc', name: 'Khăn đen' }, ko: { kind: '파티', name: '블랙 스카프' }, ru: { kind: 'Праздник', name: 'Чёрный шарф' } } },
+  { id: '22', caption: { vi: { kind: 'Hằng ngày', name: 'Ren kem' }, ko: { kind: '데일리', name: '크림 레이스' }, ru: { kind: 'На каждый день', name: 'Кремовое кружево' } } },
+  { id: '25', caption: { vi: { kind: 'Tiệc', name: 'Tóc xoăn nâu' }, ko: { kind: '파티', name: '브라운 컬' }, ru: { kind: 'Праздник', name: 'Каштановые локоны' } } },
 ]
 
 /** II · the corridor: the named looks first, then more faces captioned by occasion only. */
-export const COLLECTION = [...LOOKS.map((l) => l.id), '26', '49', '10', '34', '09', '89', '63', '44']
+export const COLLECTION = [...LOOKS.map((l) => l.id), '15', '32', '05', '39', '50', '03', '47', '26']
 
-/** III · one face per occasion along the vine. */
+/** III · one face per occasion along the vine (no bridal work in the folder yet). */
 export const MOMENTS: { id: string; kind: Exclude<FaceKind, 'photo' | 'backstage'> }[] = [
-  { id: '16', kind: 'bride' },
-  { id: '70', kind: 'aodai' },
-  { id: '64', kind: 'outdoor' },
-  { id: '74', kind: 'party' },
-  { id: '36', kind: 'daily' },
+  { id: '48', kind: 'aodai' },
+  { id: '04', kind: 'outdoor' },
+  { id: '43', kind: 'party' },
+  { id: '33', kind: 'daily' },
 ]
 
 /** IV · Trâm at work. */
-export const BACKSTAGE = ['13', '11']
+export const BACKSTAGE = ['10', '12']
 
 /** Background wall of the booking finale. */
-export const FOOTER_WALL = ['87', '02', '85', '34', '57', '12', '09', '36', '86', '84', '01', '44']
+export const FOOTER_WALL = ['15', '05', '32', '39', '50', '22', '26', '47', '03', '18', '43', '38']

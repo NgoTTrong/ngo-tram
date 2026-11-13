@@ -4,7 +4,7 @@ import path from 'node:path'
 
 const root = path.resolve(import.meta.dirname, '..')
 const W = 1200, H = 630, PHOTO_W = 300, PHOTO_H = 375
-const covers = ['43', '17', '70']
+const covers = ['49', '46', '02']
 
 const photos = await Promise.all(
   covers.map((id) => sharp(path.join(root, 'public/faces', `${id}-md.webp`)).resize(PHOTO_W, PHOTO_H, { fit: 'cover', position: 'top' }).toBuffer()),
