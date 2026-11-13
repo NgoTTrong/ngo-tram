@@ -32,18 +32,12 @@ export const FACES: Record<string, Face> = Object.fromEntries(
   (Object.entries(kinds) as [FaceKind, string[]][]).flatMap(([kind, ids]) => ids.map((id) => [id, { id, kind, focus: FOCUS[id] }])),
 )
 
-/** Chapter 1: 5×5 wall; the centre (index 12) is the face the camera dives into. */
-export const WALL = [
-  '87', '02', '85', '30', '82',
-  '34', '57', '12', '75', '62',
-  '09', '36', '43', '86', '88',
-  '84', '01', '44', '78', '58',
-  '63', '49', '31', '16', '04',
-]
+/** I · opening: three small mirrors under the logo. */
+export const OPENING = ['43', '17', '70']
 
 type Caption = { kind: string; name: string }
 // KO-DRAFT / RU-DRAFT — ko and ru captions need native review.
-/** Chapter 2: full-screen looks (source ≥ 1700 px wide); the first continues from the wall's centre. */
+/** The named looks lead the corridor (sources ≥ 1700 px wide, so they also open sharp in the lightbox). */
 export const LOOKS: { id: string; caption: Record<Locale, Caption> }[] = [
   { id: '43', caption: { vi: { kind: 'Chụp ảnh', name: 'Tóc cài hoa' }, ko: { kind: '촬영', name: '꽃 장식 헤어' }, ru: { kind: 'Фотосессия', name: 'Цветы в волосах' } } },
   { id: '17', caption: { vi: { kind: 'Cô dâu', name: 'Voan và ngọc trai' }, ko: { kind: '신부', name: '베일과 진주' }, ru: { kind: 'Невеста', name: 'Фата и жемчуг' } } },
@@ -53,14 +47,20 @@ export const LOOKS: { id: string; caption: Record<Locale, Caption> }[] = [
   { id: '57', caption: { vi: { kind: 'Ngoại cảnh', name: 'Khu vườn xanh' }, ko: { kind: '야외', name: '초록 정원' }, ru: { kind: 'На природе', name: 'Зелёный сад' } } },
 ]
 
-/** Chapter 3: two strips running in opposite directions. */
-export const STRIPS: [string[], string[]] = [
-  ['03', '04', '05', '09', '10', '16', '26', '32', '35', '36', '37', '42', '52', '56', '60', '61'],
-  ['62', '64', '65', '73', '74', '75', '78', '80', '82', '83', '84', '86', '87', '88', '89', '85', '02', '58'],
+/** II · the corridor: the named looks first, then more faces captioned by occasion only. */
+export const COLLECTION = [...LOOKS.map((l) => l.id), '26', '49', '10', '34', '09', '89', '63', '44']
+
+/** III · one face per occasion along the vine. */
+export const MOMENTS: { id: string; kind: Exclude<FaceKind, 'photo' | 'backstage'> }[] = [
+  { id: '16', kind: 'bride' },
+  { id: '70', kind: 'aodai' },
+  { id: '64', kind: 'outdoor' },
+  { id: '74', kind: 'party' },
+  { id: '36', kind: 'daily' },
 ]
 
-/** Chapter 4: Trâm at work. */
-export const BACKSTAGE = ['13', '11', '18', '29', '08', '25']
+/** IV · Trâm at work. */
+export const BACKSTAGE = ['13', '11']
 
 /** Background wall of the booking finale. */
 export const FOOTER_WALL = ['87', '02', '85', '34', '57', '12', '09', '36', '86', '84', '01', '44']

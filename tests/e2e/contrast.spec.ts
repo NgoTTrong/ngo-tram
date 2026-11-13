@@ -14,13 +14,16 @@ test.use({ reducedMotion: 'reduce' })
  */
 async function ratioOver(page: Page, sel: string) {
   const el = page.locator(sel).first()
-  await el.scrollIntoViewIfNeeded()
+  // in the middle of the screen, clear of the fixed header and booking button
+  await el.evaluate((e) => e.scrollIntoView({ block: 'center' }))
   await page.waitForTimeout(300)
   const ink = await el.evaluate((e) => getComputedStyle(e).color.match(/\d+/g)!.map(Number))
   const box = (await el.boundingBox())!
   // hide the glyphs only: a pill or shade behind the text is part of what it is read against
   await el.evaluate((e) => (e as HTMLElement).style.setProperty('color', 'transparent', 'important'))
   await el.evaluate((e) => (e as HTMLElement).style.setProperty('text-shadow', 'none', 'important'))
+  // let the style change paint before the capture
+  await page.waitForTimeout(120)
   const png = await page.screenshot({ clip: box })
   await el.evaluate((e) => { (e as HTMLElement).style.removeProperty('color'); (e as HTMLElement).style.removeProperty('text-shadow') })
   const { data, info } = await sharp(png).removeAlpha().raw().toBuffer({ resolveWithObject: true })
@@ -34,13 +37,18 @@ async function ratioOver(page: Page, sel: string) {
 }
 
 for (const [sel, min] of [
-  ['#looks .look__kind', 4.5],
-  ['#looks .look__name', 3],
-  ['#wall .wall__kicker', 4.5],
-  ['#backstage .bts__kicker', 4.5],
-  ['#backstage .bts__lead', 4.5],
-  ['#backstage .bts__facts dt', 4.5],
-  ['#backstage .bts__services li', 4.5],
+  ['#top .kick', 4.5],
+  ['#collection .chap__num', 4.5],
+  ['#collection .chap__lead', 4.5],
+  ['#collection .chap__title', 3],
+  ['.walk .plate__no', 4.5],
+  ['.walk .plate__name', 3],
+  ['.walk .plate__kind', 4.5],
+  ['.path .stop h3', 3],
+  ['.path .stop p', 4.5],
+  ['#backstage .kick', 4.5],
+  ['#backstage .artist p', 4.5],
+  ['#backstage .svc li', 4.5],
 ] as const) {
   test(`${sel} stands out from what is behind it`, async ({ page }) => {
     await page.goto('/vi')

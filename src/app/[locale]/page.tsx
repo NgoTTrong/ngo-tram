@@ -1,12 +1,8 @@
 import { notFound } from 'next/navigation'
-import { Backstage } from '@/components/Backstage'
-import { FaceStrips } from '@/components/FaceStrips'
-import { FaceWall } from '@/components/FaceWall'
-import { FacesStage } from '@/components/FacesStage'
 import { FaceLightbox } from '@/components/FaceLightbox'
-import { Looks } from '@/components/Looks'
+import { Artist, Collection, JourneyMap, Moments, Opening } from '@/components/Journey/Chapters'
+import { Journey } from '@/components/Journey/Journey'
 import { isLocale } from '@/i18n/config'
-import { STAGE_SCRIPT } from '@/lib/stage'
 import { getDict } from '@/i18n/dict'
 
 export default async function Home({ params }: PageProps<'/[locale]'>) {
@@ -14,15 +10,16 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
   if (!isLocale(locale)) notFound()
   const t = getDict(locale)
   return (
-    <main>
-      <FaceWall t={t} />
-      <Looks locale={locale} t={t} />
-      <FaceStrips t={t} />
-      <Backstage locale={locale} t={t} />
-      {/* the scroll choreography, inline so it paints before hydration (see src/lib/stage.ts) */}
-      <script dangerouslySetInnerHTML={{ __html: STAGE_SCRIPT }} />
-      <FacesStage />
+    <>
+      <Journey />
+      <JourneyMap t={t} />
+      <main className="journey">
+        <Opening t={t} />
+        <Collection locale={locale} t={t} />
+        <Moments t={t} />
+        <Artist locale={locale} t={t} />
+      </main>
       <FaceLightbox labels={{ close: t.close, prev: t.prev, next: t.next }} />
-    </main>
+    </>
   )
 }

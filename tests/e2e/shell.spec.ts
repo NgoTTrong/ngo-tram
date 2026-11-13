@@ -27,7 +27,7 @@ test('root redirects Russian browsers to /ru', async ({ browser }) => {
 test('Russian pages are in Russian with a Cyrillic body font', async ({ page }) => {
   await page.goto('/ru')
   await expect(page.locator('html')).toHaveAttribute('lang', 'ru')
-  await expect(page.locator('#looks .look__name').first()).toHaveText(/[а-яё]/i)
+  await expect(page.locator('.path .stop h3').first()).toHaveText(/[а-яё]/i)
   expect(await page.evaluate(() => getComputedStyle(document.body).fontFamily)).toMatch(/Nunito/i)
   await expect(page.locator('#contact h2')).toContainText(/[а-яё]/i)
 })

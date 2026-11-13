@@ -13,7 +13,7 @@ for (const dpr of [2, 3]) {
       test.skip(dpr === 3 && info.project.name === 'desktop', 'no desktop at DPR 3')
       test.setTimeout(90_000)
       await page.goto('/vi')
-      const stops: [string, number][] = [['#wall', 0], ['#wall', 0.5], ['#looks', 0], ['#looks', 0.5], ['#looks', 1], ['#more', 0], ['#backstage', 0], ['#backstage', 0.6], ['#contact', 0]]
+      const stops: [string, number][] = [['#top', 0], ['.walk', 0], ['.walk', 0.5], ['.walk', 1], ['.path', 0], ['.path', 0.5], ['#backstage', 0.4], ['#contact', 0]]
       const bad: string[] = []
       for (const [sel, frac] of stops) {
         await page.evaluate(
@@ -32,10 +32,7 @@ for (const dpr of [2, 3]) {
           const list = [...document.querySelectorAll<HTMLImageElement>('img[data-face]')]
             .filter((i) => {
               const r = i.getBoundingClientRect()
-              const look = i.closest('.look')
-              // a look still closed to a dot (or clipped off) is not on screen
-              const closed = !!look && /circle\(0(\.0)?px/.test(getComputedStyle(look).clipPath)
-              const vis = !closed && getComputedStyle(i).visibility !== 'hidden' && Number(getComputedStyle(i.closest('[style*="opacity"]') ?? i).opacity) > 0.05
+              const vis = getComputedStyle(i).visibility !== 'hidden' && Number(getComputedStyle(i.closest('[style*="opacity"]') ?? i).opacity) > 0.05
               return vis && r.width > 40 && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth
             })
           return Promise.all(
@@ -44,7 +41,7 @@ for (const dpr of [2, 3]) {
               const f = await fileWidth(i.currentSrc)
               // object-fit: cover paints the photo at the larger of the two scales
               const painted = Math.max(w / f.w, h / f.h) * f.w
-              return { id: i.dataset.face!, src: i.currentSrc, natural: f.w, painted, look: !!i.closest('.look') }
+              return { id: i.dataset.face!, src: i.currentSrc, natural: f.w, painted }
             }),
           )
         })

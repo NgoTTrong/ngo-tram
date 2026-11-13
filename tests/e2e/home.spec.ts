@@ -1,49 +1,61 @@
 import { expect, test } from '@playwright/test'
 import { AREA } from '../../src/content/site'
 
-test('home shows the face wall with the logo', async ({ page }) => {
+test('opening shows the logo, three framed faces and the tagline', async ({ page }) => {
   await page.goto('/vi')
-  await expect(page.locator('#wall img[data-face]')).toHaveCount(25)
-  await expect(page.locator('#wall .wall__tile--hero img')).toHaveAttribute('data-face', '43')
-  await expect(page.locator('#wall img[alt="Makeup Ngô Trâm"]')).toBeVisible()
+  const open = page.locator('#top')
+  await expect(open.locator('img[alt="Makeup Ngô Trâm"]')).toBeVisible()
+  await expect(open.locator('.mirror img[data-face]')).toHaveCount(3)
+  await expect(open.locator('.open__quote')).toHaveText('Đẹp theo cách của riêng bạn')
 })
 
-test('six looks with captions and a counter', async ({ page }) => {
+test('five chapters, each with its number and title', async ({ page }) => {
   await page.goto('/vi')
-  const looks = page.locator('#looks figure.look')
-  await expect(looks).toHaveCount(6)
-  await expect(looks.first().locator('.look__name')).toHaveText('Tóc cài hoa')
-  await expect(looks.first().locator('.look__kind')).toContainText('Chụp ảnh')
-  await expect(page.locator('.looks__count')).toHaveText('01 / 06')
+  await expect(page.locator('.chap')).toHaveCount(3)
+  await expect(page.locator('#collection .chap__title')).toHaveAccessibleName('Những gương mặt')
+  await expect(page.locator('#collection .chap__num')).toHaveText('02')
+  await expect(page.locator('.map a')).toHaveCount(5)
 })
 
-test('korean looks are captioned in korean', async ({ page }) => {
+test('the corridor holds numbered mirror frames that open large', async ({ page }) => {
+  await page.goto('/vi')
+  const plates = page.locator('.walk a.plate')
+  await expect(plates).toHaveCount(14)
+  await expect(plates.first().locator('.plate__no')).toHaveText('N° 01')
+  await expect(plates.first().locator('.plate__name')).toHaveText('Tóc cài hoa')
+  await expect(plates.first()).toHaveAttribute('href', /\/faces\/43-lg\.webp$/)
+  await expect(page.locator('.walk__count')).toHaveText('01 / 14')
+})
+
+test('korean plates are captioned in korean', async ({ page }) => {
   await page.goto('/ko')
-  await expect(page.locator('#looks figure.look').nth(1).locator('.look__name')).toHaveText('베일과 진주')
+  await expect(page.locator('.walk a.plate').nth(1).locator('.plate__name')).toHaveText('베일과 진주')
 })
 
-test('face tiles have size before images load', async ({ page }) => {
-  await page.route('**/faces/**', () => {})
-  await page.goto('/vi', { waitUntil: 'domcontentloaded' })
-  const boxes = await page.locator('#wall .wall__tile').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).map((r) => r.width * r.height))
-  expect(boxes).toHaveLength(25)
-  for (const area of boxes) expect(area).toBeGreaterThan(0)
-})
-
-test('more faces run in two strips of clickable tiles', async ({ page }) => {
+test('moments sit along a vine, each with its occasion and a note', async ({ page }) => {
   await page.goto('/vi')
-  await expect(page.locator('#more .strip')).toHaveCount(2)
-  const first = page.locator('#more .strip').first().locator('a.face').first()
-  await expect(first).toHaveAttribute('href', /\/faces\/\d{2}-lg\.webp$/)
+  const stops = page.locator('.path .stop')
+  await expect(stops).toHaveCount(5)
+  await expect(stops.first().locator('h3')).toHaveText('Cô dâu')
+  await expect(stops.first().locator('p')).not.toBeEmpty()
+  await expect(page.locator('.path__vine')).toHaveCount(1)
 })
 
-test('backstage carries the about text, services and area', async ({ page }) => {
+test('behind the mirror carries the about text, numbered services and area', async ({ page }) => {
   await page.goto('/vi')
   const bts = page.locator('#backstage')
-  await expect(bts.getByRole('heading', { level: 2 })).toHaveText('Sau tấm gương')
+  await expect(bts.getByRole('heading', { level: 2 })).toHaveAccessibleName('Sau tấm gương')
   await expect(bts).toContainText(AREA.vi)
-  expect(await bts.locator('.bts__services li').count()).toBeGreaterThanOrEqual(3)
-  await expect(bts.locator('a.face')).toHaveCount(6)
+  expect(await bts.locator('.svc li').count()).toBeGreaterThanOrEqual(3)
+  await expect(bts.locator('a.face')).toHaveCount(2)
+})
+
+test('frames have size before images load', async ({ page }) => {
+  await page.route('**/faces/**', () => {})
+  await page.goto('/vi', { waitUntil: 'domcontentloaded' })
+  const areas = await page.locator('.mirror').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).map((r) => r.width * r.height))
+  expect(areas.length).toBeGreaterThan(20)
+  for (const a of areas) expect(a).toBeGreaterThan(0)
 })
 
 test('old concept links land on the home page', async ({ page }) => {

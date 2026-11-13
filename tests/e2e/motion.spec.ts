@@ -6,99 +6,114 @@ async function scrollInto(page: Page, sel: string, frac: number) {
     ([sel, frac]) => {
       const el = document.querySelector<HTMLElement>(sel as string)!
       const top = el.getBoundingClientRect().top + scrollY
-      window.scrollTo({ top: top + (frac as number) * (el.offsetHeight - innerHeight), behavior: 'instant' })
+      window.scrollTo({ top: top + (frac as number) * Math.max(0, el.offsetHeight - innerHeight), behavior: 'instant' })
     },
     [sel, frac] as const,
   )
   await page.waitForTimeout(900)
 }
 
-async function heroCovers(page: Page) {
-  return page.evaluate(() => {
-    const r = document.querySelector('.wall__tile--hero')!.getBoundingClientRect()
-    return r.left <= 2 && r.top <= 2 && r.right >= innerWidth - 2 && r.bottom >= innerHeight - 2
-  })
-}
-
-test('motion is on and the page scrolls smoothly', async ({ page }) => {
+async function ready(page: Page) {
   await page.goto('/vi')
   await expect(page.locator('html')).toHaveAttribute('data-motion', 'on')
   await expect(page.locator('html')).toHaveClass(/lenis/)
+}
+
+test('the camera moves through the logo and the tagline surfaces', async ({ page }) => {
+  await ready(page)
+  const op = (sel: string) => page.locator(sel).evaluate((e) => Number(getComputedStyle(e).opacity))
+  expect(await op('[data-open-c]')).toBeGreaterThan(0.9)
+  expect(await op('[data-quote]')).toBeLessThan(0.1)
+  await scrollInto(page, '#top', 0.7)
+  expect(await op('[data-open-c]')).toBeLessThan(0.1)
+  expect(await op('[data-quote]')).toBeGreaterThan(0.5)
 })
 
-test('centre face covers the viewport at the end of the wall', async ({ page }) => {
-  await page.goto('/vi')
-  expect(await heroCovers(page)).toBe(false)
-  await scrollInto(page, '#wall', 0.95)
-  expect(await heroCovers(page)).toBe(true)
-  // the other faces have faded away
-  const others = await page.locator('#wall .wall__tile:not(.wall__tile--hero)').first().evaluate((e) => Number(getComputedStyle(e).opacity))
-  expect(others).toBeLessThan(0.05)
-})
-
-test('centre face covers viewport after resize', async ({ page }) => {
-  await page.goto('/vi')
-  await scrollInto(page, '#wall', 0.95)
-  await page.setViewportSize({ width: 844, height: 390 })
-  await scrollInto(page, '#wall', 0.95)
-  expect(await heroCovers(page)).toBe(true)
-})
-
-test('looks open one after another out of a circle, with a counter', async ({ page }) => {
-  await page.goto('/vi')
-  await scrollInto(page, '#looks', 0)
+test('the corridor slides sideways while the page scrolls down, with a counter', async ({ page }) => {
+  await ready(page)
+  const x = () => page.locator('[data-track]').evaluate((e) => e.getBoundingClientRect().left)
+  await scrollInto(page, '.walk', 0)
+  const a = await x()
   await expect(page.locator('[data-count]')).toHaveText('01')
-  const closed = await page.locator('#looks .look').nth(3).evaluate((e) => getComputedStyle(e).clipPath)
-  expect(closed).toMatch(/circle\(0px/)
-  await scrollInto(page, '#looks', 0.5)
-  const open = await page.locator('#looks .look').nth(3).evaluate((e) => getComputedStyle(e).clipPath)
-  expect(open).toMatch(/circle\((?!0px)/)
+  await scrollInto(page, '.walk', 0.5)
+  expect(await x()).toBeLessThan(a - 300)
   await expect(page.locator('[data-count]')).not.toHaveText('01')
+  await scrollInto(page, '.walk', 1)
+  await expect(page.locator('[data-count]')).toHaveText('14')
 })
 
-test('restored scroll paints mid-journey state', async ({ page }) => {
-  await page.goto('/vi')
-  await scrollInto(page, '#looks', 0.5)
-  await page.reload()
-  await page.waitForTimeout(500)
-  const clip = await page.locator('#looks .look').nth(3).evaluate((e) => getComputedStyle(e).clipPath)
-  expect(clip).toMatch(/circle\((?!0px)/)
-  await expect(page.locator('[data-count]')).not.toHaveText('01')
+test('every mirror of the corridor passes the middle of the screen', async ({ page }) => {
+  await ready(page)
+  await scrollInto(page, '.walk', 1)
+  const last = await page.locator('.walk a.plate').last().evaluate((e) => {
+    const b = e.getBoundingClientRect()
+    return Math.abs(b.left + b.width / 2 - innerWidth / 2)
+  })
+  expect(last).toBeLessThan(40)
 })
 
-test('strips move in opposite directions', async ({ page }) => {
-  await page.goto('/vi')
-  const xs = () => page.locator('#more .strip__track').evaluateAll((els) => els.map((e) => e.getBoundingClientRect().left))
-  await page.locator('#more').evaluate((e) => window.scrollTo({ top: e.getBoundingClientRect().top + scrollY - innerHeight * 0.8, behavior: 'instant' }))
-  await page.waitForTimeout(800)
-  const a = await xs()
-  await page.evaluate(() => window.scrollBy({ top: innerHeight * 0.6, behavior: 'instant' }))
-  await page.waitForTimeout(800)
-  const b = await xs()
-  expect(b[0]).toBeLessThan(a[0])
-  expect(b[1]).toBeGreaterThan(a[1])
+test('chapter titles and moments reveal as they come into view', async ({ page }) => {
+  await ready(page)
+  const chap = page.locator('#moments .chap')
+  await expect(chap).not.toHaveClass(/\bin\b/)
+  await chap.scrollIntoViewIfNeeded()
+  await expect(chap).toHaveClass(/\bin\b/)
+  const stop = page.locator('.path .stop').first()
+  await stop.scrollIntoViewIfNeeded()
+  await expect(stop).toHaveClass(/\bin\b/)
+  await expect.poll(() => stop.locator('.stop__face').evaluate((e) => Number(getComputedStyle(e).opacity))).toBeGreaterThan(0.9)
 })
 
-test('header ink follows the surface under it', async ({ page }) => {
-  await page.goto('/vi')
-  const ink = () => page.locator('header .logo-mask').evaluate((e) => getComputedStyle(e).backgroundColor)
-  await scrollInto(page, '#looks', 0.3)
-  await expect.poll(ink).toBe('rgb(237, 231, 217)')
-  await page.locator('#more .more__title').evaluate((e) => window.scrollTo({ top: e.getBoundingClientRect().top + scrollY - 10, behavior: 'instant' }))
-  await expect.poll(ink).toBe('rgb(47, 59, 44)')
+test('the vine grows with the reader', async ({ page }) => {
+  await ready(page)
+  const off = () => page.locator('[data-vine]').evaluate((e) => Number((e as SVGPathElement).style.strokeDashoffset || 1))
+  await page.locator('.path').evaluate((e) => window.scrollTo({ top: e.getBoundingClientRect().top + scrollY - innerHeight, behavior: 'instant' }))
+  await page.waitForTimeout(600)
+  const before = await off()
+  await page.locator('.path .stop').nth(3).scrollIntoViewIfNeeded()
+  await page.waitForTimeout(900)
+  expect(await off()).toBeLessThan(before - 0.2)
+})
+
+test('a focused mirror in the corridor is brought to the middle', async ({ page }) => {
+  await ready(page)
+  const plate = page.locator('.walk a.plate').nth(9)
+  await plate.focus()
+  await page.waitForTimeout(1200)
+  const d = await plate.evaluate((e) => {
+    const b = e.getBoundingClientRect()
+    return { off: Math.abs(b.left + b.width / 2 - innerWidth / 2), top: b.top, bottom: b.bottom }
+  })
+  expect(d.off).toBeLessThan(60)
+  expect(d.top).toBeGreaterThan(0)
+})
+
+test('the rail follows the chapters (desktop)', async ({ page }, info) => {
+  test.skip(info.project.name === 'mobile', 'the rail is hidden on phones')
+  await ready(page)
+  await expect(page.locator('.map a.on')).toHaveAttribute('href', '#top')
+  await page.locator('#backstage .chap').scrollIntoViewIfNeeded()
+  await page.waitForTimeout(900)
+  await expect(page.locator('.map a.on')).toHaveAttribute('href', '#backstage')
+})
+
+test('petals fall on a canvas behind the content', async ({ page }) => {
+  await ready(page)
+  const canvas = page.locator('canvas.petals')
+  await expect(canvas).toHaveCount(1)
+  await expect(canvas).toHaveCSS('pointer-events', 'none')
 })
 
 test.describe('reduced motion', () => {
   test.use({ reducedMotion: 'reduce' })
-  test('nothing is pinned or zoomed', async ({ page }) => {
+  test('nothing is pinned; the corridor scrolls sideways by itself', async ({ page }) => {
     await page.goto('/vi')
+    await page.waitForTimeout(500)
     await expect(page.locator('html')).not.toHaveAttribute('data-motion', 'on')
     await expect(page.locator('html')).not.toHaveClass(/lenis/)
-    const h = await page.evaluate(() => document.getElementById('wall')!.offsetHeight / innerHeight)
-    expect(h).toBeLessThan(1.5)
-    // every look is a plain full-height photo, none clipped away
-    const clips = await page.locator('#looks .look').evaluateAll((els) => els.map((e) => getComputedStyle(e).clipPath))
-    for (const c of clips) expect(c).toBe('none')
+    await expect(page.locator('.walk__track')).toHaveCSS('overflow-x', 'auto')
+    expect(await page.evaluate(() => document.getElementById('top')!.offsetHeight / innerHeight)).toBeLessThan(1.5)
+    await expect(page.locator('.path .stop__face').first()).toHaveCSS('opacity', '1')
   })
 })
 
@@ -107,72 +122,8 @@ test.describe('without JavaScript', () => {
   test('every chapter is laid out statically', async ({ page }) => {
     await page.goto('/vi')
     await expect(page.locator('html')).not.toHaveAttribute('data-motion', 'on')
-    await expect(page.locator('#looks .look').nth(5)).toBeVisible()
-    await expect(page.locator('#more a.face').first()).toBeVisible()
+    await expect(page.locator('.walk a.plate').last()).toBeAttached()
+    await expect(page.locator('.path .stop').last()).toBeVisible()
+    await expect(page.locator('#backstage .svc')).toBeVisible()
   })
-})
-
-test('a reload mid-journey paints the right look even when the page scripts never arrive', async ({ page }) => {
-  await page.goto('/vi')
-  await scrollInto(page, '#looks', 0.62)
-  const want = await page.locator('[data-count]').textContent()
-  expect(want).not.toBe('01')
-  // the app bundle fails to load (styles still arrive): only what is in the HTML runs
-  await page.route(/\/_next\/static\/chunks\/.*\.js(\?.*)?$/, (r) => r.abort())
-  await page.reload()
-  await expect(page.locator('[data-count]')).toHaveText(want!)
-  // and the journey keeps working while scrolling on
-  await page.evaluate(() => window.scrollBy({ top: innerHeight * 1.5, behavior: 'instant' }))
-  await expect(page.locator('[data-count]')).not.toHaveText(want!)
-})
-
-test('the centre face covers its stage when the stage is taller than the window (phone toolbar hidden)', async ({ page }) => {
-  await page.goto('/vi')
-  // a phone with its toolbar collapsed: the stage is taller than innerHeight at load
-  await page.addStyleTag({ content: '.wall .stage, .looks .stage { height: 125vh !important; }' })
-  await scrollInto(page, '#wall', 0.56)
-  const ok = await page.evaluate(() => {
-    const s = document.querySelector('.wall .stage')!.getBoundingClientRect()
-    const r = document.querySelector('.wall__tile--hero')!.getBoundingClientRect()
-    return r.left <= s.left + 2 && r.top <= s.top + 2 && r.right >= s.right - 2 && r.bottom >= s.bottom - 2
-  })
-  expect(ok).toBe(true)
-})
-
-test('tabbing through the looks shows each focused look', async ({ page }) => {
-  await page.goto('/vi')
-  await page.waitForFunction(() => document.documentElement.dataset.ink)
-  await page.locator('#looks a.face').first().focus()
-  for (let i = 1; i < 6; i++) {
-    await page.keyboard.press('Tab')
-    await page.waitForTimeout(700)
-    const shown = await page.evaluate(() => {
-      const a = document.activeElement as HTMLElement
-      const look = a.closest('.look') as HTMLElement
-      const c = getComputedStyle(look).clipPath
-      const m = c.match(/circle\(([\d.]+)px/)
-      const cap = look.querySelector('.look__cap')!
-      return { inLook: !!look, open: c === 'none' || (m ? Number(m[1]) > innerHeight / 2 : false), caption: Number(getComputedStyle(cap).opacity) }
-    })
-    expect(shown.inLook, `look ${i + 1}`).toBe(true)
-    expect(shown.open, `look ${i + 1}`).toBe(true)
-    expect(shown.caption, `look ${i + 1}`).toBeGreaterThan(0.9)
-  }
-})
-
-test('tabbing onto a strip tile brings it into view without shifting the strip', async ({ page }) => {
-  await page.goto('/vi')
-  await page.waitForFunction(() => document.documentElement.dataset.ink)
-  const tiles = page.locator('#more .strip').first().locator('a.face')
-  await tiles.nth(0).focus()
-  const n = await tiles.count()
-  for (let i = 1; i < n; i++) await page.keyboard.press('Tab')
-  await page.waitForTimeout(800)
-  const r = await page.evaluate(() => {
-    const a = document.activeElement as HTMLElement
-    const b = a.getBoundingClientRect()
-    return { visible: b.left >= -1 && b.right <= innerWidth + 1 && b.top >= 0 && b.bottom <= innerHeight, scrollLeft: a.closest('.strip')!.scrollLeft }
-  })
-  expect(r.scrollLeft).toBe(0)
-  expect(r.visible).toBe(true)
 })

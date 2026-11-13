@@ -1,16 +1,25 @@
 import { existsSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import { BACKSTAGE, FACES, FOOTER_WALL, LOOKS, STRIPS, WALL } from '@/content/faces'
+import { BACKSTAGE, COLLECTION, FACES, FOOTER_WALL, LOOKS, MOMENTS, OPENING } from '@/content/faces'
 import { faceSize, faceSrc, faceSrcSet } from '@/lib/face'
 import { locales } from '@/i18n/config'
 
-const used = [...WALL, ...LOOKS.map((l) => l.id), ...STRIPS.flat(), ...BACKSTAGE, ...FOOTER_WALL]
+const used = [...OPENING, ...COLLECTION, ...MOMENTS.map((m) => m.id), ...BACKSTAGE, ...FOOTER_WALL]
 
 describe('face catalogue', () => {
-  it('wall has 25 distinct faces with 43 in the centre', () => {
-    expect(WALL).toHaveLength(25)
-    expect(new Set(WALL).size).toBe(25)
-    expect(WALL[12]).toBe('43')
+  it('the corridor opens with the six named looks and never repeats a face', () => {
+    expect(COLLECTION).toHaveLength(14)
+    expect(new Set(COLLECTION).size).toBe(14)
+    expect(COLLECTION.slice(0, 6)).toEqual(LOOKS.map((l) => l.id))
+  })
+
+  it('each moment is a face of its own occasion', () => {
+    for (const m of MOMENTS) expect(FACES[m.id].kind, m.id).toBe(m.kind)
+    expect(new Set(MOMENTS.map((m) => m.kind)).size).toBe(MOMENTS.length)
+  })
+
+  it('backstage photos show Trâm at work', () => {
+    for (const id of BACKSTAGE) expect(FACES[id].kind, id).toBe('backstage')
   })
 
   it('looks are 6 full-screen-capable faces', () => {
@@ -35,8 +44,8 @@ describe('face catalogue', () => {
     for (const id of excluded) expect(used, id).not.toContain(id)
   })
 
-  it('strip tiles are sharp enough', () => {
-    for (const id of STRIPS.flat()) expect(faceSize(id).width, id).toBeGreaterThanOrEqual(480)
+  it('framed faces are sharp enough for a phone at 3x', () => {
+    for (const id of [...COLLECTION, ...MOMENTS.map((m) => m.id), ...BACKSTAGE]) expect(faceSize(id).width, id).toBeGreaterThanOrEqual(600)
   })
 
   it('srcset lists the three exports with their real widths', () => {
