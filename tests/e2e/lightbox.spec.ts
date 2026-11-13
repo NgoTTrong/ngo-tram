@@ -1,7 +1,13 @@
-import { expect, test } from '@playwright/test'
+import { expect, test, type Page } from '@playwright/test'
+
+/** Open /vi and wait until the page's effects (lightbox listener included) are attached. */
+async function open(page: Page) {
+  await page.goto('/vi')
+  await page.waitForFunction(() => document.documentElement.dataset.ink)
+}
 
 test('clicking a face opens it large, arrows step, Escape closes', async ({ page }) => {
-  await page.goto('/vi')
+  await open(page)
   const tile = page.locator('#backstage a.face').first()
   await tile.scrollIntoViewIfNeeded()
   await tile.click()
@@ -18,7 +24,7 @@ test('clicking a face opens it large, arrows step, Escape closes', async ({ page
 })
 
 test('next and previous buttons step through the faces, wrapping around', async ({ page }) => {
-  await page.goto('/vi')
+  await open(page)
   // the looks are pinned: go to where the first one fills the screen
   await page.evaluate(() => {
     const el = document.querySelector<HTMLElement>('#looks')!
@@ -36,7 +42,7 @@ test('next and previous buttons step through the faces, wrapping around', async 
 })
 
 test('keyboard: Enter opens a focused face and focus returns on close', async ({ page }) => {
-  await page.goto('/vi')
+  await open(page)
   const tile = page.locator('#more a.face').nth(2)
   await tile.focus()
   await page.keyboard.press('Enter')
@@ -46,7 +52,7 @@ test('keyboard: Enter opens a focused face and focus returns on close', async ({
 })
 
 test('the large photo is never shown above its real size', async ({ page }) => {
-  await page.goto('/vi')
+  await open(page)
   // the strips move with the scroll, so a pointer click is racy here; size is what this test is about
   await page.locator('#more a.face').first().dispatchEvent('click')
   const img = page.getByTestId('lightbox').locator('img')
