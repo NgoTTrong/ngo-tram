@@ -272,7 +272,7 @@ a.face:focus-visible .mirror { outline: 2px solid var(--rose-ink); outline-offse
 
 /* chapter heads */
 .chapter { position: relative; }
-.chap { position: relative; text-align: center; padding: 18vh var(--g) 7vh; }
+.chap { position: relative; text-align: center; padding: 10vh var(--g) 7vh; }
 .chap__num { font-size: 13px; letter-spacing: 0.4em; color: var(--blush); }
 .chap__title { margin: 6px 0 0; padding-top: 0.2em; font-size: clamp(56px, 8.5vw, 128px); line-height: 1.1; }
 .chap__lead { max-width: 46ch; margin: 18px auto 0; line-height: 1.8; color: var(--dim); }
@@ -344,7 +344,7 @@ html.scrolled .site-header { background: rgb(250 237 229 / 0.8); backdrop-filter
 }
 
 /* ---------- motion (html[data-motion='on'], set by Journey) ---------- */
-html[data-motion='on'] .open { height: 200vh; }
+html[data-motion='on'] .open { height: 180vh; }
 html[data-motion='on'] .open__pin { position: sticky; top: 0; height: 100svh; display: grid; place-items: center; padding: 0; }
 html[data-motion='on'] .open__c { margin-top: -20svh; will-change: transform, opacity; }
 html[data-motion='on'] .open__trio { position: absolute; bottom: 9svh; left: 50%; transform: translateX(-50%); will-change: transform, opacity; }

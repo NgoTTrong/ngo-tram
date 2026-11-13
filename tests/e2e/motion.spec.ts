@@ -29,6 +29,17 @@ test('the camera moves through the logo and the tagline surfaces', async ({ page
   expect(await op('[data-quote]')).toBeGreaterThan(0.5)
 })
 
+test('the opening never leaves an empty screen', async ({ page }) => {
+  await ready(page)
+  for (const frac of [0.2, 0.3, 0.4, 0.6, 0.8, 1]) {
+    await scrollInto(page, '#top', frac)
+    const seen = await page.evaluate(() =>
+      Math.max(...['[data-open-c]', '[data-trio]', '[data-quote]'].map((s) => Number(getComputedStyle(document.querySelector(s)!).opacity))),
+    )
+    expect(seen, `at ${frac}`).toBeGreaterThan(0.45)
+  }
+})
+
 test('the corridor slides sideways while the page scrolls down, with a counter', async ({ page }) => {
   await ready(page)
   const x = () => page.locator('[data-track]').evaluate((e) => e.getBoundingClientRect().left)

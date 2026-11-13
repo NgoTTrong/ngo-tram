@@ -60,14 +60,15 @@ export function Journey() {
         // 01 · the camera moves through the logo; the tagline surfaces behind it
         const p = clamp(y / Math.max(1, open.offsetHeight - vh))
         openC.style.transform = `scale(${1 + p * 1.6})`
-        openC.style.opacity = String(clamp(1 - p * 1.8))
+        openC.style.opacity = String(clamp(1 - p * 1.6))
         if (trio) {
           trio.style.transform = `translate3d(-50%, ${p * -150}px, 0) scale(${1 - p * 0.25})`
           trio.style.opacity = String(clamp(1 - p * 2.2))
         }
         if (quote) {
-          const q = clamp((p - 0.42) / 0.4)
-          quote.style.opacity = String(q * (1 - clamp((p - 0.92) / 0.08)))
+          // crossfades with the logo and stays until the pin lets go, so the screen is never empty
+          const q = clamp((p - 0.2) / 0.25)
+          quote.style.opacity = String(q)
           quote.style.transform = `scale(${0.9 + q * 0.1})`
         }
         if (cue) cue.style.opacity = String(clamp(1 - p * 5))
