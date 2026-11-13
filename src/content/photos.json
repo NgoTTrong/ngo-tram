@@ -1,0 +1,20 @@
+{
+  "_note": "Single source for the image pipeline and the site. drive = files in assets/drive/ (originals from Trâm's Google Drive folder, numbered NN.jpg as in its _index.txt), each a whole photo, first is the cover. eff = sharp pixels of a served file, judged by eye at 100%: shown CSS width x DPR must stay at or below it. Never used: 35-37 (brand logos), 01/44/45 (collages, landscape duplicates), 09/11/13/14 (other artists backstage).",
+  "looks": [
+    { "slug": "peony-blush", "drive": ["49", "50"], "eff": 900 },
+    { "slug": "berry-garden", "drive": ["02", "04", "03"], "eff": 900 },
+    { "slug": "silk-braids", "drive": ["46", "47", "48"], "eff": 900 },
+    { "slug": "brick-curl", "drive": ["26", "25", "29", "31"], "eff": 670 },
+    { "slug": "ivory-shirt", "drive": ["16", "15", "18", "20"], "eff": 670 },
+    { "slug": "twin-braids", "drive": ["06", "05", "07", "08"], "eff": 670 },
+    { "slug": "cream-lace", "drive": ["22", "23", "24"], "eff": 900 },
+    { "slug": "winged-sculpt", "drive": ["40", "39", "41"], "eff": 670 }
+  ],
+  "moments": [
+    { "slug": "lace-bloom", "drive": "38", "eff": 600 },
+    { "slug": "black-ribbon", "drive": "42", "eff": 630 },
+    { "slug": "tangerine", "drive": "33", "eff": 630 },
+    { "slug": "night-curl", "drive": "27", "eff": 630 }
+  ],
+  "artist": { "drive": "12", "eff": 630 }
+}
