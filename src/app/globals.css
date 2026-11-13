@@ -234,6 +234,8 @@ main > section { position: relative; }
 /* 1 · wall */
 .wall { background: var(--paper); z-index: 0; } /* own stacking context: the zoomed hero must stay under the looks */
 .wall .stage { height: 100svh; min-height: 560px; overflow: hidden; }
+/* pinned stages use the large viewport so a collapsing phone toolbar never uncovers a band below them */
+html[data-motion='on'] .wall .stage { height: 100lvh; }
 .wall__grid {
   position: absolute;
   left: 50%;
@@ -315,13 +317,16 @@ html[data-motion='on'] .wall__grid,
 html[data-motion='on'] .wall__tile,
 html[data-motion='on'] .wall__title { will-change: transform, opacity; }
 /* the looks overlap the wall's last screen: the first look wipes up over the zoomed centre face */
-html[data-motion='on'] .looks { height: calc(100svh * 6.2); margin-top: -100svh; z-index: 1; }
-html[data-motion='on'] .looks .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+html[data-motion='on'] .looks { height: calc(100lvh * 6.2); margin-top: -100lvh; z-index: 1; }
+html[data-motion='on'] .looks .stage { position: sticky; top: 0; height: 100lvh; overflow: hidden; }
+/* captions and counter stay above the toolbar while it is shown (the stage then runs under it) */
+html[data-motion='on'] .look__cap { bottom: calc(100lvh - 100svh + max(28px, 8svh)); }
 html[data-motion='on'] .look { position: absolute; inset: 0; height: auto; min-height: 0; clip-path: circle(0px at 50% 72%); }
 html[data-motion='on'] .look:first-child { clip-path: none; }
 html[data-motion='on'] .look img { will-change: transform; }
-html[data-motion='on'] .looks__count { display: block; position: absolute; z-index: 3; right: max(20px, 5vw); bottom: max(28px, 8svh); margin: 0; color: var(--cream); font-size: 14px; letter-spacing: 0.2em; }
-html[data-motion='on'] .strip { overflow: hidden; }
+html[data-motion='on'] .looks__count { display: block; position: absolute; z-index: 3; right: max(20px, 5vw); bottom: calc(100lvh - 100svh + max(28px, 8svh)); margin: 0; color: var(--cream); font-size: 14px; letter-spacing: 0.2em; }
+/* clip, not hidden: a hidden box is still scrollable, and focusing an off-screen tile would scroll it */
+html[data-motion='on'] .strip { overflow: clip; }
 html[data-motion='on'] .strip__track { will-change: transform; }
 html[data-motion='on'] .bts__tile { will-change: transform; }
 

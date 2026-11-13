@@ -6,6 +6,7 @@ import { FacesStage } from '@/components/FacesStage'
 import { FaceLightbox } from '@/components/FaceLightbox'
 import { Looks } from '@/components/Looks'
 import { isLocale } from '@/i18n/config'
+import { STAGE_SCRIPT } from '@/lib/stage'
 import { getDict } from '@/i18n/dict'
 
 export default async function Home({ params }: PageProps<'/[locale]'>) {
@@ -18,6 +19,8 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
       <Looks locale={locale} t={t} />
       <FaceStrips t={t} />
       <Backstage locale={locale} t={t} />
+      {/* the scroll choreography, inline so it paints before hydration (see src/lib/stage.ts) */}
+      <script dangerouslySetInnerHTML={{ __html: STAGE_SCRIPT }} />
       <FacesStage />
       <FaceLightbox labels={{ close: t.close, prev: t.prev, next: t.next }} />
     </main>

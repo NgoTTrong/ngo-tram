@@ -111,3 +111,68 @@ test.describe('without JavaScript', () => {
     await expect(page.locator('#more a.face').first()).toBeVisible()
   })
 })
+
+test('a reload mid-journey paints the right look even when the page scripts never arrive', async ({ page }) => {
+  await page.goto('/vi')
+  await scrollInto(page, '#looks', 0.62)
+  const want = await page.locator('[data-count]').textContent()
+  expect(want).not.toBe('01')
+  // the app bundle fails to load (styles still arrive): only what is in the HTML runs
+  await page.route(/\/_next\/static\/chunks\/.*\.js(\?.*)?$/, (r) => r.abort())
+  await page.reload()
+  await expect(page.locator('[data-count]')).toHaveText(want!)
+  // and the journey keeps working while scrolling on
+  await page.evaluate(() => window.scrollBy({ top: innerHeight * 1.5, behavior: 'instant' }))
+  await expect(page.locator('[data-count]')).not.toHaveText(want!)
+})
+
+test('the centre face covers its stage when the stage is taller than the window (phone toolbar hidden)', async ({ page }) => {
+  await page.goto('/vi')
+  // a phone with its toolbar collapsed: the stage is taller than innerHeight at load
+  await page.addStyleTag({ content: '.wall .stage, .looks .stage { height: 125vh !important; }' })
+  await scrollInto(page, '#wall', 0.56)
+  const ok = await page.evaluate(() => {
+    const s = document.querySelector('.wall .stage')!.getBoundingClientRect()
+    const r = document.querySelector('.wall__tile--hero')!.getBoundingClientRect()
+    return r.left <= s.left + 2 && r.top <= s.top + 2 && r.right >= s.right - 2 && r.bottom >= s.bottom - 2
+  })
+  expect(ok).toBe(true)
+})
+
+test('tabbing through the looks shows each focused look', async ({ page }) => {
+  await page.goto('/vi')
+  await page.waitForFunction(() => document.documentElement.dataset.ink)
+  await page.locator('#looks a.face').first().focus()
+  for (let i = 1; i < 6; i++) {
+    await page.keyboard.press('Tab')
+    await page.waitForTimeout(700)
+    const shown = await page.evaluate(() => {
+      const a = document.activeElement as HTMLElement
+      const look = a.closest('.look') as HTMLElement
+      const c = getComputedStyle(look).clipPath
+      const m = c.match(/circle\(([\d.]+)px/)
+      const cap = look.querySelector('.look__cap')!
+      return { inLook: !!look, open: c === 'none' || (m ? Number(m[1]) > innerHeight / 2 : false), caption: Number(getComputedStyle(cap).opacity) }
+    })
+    expect(shown.inLook, `look ${i + 1}`).toBe(true)
+    expect(shown.open, `look ${i + 1}`).toBe(true)
+    expect(shown.caption, `look ${i + 1}`).toBeGreaterThan(0.9)
+  }
+})
+
+test('tabbing onto a strip tile brings it into view without shifting the strip', async ({ page }) => {
+  await page.goto('/vi')
+  await page.waitForFunction(() => document.documentElement.dataset.ink)
+  const tiles = page.locator('#more .strip').first().locator('a.face')
+  await tiles.nth(0).focus()
+  const n = await tiles.count()
+  for (let i = 1; i < n; i++) await page.keyboard.press('Tab')
+  await page.waitForTimeout(800)
+  const r = await page.evaluate(() => {
+    const a = document.activeElement as HTMLElement
+    const b = a.getBoundingClientRect()
+    return { visible: b.left >= -1 && b.right <= innerWidth + 1 && b.top >= 0 && b.bottom <= innerHeight, scrollLeft: a.closest('.strip')!.scrollLeft }
+  })
+  expect(r.scrollLeft).toBe(0)
+  expect(r.visible).toBe(true)
+})
