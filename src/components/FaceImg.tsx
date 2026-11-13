@@ -2,6 +2,12 @@
 import { FACES } from '@/content/faces'
 import { faceOut, faceSrc, faceSrcSet } from '@/lib/face'
 
+/**
+ * `sizes` of a photo that covers the whole screen: on a tall screen a portrait photo is painted by
+ * height, wider than the viewport (up to ~0.9 of the screen height for the widest looks).
+ */
+export const COVER = 'max(100vw, 90vh)'
+
 /** One face photo: responsive srcset of the exports, intrinsic size for layout, face kept in frame when cropped. */
 export function FaceImg({ id, sizes, alt = '', eager = false, className }: { id: string; sizes: string; alt?: string; eager?: boolean; className?: string }) {
   const { width, height } = faceOut(id, 'md')

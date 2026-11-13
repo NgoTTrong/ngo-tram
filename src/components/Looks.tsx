@@ -1,7 +1,7 @@
 import { LOOKS } from '@/content/faces'
 import type { Locale } from '@/i18n/config'
 import type { Dict } from '@/i18n/dict'
-import { FaceImg } from './FaceImg'
+import { COVER, FaceImg } from './FaceImg'
 import { faceSrc } from '@/lib/face'
 
 const pad = (n: number) => String(n).padStart(2, '0')
@@ -14,7 +14,7 @@ export function Looks({ locale, t }: { locale: Locale; t: Dict }) {
         {LOOKS.map((l, i) => (
           <figure key={l.id} className="look" data-index={i}>
             <a className="face look__face" href={faceSrc(l.id, 'lg')} data-face={l.id} aria-label={`${t.open}: ${l.caption[locale].name}`}>
-              <FaceImg id={l.id} sizes="100vw" alt={l.caption[locale].name} eager={i === 0} />
+              <FaceImg id={l.id} sizes={COVER} alt={l.caption[locale].name} eager={i === 0} />
             </a>
             <figcaption className="look__cap">
               <span className="look__kind">
@@ -25,7 +25,7 @@ export function Looks({ locale, t }: { locale: Locale; t: Dict }) {
           </figure>
         ))}
         <p className="looks__count" aria-hidden>
-          <span data-count>01</span> / {pad(LOOKS.length)}
+          <span data-count suppressHydrationWarning>01</span> / {pad(LOOKS.length)}
         </p>
       </div>
     </section>

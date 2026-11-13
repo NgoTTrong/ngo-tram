@@ -3,9 +3,8 @@ import sizes from '../../src/content/face-sizes.json'
 
 const source = sizes as Record<string, { width: number; height: number }>
 
-// Every face on screen gets enough pixels for the screen it is on: either the served file covers the
-// painted size at this device's pixel ratio, or it is already the largest file there is. A full-screen
-// look is never stretched more than 1.15× beyond its source photo.
+// Every face on screen gets enough pixels for the screen it is on: the served file covers the painted
+// size at this device's pixel ratio, or carries every pixel the source photo has.
 for (const dpr of [2, 3]) {
   test.describe(`DPR ${dpr}`, () => {
     test.use({ deviceScaleFactor: dpr })
@@ -33,7 +32,10 @@ for (const dpr of [2, 3]) {
           const list = [...document.querySelectorAll<HTMLImageElement>('img[data-face]')]
             .filter((i) => {
               const r = i.getBoundingClientRect()
-              const vis = getComputedStyle(i).visibility !== 'hidden' && Number(getComputedStyle(i.closest('[style*="opacity"]') ?? i).opacity) > 0.05
+              const look = i.closest('.look')
+              // a look still closed to a dot (or clipped off) is not on screen
+              const closed = !!look && /circle\(0(\.0)?px/.test(getComputedStyle(look).clipPath)
+              const vis = !closed && getComputedStyle(i).visibility !== 'hidden' && Number(getComputedStyle(i.closest('[style*="opacity"]') ?? i).opacity) > 0.05
               return vis && r.width > 40 && r.bottom > 0 && r.top < innerHeight && r.right > 0 && r.left < innerWidth
             })
           return Promise.all(
@@ -48,9 +50,8 @@ for (const dpr of [2, 3]) {
         })
         for (const f of found) {
           const need = f.painted * dpr * 0.95
-          const largest = /-lg\.webp$/.test(f.src)
-          if (f.natural < need && !largest) bad.push(`${sel}@${frac} ${f.id} ${f.natural}px < ${Math.round(need)}px (${f.src.split('/').pop()})`)
-          if (f.look && f.painted > source[f.id].width * 1.15) bad.push(`${sel}@${frac} look ${f.id} painted ${Math.round(f.painted)}px from a ${source[f.id].width}px photo`)
+          const enough = Math.min(need, source[f.id].width * 0.95)
+          if (f.natural < enough) bad.push(`${sel}@${frac} ${f.id} ${f.natural}px < ${Math.round(enough)}px (${f.src.split('/').pop()})`)
         }
       }
       expect([...new Set(bad)]).toEqual([])

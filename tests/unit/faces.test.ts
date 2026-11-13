@@ -44,4 +44,15 @@ describe('face catalogue', () => {
     expect(set).toMatch(/\/faces\/43-sm\.webp \d+w/)
     expect(set).toMatch(/\/faces\/43-lg\.webp \d+w/)
   })
+
+  it('full-screen looks also ship an xl export at their full source width', () => {
+    for (const { id } of LOOKS) {
+      expect(existsSync(`public${faceSrc(id, 'xl')}`), id).toBe(true)
+      const w = Number(faceSrcSet(id).match(new RegExp(`/faces/${id}-xl\\.webp (\\d+)w`))?.[1])
+      // every source pixel, give or take rounding when the long edge is capped
+      expect(w, id).toBeGreaterThanOrEqual(faceSize(id).width - 2)
+    }
+    // the other faces never need one
+    expect(faceSrcSet('02')).not.toContain('-xl.webp')
+  })
 })
