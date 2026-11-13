@@ -263,7 +263,7 @@ main > section { position: relative; }
 }
 .wall__title h1 { margin: 0; width: min(56vw, 400px); }
 .wall__title h1 img { display: block; width: 100%; height: auto; filter: drop-shadow(0 6px 30px rgb(0 0 0 / 0.45)); }
-.wall__kicker { margin: 10px 0 0; font-size: 12px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; }
+.wall__kicker { margin: 10px 0 0; padding: 6px 12px 6px calc(12px + 0.32em); border-radius: 999px; background: rgb(30 38 28 / 0.78); font-size: 12px; font-weight: 600; letter-spacing: 0.32em; text-transform: uppercase; }
 .wall__tagline { margin: 0; padding-top: 0.14em; font-size: clamp(30px, 5vw, 52px); line-height: 1.15; text-shadow: 0 2px 24px rgb(0 0 0 / 0.5); }
 .wall__scroll { position: absolute; z-index: 3; left: 0; right: 0; bottom: max(22px, env(safe-area-inset-bottom)); margin: 0; text-align: center; font-size: 12px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--cream); text-shadow: 0 1px 12px rgb(0 0 0 / 0.6); }
 
@@ -271,10 +271,10 @@ main > section { position: relative; }
 .looks { background: var(--moss); }
 .look { position: relative; margin: 0; height: 100svh; min-height: 520px; overflow: hidden; }
 .look__face { position: absolute; inset: 0; }
-.look::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, transparent 45%, rgb(20 26 18 / 0.72)); }
+.look::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, transparent 40%, rgb(20 26 18 / 0.6) 68%, rgb(20 26 18 / 0.88)); }
 .look__cap { position: absolute; z-index: 2; left: max(20px, 6vw); right: 120px; bottom: max(28px, 8svh); display: grid; gap: 2px; color: var(--cream); pointer-events: none; }
 .look__kind { font-size: 12px; font-weight: 600; letter-spacing: 0.24em; text-transform: uppercase; }
-.look__name { padding-top: 0.14em; font-size: clamp(52px, 8vw, 120px); line-height: 1.1; }
+.look__name { padding-top: 0.22em; font-size: clamp(52px, 8vw, 120px); line-height: 1.1; }
 .looks__count { display: none; }
 
 /* 3 · more faces */

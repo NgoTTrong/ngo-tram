@@ -114,8 +114,10 @@ function run(getLenis: () => { raf: (t: number) => void } | undefined): () => vo
       if (img) img.style.transform = `scale(${(mix(1.3, 1, t) * mix(1, 1.06, next)).toFixed(4)})`
       const cap = s.querySelector<HTMLElement>('.look__cap')
       if (cap) {
+        // captions never share the screen: the outgoing one is gone before the incoming one shows
+        const shown = seg(t, 0.55, 1) * (1 - seg(next, 0, 0.4))
         cap.style.transform = `translateY(${((1 - t) * 60 - next * 30).toFixed(1)}px)`
-        cap.style.opacity = (t * (1 - next)).toFixed(3)
+        cap.style.opacity = shown.toFixed(3)
       }
     })
     if (count) count.textContent = String(Math.min(slides.length, Math.round(r) + 1)).padStart(2, '0')
