@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test'
 
-// E2E_PORT lets the suite run while another project's server holds the default port.
-const PORT = process.env.E2E_PORT ?? '3200'
+// E2E_PORT lets the suite run while another project's server holds 3100.
+const PORT = process.env.E2E_PORT ?? '3100'
 
 export default defineConfig({
   testDir: 'tests/e2e',
@@ -16,6 +16,6 @@ export default defineConfig({
   projects: [
     // iPhone-sized viewport in Chromium: Playwright's WebKit on Windows mis-scales with OS DPI (clientWidth 326 for a 390 viewport).
     { name: 'mobile', use: { ...devices['iPhone 13'], browserName: 'chromium' } },
-    { name: 'desktop', use: { browserName: 'chromium', viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 } },
+    { name: 'desktop', use: { browserName: 'chromium', viewport: { width: 1440, height: 900 } } },
   ],
 })

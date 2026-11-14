@@ -7,11 +7,6 @@ const eslintConfig = defineConfig([
   ...nextTs,
   // Override default ignores of eslint-config-next.
   globalIgnores([
-    ".tmp/**",
-    ".npm-cache/**",
-    "spike/**",
-    "test-results/**",
-    "playwright-report/**",
     // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",

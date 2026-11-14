@@ -49,4 +49,3 @@ next-env.d.ts
 /test-results/
 !.env.example
 /assets/drive/
-.tmp/

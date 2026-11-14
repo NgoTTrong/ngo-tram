@@ -2,25 +2,33 @@ import { describe, expect, test } from 'vitest'
 import { getDict } from '@/i18n/dict'
 import { isLocale, locales } from '@/i18n/config'
 
-const flat = (o: unknown, p = ''): [string, string][] =>
-  typeof o === 'string' ? [[p, o]] : Object.entries(o as object).flatMap(([k, v]) => flat(v, p ? `${p}.${k}` : k))
+/** Every string of a dictionary with its path, nested lists and maps included. */
+const strings = (v: unknown, path: string): [string, string][] =>
+  typeof v === 'string' ? [[path, v]] : Object.entries(v as object).flatMap(([k, x]) => strings(x, `${path}.${k}`))
 
 describe('dictionaries', () => {
-  test('every locale has the same keys and list lengths as vi', () => {
+  test('every locale has the same keys as vi', () => {
     expect(locales).toEqual(['vi', 'ko', 'ru'])
-    const vi = flat(getDict('vi')).map(([k]) => k)
-    for (const locale of locales) expect(flat(getDict(locale)).map(([k]) => k), locale).toEqual(vi)
+    const shape = (locale: (typeof locales)[number]) => strings(getDict(locale), '').map(([p]) => p).sort()
+    for (const locale of locales) expect(shape(locale), locale).toEqual(shape('vi'))
   })
 
   test('no string is empty', () => {
-    for (const locale of locales) for (const [key, value] of flat(getDict(locale))) expect(value.trim(), `${locale}.${key}`).not.toBe('')
+    for (const locale of locales) {
+      for (const [path, value] of strings(getDict(locale), locale)) expect(value.trim(), path).not.toBe('')
+    }
   })
 
-  test('five chapters', () => {
-    for (const locale of locales) expect(getDict(locale).chapters).toHaveLength(5)
+  test('no copy talks about concepts any more', () => {
+    for (const locale of locales) {
+      for (const [path, value] of strings(getDict(locale), locale)) expect(value, path).not.toMatch(/concept|콘셉트|концепт|\{concept\}/i)
+    }
   })
 
   test('isLocale accepts only vi, ko and ru', () => {
-    expect(['vi', 'ko', 'ru', 'en'].map(isLocale)).toEqual([true, true, true, false])
+    expect(isLocale('vi')).toBe(true)
+    expect(isLocale('ko')).toBe(true)
+    expect(isLocale('ru')).toBe(true)
+    expect(isLocale('en')).toBe(false)
   })
 })

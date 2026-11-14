@@ -1,10 +1,7 @@
 import { notFound } from 'next/navigation'
-import { Contact } from '@/components/Contact'
-import { Header } from '@/components/Header'
-import { Journey } from '@/components/Journey'
-import { LookDialog } from '@/components/LookDialog'
-import { Artist, Collection, JourneyMap, Moments, Opening } from '@/components/Sections'
-import { looks } from '@/content/looks'
+import { FaceLightbox } from '@/components/FaceLightbox'
+import { Artist, Collection, JourneyMap, Moments, Opening } from '@/components/Journey/Chapters'
+import { Journey } from '@/components/Journey/Journey'
 import { isLocale } from '@/i18n/config'
 import { getDict } from '@/i18n/dict'
 
@@ -15,16 +12,14 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
   return (
     <>
       <Journey />
-      <Header locale={locale} t={t} bookHref="#meet" />
       <JourneyMap t={t} />
-      <main id="main">
+      <main className="journey">
         <Opening t={t} />
         <Collection locale={locale} t={t} />
-        <Moments locale={locale} t={t} />
-        <Artist t={t} />
-        <Contact locale={locale} t={t} />
+        <Moments t={t} />
+        <Artist locale={locale} t={t} />
       </main>
-      <LookDialog looks={looks} locale={locale} t={{ close: t.close, want: t.want, angle: t.angle, tones: t.tones }} />
+      <FaceLightbox labels={{ close: t.close, prev: t.prev, next: t.next }} />
     </>
   )
 }
